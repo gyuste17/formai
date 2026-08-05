@@ -13,6 +13,7 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Pre-fill values if props change
   useEffect(() => {
@@ -43,23 +44,39 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     // Basic validation
     if (!formData.name || !formData.email || !formData.phone || !formData.company) {
       setError('Por favor, rellena todos los campos obligatorios (*).');
+      setLoading(false);
       return;
     }
 
-    // Simulate sending email
-    setSubmitted(true);
-    // Clear form
-    setFormData({
-      name: '',
-      company: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
+    fetch('https://script.google.com/macros/s/AKfycbwJCfmG8Gn-GpzVaVEnBng-_Qq_aCZWOIP3BkzpCCzVmhVb8a1zrAXw6EeP22HTBycs/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(() => {
+      setSubmitted(true);
+      setLoading(false);
+      setFormData({
+        name: '',
+        company: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      setError('Hubo un error al enviar el formulario. Por favor, vuelve a intentarlo.');
+      setLoading(false);
     });
   };
 
@@ -304,14 +321,15 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
 
                 <button 
                   type="submit"
+                  disabled={loading}
                   style={{
-                    backgroundColor: 'var(--accent-primary)',
+                    backgroundColor: loading ? 'var(--text-muted)' : 'var(--accent-primary)',
                     color: '#ffffff',
                     border: 'none',
                     padding: '16px 24px',
                     borderRadius: 'var(--border-radius-md)',
                     fontWeight: '700',
-                    cursor: 'pointer',
+                    cursor: loading ? 'not-allowed' : 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -321,8 +339,8 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                   }}
                   className="submit-btn"
                 >
-                  Enviar Mensaje
-                  <Send size={16} />
+                  {loading ? 'Enviando...' : 'Enviar Mensaje'}
+                  {!loading && <Send size={16} />}
                 </button>
               </form>
             )}
