@@ -1,14 +1,9 @@
 import { useEffect } from 'react';
 
-// Corporate palette of blues and greens (ajustada un 20% más oscura e intensa)
+// Corporate palette: alternancia directa entre #56A9F8 y #0A3554
 const CORPORATE_PALETTE = [
-  '#1d7281', // Azul turquesa corporativo más profundo
-  '#0f5966', // Azul petróleo oscuro
-  '#095c54', // Verde azulado / Deep Teal
-  '#04724d', // Verde esmeralda corporativo intenso
-  '#0a6e62', // Verde azulado marino intenso
-  '#025c8a', // Azul cerúleo tecnológico oscuro
-  '#0b4d59', // Azul verdoso corporativo profundo
+  '#56A9F8',
+  '#0A3554',
 ];
 
 // Helper to convert hex to RGB
