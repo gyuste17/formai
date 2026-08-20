@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 
-// Corporate palette of blues and greens
+// Corporate palette of blues and greens (ajustada un 20% más oscura e intensa)
 const CORPORATE_PALETTE = [
-  '#2997aa', // Azul turquesa corporativo FormAI (original)
-  '#15798a', // Azul petróleo corporativo
-  '#0d9488', // Verde azulado / Teal
-  '#059669', // Verde esmeralda corporativo
-  '#10b981', // Verde menta brillante
-  '#14b8a6', // Aguamarina corporativo
-  '#0284c7', // Azul cerúleo tecnológico
+  '#1d7281', // Azul turquesa corporativo más profundo
+  '#0f5966', // Azul petróleo oscuro
+  '#095c54', // Verde azulado / Deep Teal
+  '#04724d', // Verde esmeralda corporativo intenso
+  '#0a6e62', // Verde azulado marino intenso
+  '#025c8a', // Azul cerúleo tecnológico oscuro
+  '#0b4d59', // Azul verdoso corporativo profundo
 ];
 
 // Helper to convert hex to RGB
@@ -57,7 +57,7 @@ export function useCorporateHeaderColor() {
       document.head.appendChild(metaTag);
     }
 
-    const stepDuration = 3500; // 3.5 seconds per color transition
+    const stepDuration = 1750; // 50% más rápida (1.75s por tono)
     const totalSteps = CORPORATE_PALETTE.length;
     let startTime = performance.now();
     let animFrameId = null;

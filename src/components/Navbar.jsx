@@ -24,14 +24,14 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
         <a href="#" style={{ display: 'flex', alignItems: 'center' }} aria-label="FormAI - Inicio">
           <img
             src={theme === 'dark'
-              ? '/logos/formAI/3-removebg-preview.png'
-              : '/logos/formAI/1-removebg-preview.png'}
+              ? '/logos/formAI/3-removebg-preview-trimmed.webp'
+              : '/logos/formAI/1-removebg-preview-trimmed.webp'}
             alt="FormAI"
             loading="eager"
             fetchPriority="high"
             decoding="async"
             className="navbar-logo"
-            style={{ width: 'auto', objectFit: 'contain' }}
+            style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
           />
         </a>
 
@@ -185,21 +185,28 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
       {/* Add CSS injection for desktop menu responsiveness in styles */}
       <style>{`
         .navbar-container {
-          height: 76px;
+          height: 68px;
         }
         .navbar-logo {
-          height: 58px;
+          height: 48px;
+          width: auto;
+          object-fit: contain;
           transition: height var(--transition-fast);
         }
         @media (max-width: 768px) {
           .navbar-container {
-            height: 64px !important;
+            height: 56px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
           }
           .navbar-logo {
-            height: 44px !important;
+            height: 38px !important;
           }
           .mobile-menu-panel {
-            top: 64px !important;
+            top: 56px !important;
+          }
+          .mobile-toggle-area {
+            gap: 8px !important;
           }
         }
         @media (min-width: 769px) {
