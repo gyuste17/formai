@@ -99,7 +99,7 @@ export default function App() {
         </section>
 
         {/* Cómo funciona FUNDAE */}
-        <section id="como-funciona" className="section-padding" style={{ background: 'var(--bg-secondary)' }}>
+        <section id="como-funciona" className="section-padding section-parallax-bg">
           <div className="container">
             <div style={{ textAlign: 'center', marginBottom: '56px' }}>
               <span className="badge badge-ai" style={{ marginBottom: '16px' }}>Sin burocracia para ti</span>

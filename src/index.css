@@ -186,17 +186,77 @@ button, input, select, textarea {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
 }
 
 [data-theme="dark"] .glass-card {
-  background: rgba(11, 19, 41, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(11, 19, 41, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sección con imagen de fondo sutil con personas y efecto parallax/faded */
+.section-parallax-bg {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+}
+
+.section-parallax-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/images/startup-594090_1280.webp');
+  background-attachment: fixed;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.13;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity var(--transition-normal);
+}
+
+[data-theme="dark"] .section-parallax-bg::before {
+  opacity: 0.09;
+  filter: brightness(0.85) contrast(1.15);
+}
+
+/* Desvanecido (faded) en los bordes superior e inferior para integración natural */
+.section-parallax-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-primary) 0%,
+    transparent 12%,
+    transparent 88%,
+    var(--bg-primary) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section-parallax-bg > .container {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .section-parallax-bg::before {
+    background-attachment: scroll;
+  }
 }
 
 /* Badge styling */
