@@ -14,8 +14,10 @@ const CourseModal = lazy(() => import('./components/CourseModal'));
 
 // Tema por hora: 06–18 → claro, 18–06 → oscuro
 function getDefaultTheme() {
-  const saved = localStorage.getItem('formai-theme');
-  if (saved) return saved;
+  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    const saved = localStorage.getItem('formai-theme');
+    if (saved) return saved;
+  }
   const hour = new Date().getHours();
   return hour >= 6 && hour < 18 ? 'light' : 'dark';
 }
