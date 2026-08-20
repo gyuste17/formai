@@ -21,7 +21,7 @@ export default function Footer() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <img
               src="/logos/formAI/1-removebg-preview.webp"
-              alt="FormAI – Cursos Bonificados FUNDAE"
+              alt="FormAI"
               width="160"
               height="56"
               loading="lazy"
@@ -35,7 +35,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <h4 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cursos</h4>
+            <h3 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cursos</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
               <a href="#cursos" className="footer-link">Excel para Empresas</a>
               <a href="#cursos" className="footer-link">Power BI Profesional</a>
@@ -47,7 +47,7 @@ export default function Footer() {
 
           {/* Legal / FUNDAE Disclosure */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <h4 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>FUNDAE</h4>
+            <h3 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>FUNDAE</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.4 }}>
               Las acciones formativas se bonifican a través del sistema de Formación Programada para Empresas (FUNDAE), regulado por la Ley 30/2015. Todos los trabajadores por cuenta ajena que coticen por Formación Profesional tienen derecho a la bonificación.
             </p>

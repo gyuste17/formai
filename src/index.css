@@ -7,21 +7,23 @@
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
   --bg-tertiary: #f1f5f9;
-  --text-primary: #1e293b;
-  --text-heading: #2d3f5a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-primary: #0f172a;
+  --text-heading: #1e293b;
+  --text-secondary: #334155;
+  --text-muted: #475569;
   
-  --accent-primary: #2997aa;
-  --accent-primary-hover: #1f7888;
-  --accent-primary-light: #e9f8f9;
+  --accent-primary: #15798a;
+  --accent-primary-hover: #0e5a67;
+  --accent-primary-light: #e6f7f9;
+  --accent-primary-text: #0e6573;
   
-  --accent-ai: #6366f1;
-  --accent-ai-hover: #4f46e5;
+  --accent-ai: #4f46e5;
+  --accent-ai-hover: #4338ca;
   --accent-ai-light: #e0e7ff;
+  --accent-ai-text: #3730a3;
 
-  --accent-success: #10b981;
-  --border-color: #e2e8f0;
+  --accent-success: #059669;
+  --border-color: #cbd5e1;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
@@ -42,18 +44,20 @@
   --bg-primary: #020617;
   --bg-secondary: #0b1329;
   --bg-tertiary: #16223f;
-  --text-primary: #f1f5f9;
-  --text-heading: #e2e8f0;
+  --text-primary: #f8fafc;
+  --text-heading: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
   
   --accent-primary: #38bdf8;
   --accent-primary-hover: #0ea5e9;
   --accent-primary-light: #0c4a6e;
+  --accent-primary-text: #7dd3fc;
   
   --accent-ai: #818cf8;
   --accent-ai-hover: #6366f1;
   --accent-ai-light: #1e1b4b;
+  --accent-ai-text: #c7d2fe;
   
   --border-color: #1e293b;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
@@ -210,12 +214,12 @@ button, input, select, textarea {
 
 .badge-primary {
   background-color: var(--accent-primary-light);
-  color: var(--accent-primary);
+  color: var(--accent-primary-text, var(--accent-primary));
 }
 
 .badge-ai {
   background-color: var(--accent-ai-light);
-  color: var(--accent-ai);
+  color: var(--accent-ai-text, var(--accent-ai));
 }
 
 /* Form inputs styling */

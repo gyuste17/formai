@@ -53,7 +53,7 @@ export default function PartnersCarousel({ theme }) {
       transition: 'background-color var(--transition-normal)'
     }}>
       <div className="container" style={{ marginBottom: '32px', textAlign: 'center' }}>
-        <h3 style={{
+        <h2 style={{
           fontFamily: 'var(--font-display)',
           fontSize: '1.4rem',
           fontWeight: '800',
@@ -61,7 +61,7 @@ export default function PartnersCarousel({ theme }) {
           marginBottom: '6px'
         }}>
           Colaboradores <span className="gradient-text">&amp; Partners</span>
-        </h3>
+        </h2>
         <p style={{
           color: theme === 'dark' ? 'var(--text-muted)' : '#64748b',
           fontSize: '0.85rem',
@@ -105,7 +105,7 @@ export default function PartnersCarousel({ theme }) {
             >
               <img
                 src={partner.logo}
-                alt={`Logo ${partner.name}`}
+                alt={partner.name}
                 width="130"
                 height="48"
                 loading="lazy"

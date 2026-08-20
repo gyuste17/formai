@@ -99,7 +99,7 @@ export default function ClientsReviews() {
             >
               <img
                 src={client.logo}
-                alt={`Logo ${client.name}`}
+                alt={client.name}
                 width="140"
                 height="50"
                 loading="lazy"

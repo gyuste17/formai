@@ -155,11 +155,11 @@ export default function Hero() {
               {/* Mini Stats Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <h4 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-primary)' }}>0 €</h4>
+                  <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-primary)' }}>0 €</div>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Costo real para la empresa</p>
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-primary)' }}>+10 años</h4>
+                  <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-primary)' }}>+10 años</div>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>De experiencia docente</p>
                 </div>
               </div>

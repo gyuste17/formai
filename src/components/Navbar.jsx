@@ -27,7 +27,7 @@ export default function Navbar({ theme, toggleTheme }) {
             src={theme === 'dark'
               ? '/logos/formAI/3-removebg-preview.webp'
               : '/logos/formAI/1-removebg-preview.webp'}
-            alt="FormAI – Formación Bonificada en Digitalización"
+            alt="FormAI"
             width="220"
             height="76"
             loading="eager"

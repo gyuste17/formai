@@ -81,29 +81,24 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
   };
 
   return (
-    <section id="contacto" className="section-padding" style={{
-      background: 'radial-gradient(circle at 10% 80%, var(--accent-ai-light) 0%, transparent 40%)',
-      transition: 'background-color var(--transition-normal)'
-    }}>
-      <div className="container">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '48px',
-          alignItems: 'start'
-        }} className="contact-grid">
-          
-          {/* Info Details Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <div>
-              <span className="badge badge-ai" style={{ marginBottom: '12px' }}>¿Hablamos?</span>
-              <h2 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '16px', letterSpacing: '-0.02em' }}>
-                Contacta con nosotros
-              </h2>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6 }}>
-                Revisamos tu crédito formativo FUNDAE en menos de 24 horas y diseñamos una propuesta adaptada sin compromiso alguno.
-              </p>
-            </div>
+    <div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gap: '48px',
+        alignItems: 'start'
+      }} className="contact-grid">
+        
+        {/* Info Details Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <div>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '12px' }}>
+              Atención directa y personalizada
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6 }}>
+              Revisamos tu crédito formativo FUNDAE en menos de 24 horas y diseñamos una propuesta adaptada sin compromiso alguno.
+            </p>
+          </div>
 
             {/* Quick Contact Links */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -356,30 +351,28 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
               </form>
             )}
           </div>
-
         </div>
-      </div>
 
-      <style>{`
-        @media (min-width: 992px) {
-          .contact-grid {
-            grid-template-columns: 0.9fr 1.1fr !important;
-            gap: 64px !important;
+        <style>{`
+          @media (min-width: 992px) {
+            .contact-grid {
+              grid-template-columns: 0.9fr 1.1fr !important;
+              gap: 64px !important;
+            }
           }
-        }
-        @media (max-width: 576px) {
-          .form-row {
-            grid-template-columns: 1fr !important;
-            gap: 20px !important;
+          @media (max-width: 576px) {
+            .form-row {
+              grid-template-columns: 1fr !important;
+              gap: 20px !important;
+            }
           }
-        }
-        .contact-link:hover {
-          color: var(--accent-primary);
-        }
-        .submit-btn:hover {
-          background-color: var(--accent-primary-hover) !important;
-        }
-      `}</style>
-    </section>
-  );
+          .contact-link:hover {
+            color: var(--accent-primary);
+          }
+          .submit-btn:hover {
+            background-color: var(--accent-primary-hover) !important;
+          }
+        `}</style>
+      </div>
+    );
 }
