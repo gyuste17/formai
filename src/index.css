@@ -341,13 +341,13 @@ button, input, select, textarea {
   }
 
   .hero-ambient-img {
-    width: 220px;
-    height: 150px;
-    border-radius: 24px;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
     background-size: cover;
     background-position: center center;
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0.8) 75%, transparent 100%);
-    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0.8) 75%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0.75) 75%, transparent 100%);
+    mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0.75) 75%, transparent 100%);
   }
 
   .hero-ambient-img-1 {
