@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { X, Clock, Sliders, CheckCircle, MessageSquare } from 'lucide-react';
+import { formatCourseTitle } from './CourseCard';
 
 export default function CourseModal({ course, onClose, onSelectCourse }) {
   // Prevent body scroll when modal is open
@@ -98,7 +99,7 @@ export default function CourseModal({ course, onClose, onSelectCourse }) {
               letterSpacing: '-0.02em',
               lineHeight: 1.2
             }}>
-              {course.title}
+              {formatCourseTitle(course.title)}
             </h2>
           </div>
 

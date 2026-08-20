@@ -56,6 +56,43 @@ const toolLogos = {
   'Tableau Cloud': 'Tableau.webp',
 };
 
+export function formatCourseTitle(title) {
+  if (!title) return '';
+  // Quitar emojis si hubiera
+  const cleanTitle = title.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F270}\u{238C}-\u{2454}\u{20D0}-\u{20FF}]/gu, '').trim();
+
+  // Palabras clave ordenadas por especificidad
+  const keywords = [
+    'Power BI',
+    'Excel',
+    'ChatGPT',
+    'Copilot 365',
+    'Copilot',
+    'Power Automate',
+    'Looker Studio',
+    'Google Workspace',
+    'Tableau',
+    'Inteligencia Artificial'
+  ];
+
+  for (const kw of keywords) {
+    if (cleanTitle.includes(kw)) {
+      const index = cleanTitle.indexOf(kw);
+      const before = cleanTitle.substring(0, index);
+      const after = cleanTitle.substring(index + kw.length);
+      return (
+        <>
+          {before}
+          <span className="gradient-text">{kw}</span>
+          {after}
+        </>
+      );
+    }
+  }
+
+  return cleanTitle;
+}
+
 export default function CourseCard({ course, onViewSyllabus }) {
   // Dynamically resolve icon from name
   const IconComponent = iconMap[course.iconName] || BookOpen;
@@ -132,7 +169,7 @@ export default function CourseCard({ course, onViewSyllabus }) {
             fontWeight: '700',
             lineHeight: 1.2
           }}>
-            {course.title}
+            {formatCourseTitle(course.title)}
           </h3>
         </div>
 
