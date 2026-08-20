@@ -27,6 +27,8 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
               ? '/logos/formAI/3-removebg-preview-trimmed.webp'
               : '/logos/formAI/1-removebg-preview-trimmed.webp'}
             alt="FormAI"
+            width="240"
+            height="134"
             loading="eager"
             fetchPriority="high"
             decoding="async"
