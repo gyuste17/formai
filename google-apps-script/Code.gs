@@ -1,34 +1,32 @@
 /**
  * =====================================================================
- * FORMAI - GESTOR DE LEADS (GOOGLE APPS SCRIPT BACKEND)
+ * FORMAI - GESTOR DE LEADS & CRM (GOOGLE APPS SCRIPT BACKEND)
  * =====================================================================
- * Este script se vincula a tu Google Sheet ("Respuestas FormAI").
- * 
- * Funcionalidades:
- * 1. doPost:
- *    - Recibe envíos del formulario público de la web (contacto / cálculo).
- *    - Recibe acciones del CRM: updateStatus, addComment, createLead, updateLead, deleteLead.
- * 2. doGet:
- *    - Sirve la Web App interactiva (Index.html) cuando se abre en el navegador.
- *    - O devuelve JSON con los leads si se consulta con ?action=getLeads.
+ * Este script sustituye al anterior manteniendo el 100% de funcionalidades:
+ * 1. Recepción de leads públicos desde la web (formulario / calculadora).
+ * 2. Envío de notificación por email a hola@formai.es con enlace al Sheet.
+ * 3. Gestión completa de CRM: estados, notas, edición, borrado, creación manual.
+ * 4. Servicio de la Web App autónoma (Index.html) o API JSON.
  */
 
-// Nombre de la hoja de cálculo donde están los leads
-var SHEET_NAME = "Respuestas de formulario 1"; // o el nombre de tu primera hoja, ej. "Hoja 1" o "Respuestas"
+// Configuración
+var NOTIFICATION_EMAIL = "hola@formai.es";
 
 /**
- * Obtiene la hoja activa o la primera hoja si no coincide el nombre exacto
+ * Obtiene la hoja activa ("Respuestas" o la primera disponible)
  */
 function getTargetSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
+  var sheet = ss.getSheetByName("Respuestas") || 
+              ss.getSheetByName("Respuestas de formulario 1") || 
+              ss.getSheets()[0];
   ensureHeaders(sheet);
   return sheet;
 }
 
 /**
- * Asegura que existan las columnas de gestión (Estado, Comentarios, Prioridad, ID)
- * sin alterar los datos existentes de Fecha, Nombre, Empresa, Email, Teléfono, Asunto, Mensaje.
+ * Asegura que existan todas las columnas sin tocar los datos previos:
+ * A: Fecha | B: Nombre | C: Empresa | D: Email | E: Teléfono | F: Asunto | G: Mensaje | H: Estado | I: Comentarios | J: Prioridad | K: ID
  */
 function ensureHeaders(sheet) {
   var headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 11)).getValues()[0];
@@ -52,25 +50,24 @@ function ensureHeaders(sheet) {
 }
 
 /**
- * doGet: Sirve la Web App o devuelve datos JSON
+ * doGet: Sirve la Web App interactiva o devuelve JSON
  */
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "";
   
   if (action === "getLeads") {
     return createJsonResponse({
+      result: "success",
       success: true,
       leads: fetchAllLeads()
     });
   }
   
-  // Por defecto, sirve la Web App en HTML
-  var htmlOutput = HtmlService.createHtmlOutputFromFile('Index')
+  // Sirve la Web App en HTML
+  return HtmlService.createHtmlOutputFromFile('Index')
     .setTitle('FormAI - Gestor de Leads')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
-    
-  return htmlOutput;
 }
 
 /**
@@ -85,44 +82,140 @@ function doPost(e) {
       data = e.parameter;
     }
     
-    var action = data.action || "createFromForm";
-    var result = { success: true };
+    var action = data.action;
+    var result = { result: "success", success: true };
     
-    switch (action) {
-      case "getLeads":
-        result.leads = fetchAllLeads();
-        break;
-        
-      case "updateStatus":
-        result = updateLeadStatus(data.id, data.status);
-        break;
-        
-      case "addComment":
-        result = addLeadComment(data.id, data.comment, data.author);
-        break;
-        
-      case "updateLead":
-        result = updateLeadDetails(data.id, data.lead);
-        break;
-        
-      case "deleteLead":
-        result = deleteLeadById(data.id);
-        break;
-        
-      case "createLead":
-      case "createFromForm":
-      default:
-        result = insertNewLead(data);
-        break;
+    // Si no tiene 'action' o es 'createFromForm', es un lead del formulario de la web
+    if (!action || action === "createFromForm") {
+      result = processNewWebLead(data);
+    } else {
+      switch (action) {
+        case "getLeads":
+          result.leads = fetchAllLeads();
+          break;
+        case "updateStatus":
+          result = updateLeadStatus(data.id, data.status);
+          break;
+        case "addComment":
+          result = addLeadComment(data.id, data.comment, data.author);
+          break;
+        case "updateLead":
+          result = updateLeadDetails(data.id, data.lead);
+          break;
+        case "deleteLead":
+          result = deleteLeadById(data.id);
+          break;
+        case "createLead":
+          result = insertNewLead(data, false); // Creación manual desde CRM (sin email si no se desea)
+          break;
+        default:
+          result = processNewWebLead(data);
+          break;
+      }
     }
     
     return createJsonResponse(result);
   } catch (error) {
     return createJsonResponse({
+      result: "error",
       success: false,
       error: error.toString()
     });
   }
+}
+
+/**
+ * Procesa un nuevo lead del formulario público:
+ * 1. Guarda en Google Sheets con ID y estado 'Nuevo'.
+ * 2. Envía notificación por email a hola@formai.es.
+ */
+function processNewWebLead(data) {
+  var sheet = getTargetSheet();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var timestamp = new Date();
+  var leadId = "lead_" + timestamp.getTime() + "_" + Math.floor(Math.random() * 1000);
+  
+  // 1. Guardar en la hoja de cálculo con columnas de gestión
+  sheet.appendRow([
+    timestamp,
+    data.name || "",
+    data.company || "",
+    data.email || "",
+    data.phone || "",
+    data.subject || "",
+    data.message || "",
+    "Nuevo",     // Estado inicial
+    "",          // Comentarios iniciales
+    "Media",     // Prioridad inicial
+    leadId       // ID único
+  ]);
+  
+  // 2. Enviar notificación por email
+  try {
+    var emailRecipient = NOTIFICATION_EMAIL;
+    var emailSubject = "🔥 Nuevo Lead Web: " + (data.name || "Sin nombre") + " (" + (data.company || "Sin empresa") + ")";
+    
+    var emailBody = "Hola,\n\n" +
+                    "Se ha registrado un nuevo contacto desde el formulario de la web de FormAI:\n\n" +
+                    "▪ Nombre: " + (data.name || "-") + "\n" +
+                    "▪ Empresa: " + (data.company || "-") + "\n" +
+                    "▪ Email: " + (data.email || "-") + "\n" +
+                    "▪ Teléfono: " + (data.phone || "-") + "\n" +
+                    "▪ Asunto: " + (data.subject || "-") + "\n" +
+                    "▪ Mensaje:\n" + (data.message || "-") + "\n\n" +
+                    "--------------------------------------------------\n" +
+                    "Accede a la hoja de respuestas completa aquí:\n" +
+                    ss.getUrl() + "\n\n" +
+                    "Un saludo,\nEl sistema automático de FormAI";
+    
+    MailApp.sendEmail(emailRecipient, emailSubject, emailBody);
+  } catch (mailError) {
+    Logger.log("Error al enviar email de notificación: " + mailError.toString());
+  }
+  
+  return {
+    result: "success",
+    success: true,
+    id: leadId,
+    message: "Lead registrado correctamente"
+  };
+}
+
+/**
+ * Inserta lead manual desde el CRM
+ */
+function insertNewLead(data, sendNotification) {
+  var sheet = getTargetSheet();
+  var timestamp = new Date();
+  var leadId = "lead_" + timestamp.getTime() + "_" + Math.floor(Math.random() * 1000);
+  
+  var status = data.status || "Nuevo";
+  var priority = data.priority || "Media";
+  var comments = data.comments ? formatCommentsForCell(data.comments) : "";
+  
+  sheet.appendRow([
+    timestamp,
+    data.name || "",
+    data.company || "",
+    data.email || "",
+    data.phone || "",
+    data.subject || "",
+    data.message || "",
+    status,
+    comments,
+    priority,
+    leadId
+  ]);
+  
+  if (sendNotification) {
+    processNewWebLead(data);
+  }
+  
+  return {
+    result: "success",
+    success: true,
+    id: leadId
+  };
 }
 
 /**
@@ -139,14 +232,13 @@ function fetchAllLeads() {
   
   for (var i = 0; i < data.length; i++) {
     var row = data[i];
-    var rowIndex = i + 2; // Fila real en Sheet
+    var rowIndex = i + 2;
     
-    // Si la fila está vacía en nombre y email, saltar
+    // Si la fila está completamente vacía, saltar
     if (!row[1] && !row[3]) continue;
     
     var leadId = row[10] ? row[10].toString() : "lead_" + rowIndex + "_" + new Date().getTime();
     
-    // Si no tiene ID en la hoja, lo rellenamos
     if (!row[10]) {
       sheet.getRange(rowIndex, 11).setValue(leadId);
     }
@@ -170,42 +262,7 @@ function fetchAllLeads() {
     });
   }
   
-  // Ordenar los más recientes primero
   return leads.reverse();
-}
-
-/**
- * Inserta un nuevo lead
- */
-function insertNewLead(data) {
-  var sheet = getTargetSheet();
-  var timestamp = new Date();
-  var formattedDate = Utilities.formatDate(timestamp, Session.getScriptTimeZone() || "GMT+1", "dd/MM/yyyy HH:mm:ss");
-  var leadId = "lead_" + new Date().getTime() + "_" + Math.floor(Math.random() * 1000);
-  
-  var status = data.status || "Nuevo";
-  var priority = data.priority || "Media";
-  var comments = data.comments ? formatCommentsForCell(data.comments) : "";
-  
-  sheet.appendRow([
-    formattedDate,
-    data.name || "",
-    data.company || "",
-    data.email || "",
-    data.phone || "",
-    data.subject || "",
-    data.message || "",
-    status,
-    comments,
-    priority,
-    leadId
-  ]);
-  
-  return {
-    success: true,
-    id: leadId,
-    message: "Lead creado con éxito"
-  };
 }
 
 /**
@@ -215,11 +272,11 @@ function updateLeadStatus(id, newStatus) {
   var sheet = getTargetSheet();
   var row = findRowById(sheet, id);
   if (row === -1) {
-    return { success: false, error: "Lead no encontrado" };
+    return { result: "error", success: false, error: "Lead no encontrado" };
   }
   
   sheet.getRange(row, 8).setValue(newStatus);
-  return { success: true, id: id, newStatus: newStatus };
+  return { result: "success", success: true, id: id, newStatus: newStatus };
 }
 
 /**
@@ -229,7 +286,7 @@ function addLeadComment(id, commentText, author) {
   var sheet = getTargetSheet();
   var row = findRowById(sheet, id);
   if (row === -1) {
-    return { success: false, error: "Lead no encontrado" };
+    return { result: "error", success: false, error: "Lead no encontrado" };
   }
   
   var currentVal = sheet.getRange(row, 9).getValue().toString();
@@ -241,6 +298,7 @@ function addLeadComment(id, commentText, author) {
   sheet.getRange(row, 9).setValue(updatedVal);
   
   return {
+    result: "success",
     success: true,
     id: id,
     comments: parseComments(updatedVal)
@@ -254,7 +312,7 @@ function updateLeadDetails(id, leadData) {
   var sheet = getTargetSheet();
   var row = findRowById(sheet, id);
   if (row === -1) {
-    return { success: false, error: "Lead no encontrado" };
+    return { result: "error", success: false, error: "Lead no encontrado" };
   }
   
   if (leadData.name !== undefined) sheet.getRange(row, 2).setValue(leadData.name);
@@ -266,7 +324,7 @@ function updateLeadDetails(id, leadData) {
   if (leadData.status !== undefined) sheet.getRange(row, 8).setValue(leadData.status);
   if (leadData.priority !== undefined) sheet.getRange(row, 10).setValue(leadData.priority);
   
-  return { success: true, id: id, message: "Lead actualizado con éxito" };
+  return { result: "success", success: true, id: id, message: "Lead actualizado con éxito" };
 }
 
 /**
@@ -276,11 +334,11 @@ function deleteLeadById(id) {
   var sheet = getTargetSheet();
   var row = findRowById(sheet, id);
   if (row === -1) {
-    return { success: false, error: "Lead no encontrado" };
+    return { result: "error", success: false, error: "Lead no encontrado" };
   }
   
   sheet.deleteRow(row);
-  return { success: true, id: id, message: "Lead eliminado" };
+  return { result: "success", success: true, id: id, message: "Lead eliminado" };
 }
 
 /**
@@ -297,7 +355,6 @@ function findRowById(sheet, id) {
     }
   }
   
-  // Si no se encuentra por ID, intentar buscar si el id es un número de fila
   if (!isNaN(id) && id >= 2 && id <= lastRow) {
     return parseInt(id, 10);
   }
@@ -306,7 +363,7 @@ function findRowById(sheet, id) {
 }
 
 /**
- * Parsea el texto de comentarios a un array de objetos
+ * Parsea comentarios
  */
 function parseComments(rawComments) {
   if (!rawComments) return [];
