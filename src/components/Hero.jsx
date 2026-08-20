@@ -9,11 +9,20 @@ export default function Hero() {
       overflow: 'hidden',
       position: 'relative'
     }}>
+      {/* Imágenes de fondo sutiles con cross-fade animado en la zona izquierda */}
+      <div className="hero-ambient-container" aria-hidden="true">
+        <div className="hero-ambient-img hero-ambient-img-1" />
+        <div className="hero-ambient-img hero-ambient-img-2" />
+        <div className="hero-ambient-img hero-ambient-img-3" />
+      </div>
+
       <div className="container hero-grid" style={{
         display: 'grid',
         gridTemplateColumns: '1fr',
         gap: '48px',
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'relative',
+        zIndex: 1
       }}>
         
         {/* Text Area */}

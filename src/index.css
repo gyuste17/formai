@@ -218,15 +218,16 @@ button, input, select, textarea {
   background-position: center 30%;
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.13;
+  opacity: 0.22;
   pointer-events: none;
   z-index: 0;
   transition: opacity var(--transition-normal);
+  filter: saturate(1.1);
 }
 
 [data-theme="dark"] .section-parallax-bg::before {
-  opacity: 0.09;
-  filter: brightness(0.85) contrast(1.15);
+  opacity: 0.15;
+  filter: brightness(0.9) contrast(1.15) saturate(1.1);
 }
 
 /* Desvanecido (faded) en los bordes superior e inferior para integración natural */
@@ -240,8 +241,8 @@ button, input, select, textarea {
   background: linear-gradient(
     to bottom,
     var(--bg-primary) 0%,
-    transparent 12%,
-    transparent 88%,
+    transparent 14%,
+    transparent 86%,
     var(--bg-primary) 100%
   );
   pointer-events: none;
@@ -257,6 +258,78 @@ button, input, select, textarea {
   .section-parallax-bg::before {
     background-attachment: scroll;
   }
+}
+
+/* Hero ambient background images (left side, fading cross-fade) */
+.hero-ambient-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 65%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  -webkit-mask-image: radial-gradient(ellipse at 25% 45%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
+  mask-image: radial-gradient(ellipse at 25% 45%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
+}
+
+.hero-ambient-img {
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  background-size: cover;
+  background-position: center left;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: heroCrossFade 18s infinite ease-in-out;
+  will-change: opacity, transform;
+}
+
+.hero-ambient-img-1 {
+  background-image: url('/images/office-2360063_1280.webp');
+  animation-delay: 0s;
+}
+
+.hero-ambient-img-2 {
+  background-image: url('/images/student-849828_1280.webp');
+  animation-delay: 6s;
+}
+
+.hero-ambient-img-3 {
+  background-image: url('/images/entrepreneur-593371_1280.webp');
+  animation-delay: 12s;
+}
+
+@keyframes heroCrossFade {
+  0% {
+    opacity: 0;
+    transform: scale(1.01) translate(0, 0);
+  }
+  6% {
+    opacity: 0.18;
+  }
+  28% {
+    opacity: 0.18;
+    transform: scale(1.05) translate(8px, -4px);
+  }
+  35% {
+    opacity: 0;
+    transform: scale(1.07) translate(12px, -6px);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+[data-theme="dark"] .hero-ambient-img {
+  filter: brightness(0.85) contrast(1.15);
+}
+
+[data-theme="dark"] .hero-ambient-container {
+  opacity: 0.8;
 }
 
 /* Badge styling */
