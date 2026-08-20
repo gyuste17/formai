@@ -28,12 +28,13 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
               ? '/logos/formAI/3-removebg-preview.webp'
               : '/logos/formAI/1-removebg-preview.webp'}
             alt="FormAI"
-            width="220"
-            height="76"
+            width="264"
+            height="92"
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            style={{ height: '76px', width: 'auto', objectFit: 'contain' }}
+            className="navbar-logo"
+            style={{ height: '92px', width: 'auto', objectFit: 'contain' }}
           />
         </a>
 
@@ -186,6 +187,17 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
 
       {/* Add CSS injection for desktop menu responsiveness in styles */}
       <style>{`
+        .navbar-logo {
+          height: 92px;
+          width: auto;
+          object-fit: contain;
+          transition: height var(--transition-fast);
+        }
+        @media (max-width: 768px) {
+          .navbar-logo {
+            height: 76px !important;
+          }
+        }
         @media (min-width: 769px) {
           .desktop-menu { display: flex !important; }
           .mobile-toggle-area { display: none !important; }

@@ -22,11 +22,11 @@ export default function Footer({ onOpenCatalogModal }) {
             <img
               src="/logos/formAI/1-removebg-preview.webp"
               alt="FormAI"
-              width="160"
-              height="56"
+              width="195"
+              height="68"
               loading="lazy"
               decoding="async"
-              style={{ height: '56px', width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }}
+              style={{ height: '68px', width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }}
             />
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>
               Formación Bonificada en Digitalización para Empresas. Llevamos más de una década impulsando la productividad de equipos en toda España a través de capacitación práctica y bonificable al 100%.
