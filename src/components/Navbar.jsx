@@ -21,19 +21,17 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
         alignItems: 'center'
       }}>
         {/* Logo */}
-        <a href="#" style={{ display: 'flex', alignItems: 'center' }} aria-label="FormAI - Inicio">
+        <a href="#" style={{ display: 'flex', alignItems: 'center', margin: 0, padding: 0 }} aria-label="FormAI - Inicio">
           <img
             src={theme === 'dark'
               ? '/logos/formAI/3-removebg-preview-trimmed.webp'
               : '/logos/formAI/1-removebg-preview-trimmed.webp'}
             alt="FormAI"
-            width="240"
-            height="134"
             loading="eager"
             fetchPriority="high"
             decoding="async"
             className="navbar-logo"
-            style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
+            style={{ width: 'auto', objectFit: 'contain', display: 'block' }}
           />
         </a>
 
@@ -187,28 +185,36 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
       {/* Add CSS injection for desktop menu responsiveness in styles */}
       <style>{`
         .navbar-container {
-          height: 80px;
+          height: 64px;
         }
         .navbar-logo {
-          height: 64px;
+          height: 48px;
           width: auto;
           object-fit: contain;
+          display: block;
           transition: height var(--transition-fast);
         }
         @media (max-width: 768px) {
           .navbar-container {
-            height: 64px !important;
-            padding-left: 16px !important;
-            padding-right: 16px !important;
+            height: 48px !important;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+            margin: 0 !important;
           }
           .navbar-logo {
-            height: 48px !important;
+            height: 38px !important;
+            max-height: 38px !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
           .mobile-menu-panel {
-            top: 64px !important;
+            top: 48px !important;
           }
           .mobile-toggle-area {
-            gap: 12px !important;
+            gap: 4px !important;
+          }
+          .mobile-toggle-area button {
+            padding: 6px !important;
           }
         }
         @media (min-width: 769px) {

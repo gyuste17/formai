@@ -4,7 +4,7 @@ import ToolsRotator from './ToolsRotator';
 
 export default function Hero({ onOpenCatalogModal }) {
   return (
-    <section className="section-padding" style={{
+    <section className="hero-section" style={{
       background: 'radial-gradient(circle at 80% 20%, var(--accent-primary-light) 0%, transparent 50%)',
       overflow: 'hidden',
       position: 'relative'
@@ -239,6 +239,14 @@ export default function Hero({ onOpenCatalogModal }) {
       </div>
 
       <style>{`
+        .hero-section {
+          padding: 80px 0;
+        }
+        @media (max-width: 768px) {
+          .hero-section {
+            padding: 24px 0 48px 0 !important;
+          }
+        }
         @media (min-width: 992px) {
           .hero-grid {
             grid-template-columns: 1.2fr 0.8fr !important;
