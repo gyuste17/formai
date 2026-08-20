@@ -72,6 +72,13 @@ const INITIAL_MOCK_LEADS = [
 ];
 
 export default function LeadsManager({ onClose }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem('formai_crm_auth') === 'true' || localStorage.getItem('formai_crm_remember') === 'true';
+  });
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+
   const [leads, setLeads] = useState(() => {
     const saved = localStorage.getItem('formai_crm_leads');
     return saved ? JSON.parse(saved) : INITIAL_MOCK_LEADS;
@@ -98,16 +105,45 @@ export default function LeadsManager({ onClose }) {
     priority: 'Media'
   });
 
+  // Auto-sync when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchFromGoogleScript();
+    }
+  }, [isAuthenticated]);
+
   // Save to local storage on changes
   useEffect(() => {
     localStorage.setItem('formai_crm_leads', JSON.stringify(leads));
   }, [leads]);
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const cleanPin = pinInput.trim().toLowerCase();
+    // Claves de acceso válidas
+    if (cleanPin === 'formai' || cleanPin === '1234' || cleanPin === '2026' || cleanPin === 'admin' || cleanPin === 'gyuste') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('formai_crm_auth', 'true');
+      if (rememberMe) {
+        localStorage.setItem('formai_crm_remember', 'true');
+      }
+      setPinError('');
+    } else {
+      setPinError('PIN o contraseña incorrecta');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('formai_crm_auth');
+    localStorage.removeItem('formai_crm_remember');
+    if (onClose) onClose();
+  };
+
   // Sync with Google Apps Script
   const fetchFromGoogleScript = async () => {
     setIsRefreshing(true);
     try {
-      // Intentar obtener de Google Apps Script si está configurado
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbxkr3IiqKFK5IIRDc-keYnjNR_yqmtPIAfRN56I2QBNvU6vFfX-40Uv2PYjgNt1pDMm/exec?action=getLeads';
       const res = await fetch(scriptUrl);
       const data = await res.json();
@@ -282,6 +318,120 @@ export default function LeadsManager({ onClose }) {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div style={{
+        minHeight: '80vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px',
+        backgroundColor: 'var(--bg-primary)'
+      }}>
+        <div className="glass-card" style={{
+          maxWidth: '420px',
+          width: '100%',
+          padding: '36px 30px',
+          borderRadius: 'var(--border-radius-lg)',
+          border: '1px solid var(--border-color)',
+          textAlign: 'center',
+          boxShadow: 'var(--shadow-xl)',
+          animation: 'fadeIn 0.3s ease'
+        }}>
+          <div style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '16px',
+            background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-ai))',
+            color: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 20px auto',
+            boxShadow: 'var(--shadow-md)'
+          }}>
+            <Lock size={26} />
+          </div>
+
+          <h2 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '8px', fontFamily: 'var(--font-display)' }}>
+            Panel de Leads FormAI
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '24px', lineHeight: 1.5 }}>
+            Acceso privado para la gestión de contactos y clientes.
+          </p>
+
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <input
+                type="password"
+                placeholder="Introduce tu clave o PIN"
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value)}
+                autoFocus
+                className="form-input"
+                style={{
+                  textAlign: 'center',
+                  fontSize: '1.1rem',
+                  letterSpacing: '2px',
+                  padding: '12px 16px'
+                }}
+              />
+              {pinError && (
+                <div style={{ color: '#ef4444', fontSize: '0.82rem', marginTop: '8px', fontWeight: '600' }}>
+                  {pinError}
+                </div>
+              )}
+            </div>
+
+            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '0.82rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                style={{ accentColor: 'var(--accent-primary)' }}
+              />
+              Recordar acceso en este navegador
+            </label>
+
+            <button
+              type="submit"
+              style={{
+                backgroundColor: 'var(--accent-primary)',
+                color: '#fff',
+                border: 'none',
+                padding: '12px',
+                borderRadius: 'var(--border-radius-sm)',
+                fontWeight: '700',
+                fontSize: '0.95rem',
+                cursor: 'pointer',
+                boxShadow: 'var(--shadow-md)'
+              }}
+            >
+              Desbloquear CRM
+            </button>
+
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  marginTop: '4px'
+                }}
+              >
+                Volver a la web principal
+              </button>
+            )}
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -372,6 +522,27 @@ export default function LeadsManager({ onClose }) {
               }}
             >
               <Plus size={16} /> Nuevo Lead
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="btn-secondary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '9px 14px',
+                borderRadius: 'var(--border-radius-sm)',
+                fontWeight: '600',
+                fontSize: '0.85rem',
+                border: '1px solid var(--border-color)',
+                cursor: 'pointer',
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--text-muted)'
+              }}
+              title="Cerrar sesión y bloquear panel"
+            >
+              <Lock size={14} /> Bloquear
             </button>
 
             {onClose && (

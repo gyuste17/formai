@@ -68,12 +68,12 @@ export default function Footer() {
         }}>
           <span>&copy; {currentYear} FormAI. Todos los derechos reservados.</span>
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <a href="#leads" className="footer-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', opacity: 0.8 }}>
-              <span>🔐 Acceso CRM</span>
+            <a href="#" className="footer-link">Política de Privacidad</a>
+            <a href="#" className="footer-link">Aviso Legal</a>
+            <a href="#" className="footer-link">Política de Cookies</a>
+            <a href="#leads" className="footer-link" style={{ opacity: 0.4, fontSize: '0.8rem' }} title="Acceso Gestión">
+              🔐
             </a>
-            <a href="/politica-privacidad.html" className="footer-link">Política de Privacidad</a>
-            <a href="/aviso-legal.html" className="footer-link">Aviso Legal</a>
-            <a href="/politica-cookies.html" className="footer-link">Política de Cookies</a>
           </div>
         </div>
       </div>
