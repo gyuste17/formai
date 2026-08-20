@@ -9,6 +9,8 @@ import Footer from './components/Footer';
 import PartnersCarousel from './components/PartnersCarousel';
 import ClientsReviews from './components/ClientsReviews';
 import LeadsManager from './components/LeadsManager';
+import CatalogSection from './components/CatalogSection';
+import CatalogModal from './components/CatalogModal';
 import { coursesData } from './data/courses';
 
 const CourseModal = lazy(() => import('./components/CourseModal'));
@@ -28,6 +30,7 @@ export default function App() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [preSelectedCourse, setPreSelectedCourse] = useState(null);
   const [preSelectedBudget, setPreSelectedBudget] = useState(null);
+  const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
   const [showLeadsManager, setShowLeadsManager] = useState(() => {
     return typeof window !== 'undefined' && (window.location.hash === '#leads' || window.location.hash === '#admin');
   });
@@ -63,11 +66,11 @@ export default function App() {
 
   return (
     <>
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Navbar theme={theme} toggleTheme={toggleTheme} onOpenCatalogModal={() => setIsCatalogModalOpen(true)} />
 
       <main>
         {/* Hero — incluye ToolsRotator visible sin scroll */}
-        <Hero />
+        <Hero onOpenCatalogModal={() => setIsCatalogModalOpen(true)} />
 
         {/* Carrusel de colaboradores */}
         <PartnersCarousel theme={theme} />
@@ -97,6 +100,9 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        {/* Sección Destacada de Descarga de Catálogo 2026 */}
+        <CatalogSection onOpenCatalogModal={() => setIsCatalogModalOpen(true)} />
 
         {/* Cómo funciona FUNDAE */}
         <section id="como-funciona" className="section-padding section-parallax-bg">
@@ -154,7 +160,13 @@ export default function App() {
         </section>
       </main>
 
-      <Footer />
+      <Footer onOpenCatalogModal={() => setIsCatalogModalOpen(true)} />
+
+      {/* Pop-up Modal de Descarga de Catálogo 2026 */}
+      <CatalogModal 
+        isOpen={isCatalogModalOpen} 
+        onClose={() => setIsCatalogModalOpen(false)} 
+      />
 
       {/* Modal de temario diferido */}
       {selectedCourse && (

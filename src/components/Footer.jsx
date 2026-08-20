@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Footer() {
+export default function Footer({ onOpenCatalogModal }) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -35,13 +35,26 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cursos</h3>
+            <h3 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Cursos & Catálogo</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
               <a href="#cursos" className="footer-link">Excel para Empresas</a>
               <a href="#cursos" className="footer-link">Power BI Profesional</a>
               <a href="#cursos" className="footer-link">ChatGPT e Inteligencia Artificial</a>
               <a href="#cursos" className="footer-link">Copilot 365</a>
               <a href="#cursos" className="footer-link">Power Automate</a>
+              <a 
+                href="#catalogo" 
+                onClick={(e) => {
+                  if (onOpenCatalogModal) {
+                    e.preventDefault();
+                    onOpenCatalogModal();
+                  }
+                }} 
+                className="footer-link" 
+                style={{ color: 'var(--accent-primary)', fontWeight: '600' }}
+              >
+                📄 Descargar Catálogo 2026 (PDF)
+              </a>
             </div>
           </div>
 

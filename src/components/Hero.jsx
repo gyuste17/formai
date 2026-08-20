@@ -1,8 +1,8 @@
 import React from 'react';
-import { Award, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { Award, ArrowRight, ShieldCheck, Zap, Download } from 'lucide-react';
 import ToolsRotator from './ToolsRotator';
 
-export default function Hero() {
+export default function Hero({ onOpenCatalogModal }) {
   return (
     <section className="section-padding" style={{
       background: 'radial-gradient(circle at 80% 20%, var(--accent-primary-light) 0%, transparent 50%)',
@@ -81,13 +81,14 @@ export default function Hero() {
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '16px',
-            marginTop: '16px'
+            gap: '14px',
+            marginTop: '16px',
+            alignItems: 'center'
           }}>
             <a href="#cursos" style={{
               backgroundColor: 'var(--accent-primary)',
               color: '#ffffff',
-              padding: '16px 32px',
+              padding: '16px 28px',
               borderRadius: 'var(--border-radius-md)',
               fontWeight: '600',
               fontSize: '1rem',
@@ -107,7 +108,7 @@ export default function Hero() {
               backgroundColor: 'var(--bg-secondary)',
               color: 'var(--text-primary)',
               border: '1px solid var(--border-color)',
-              padding: '16px 32px',
+              padding: '16px 28px',
               borderRadius: 'var(--border-radius-md)',
               fontWeight: '600',
               fontSize: '1rem',
@@ -121,6 +122,30 @@ export default function Hero() {
             >
               Calcular Bonificación
             </a>
+
+            <button
+              type="button"
+              onClick={onOpenCatalogModal}
+              style={{
+                backgroundColor: 'var(--bg-primary)',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border-color)',
+                padding: '16px 24px',
+                borderRadius: 'var(--border-radius-md)',
+                fontWeight: '600',
+                fontSize: '0.95rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all var(--transition-fast)'
+              }}
+              className="btn-catalog-trigger"
+            >
+              <Download size={18} style={{ color: 'var(--accent-primary)' }} />
+              Descargar Catálogo 2026
+            </button>
           </div>
         </div>
 
