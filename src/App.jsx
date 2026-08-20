@@ -14,6 +14,7 @@ import CatalogModal from './components/CatalogModal';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { coursesData } from './data/courses';
 import { useCorporateHeaderColor } from './hooks/useCorporateHeaderColor';
+import CookieBanner from './components/CookieBanner';
 
 const CourseModal = lazy(() => import('./components/CourseModal'));
 
@@ -248,6 +249,8 @@ export default function App() {
           />
         </Suspense>
       )}
+
+      <CookieBanner />
 
       <style>{`
         @keyframes slideUp {
