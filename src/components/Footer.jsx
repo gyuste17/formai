@@ -24,7 +24,7 @@ export default function Footer({ onOpenCatalogModal }) {
               alt="FormAI"
               loading="lazy"
               decoding="async"
-              style={{ height: '56px', width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }}
+              style={{ height: '66px', width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }}
             />
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>
               Formación Bonificada en Digitalización para Empresas. Llevamos más de una década impulsando la productividad de equipos en toda España a través de capacitación práctica y bonificable al 100%.

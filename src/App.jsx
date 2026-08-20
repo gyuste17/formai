@@ -106,14 +106,12 @@ export default function App() {
                 ))}
               </div>
 
-              {/* Botón y degradado para expandir / colapsar el catálogo */}
+              {/* Botón para expandir / colapsar el catálogo */}
               <div style={{
                 position: 'relative',
                 textAlign: 'center',
-                marginTop: isCatalogExpanded ? '48px' : '-60px',
-                paddingTop: isCatalogExpanded ? '0' : '100px',
-                background: isCatalogExpanded ? 'none' : 'linear-gradient(to bottom, rgba(248, 250, 252, 0) 0%, var(--bg-primary) 70%)',
-                zIndex: 10,
+                marginTop: '40px',
+                zIndex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',

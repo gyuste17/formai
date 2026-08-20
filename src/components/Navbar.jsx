@@ -185,28 +185,28 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
       {/* Add CSS injection for desktop menu responsiveness in styles */}
       <style>{`
         .navbar-container {
-          height: 68px;
+          height: 80px;
         }
         .navbar-logo {
-          height: 48px;
+          height: 64px;
           width: auto;
           object-fit: contain;
           transition: height var(--transition-fast);
         }
         @media (max-width: 768px) {
           .navbar-container {
-            height: 56px !important;
+            height: 64px !important;
             padding-left: 16px !important;
             padding-right: 16px !important;
           }
           .navbar-logo {
-            height: 38px !important;
+            height: 48px !important;
           }
           .mobile-menu-panel {
-            top: 56px !important;
+            top: 64px !important;
           }
           .mobile-toggle-area {
-            gap: 8px !important;
+            gap: 12px !important;
           }
         }
         @media (min-width: 769px) {
