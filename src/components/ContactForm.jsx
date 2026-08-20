@@ -53,7 +53,7 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
       return;
     }
 
-    fetch('https://script.google.com/macros/s/AKfycbwJCfmG8Gn-GpzVaVEnBng-_Qq_aCZWOIP3BkzpCCzVmhVb8a1zrAXw6EeP22HTBycs/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxkr3IiqKFK5IIRDc-keYnjNR_yqmtPIAfRN56I2QBNvU6vFfX-40Uv2PYjgNt1pDMm/exec', {
       method: 'POST',
       mode: 'no-cors',
       headers: {
