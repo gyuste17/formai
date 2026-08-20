@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 const partners = [
   {
@@ -9,67 +9,40 @@ const partners = [
   },
   {
     name: 'Imagina Formación',
-    logo: '/logos/colaboradores/imagina.png',
+    logo: '/logos/colaboradores/imagina.webp',
     url: 'https://imaginaformacion.com/',
     description: 'Formación especializada en tecnología'
   },
   {
     name: 'Prologue Formación',
-    logo: '/logos/colaboradores/logo_prologue_formacion.png',
+    logo: '/logos/colaboradores/logo_prologue_formacion.webp',
     url: 'https://www.prologueformacion.com/',
     description: 'Formación profesional bonificada'
   },
   {
     name: 'KeepCoding',
-    logo: '/logos/colaboradores/keepcoding.jpg',
+    logo: '/logos/colaboradores/keepcoding.webp',
     url: 'https://keepcoding.io/',
     description: 'Bootcamps y formación tecnológica'
   },
   {
     name: 'Formación MECOS',
-    logo: '/logos/colaboradores/mecos.jpg',
+    logo: '/logos/colaboradores/mecos.webp',
     url: 'https://www.serviciosmecos.com/',
     description: 'Formación bonificada y continua'
   },
   {
     name: 'Virensis',
-    logo: '/logos/colaboradores/virensis.png',
+    logo: '/logos/colaboradores/virensis.webp',
     url: 'https://www.virensis.com/',
     description: 'Formación y Consultoría'
   },
 ];
 
-// Duplicamos para el efecto de scroll infinito
+// Duplicamos para el efecto de scroll infinito continuo
 const allPartners = [...partners, ...partners];
 
 export default function PartnersCarousel({ theme }) {
-  const trackRef = useRef(null);
-  const animRef = useRef(null);
-  const posRef = useRef(0);
-  const pausedRef = useRef(false);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const speed = 0.5; // px por frame
-    const singleWidth = track.scrollWidth / 2;
-
-    const step = () => {
-      if (!pausedRef.current) {
-        posRef.current += speed;
-        if (posRef.current >= singleWidth) {
-          posRef.current = 0;
-        }
-        track.style.transform = `translateX(-${posRef.current}px)`;
-      }
-      animRef.current = requestAnimationFrame(step);
-    };
-
-    animRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(animRef.current);
-  }, []);
-
   return (
     <section style={{
       padding: '48px 0',
@@ -98,24 +71,14 @@ export default function PartnersCarousel({ theme }) {
         </p>
       </div>
 
-      {/* Carrusel con máscara de fade en los bordes */}
+      {/* Carrusel con máscara de fade en los bordes y animación CSS acelerada por hardware */}
       <div style={{
         position: 'relative',
         overflow: 'hidden',
         maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
         WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
       }}>
-        <div
-          ref={trackRef}
-          style={{
-            display: 'flex',
-            gap: '40px',
-            width: 'max-content',
-            willChange: 'transform',
-          }}
-          onMouseEnter={() => { pausedRef.current = true; }}
-          onMouseLeave={() => { pausedRef.current = false; }}
-        >
+        <div className="partners-track">
           {allPartners.map((partner, i) => (
             <a
               key={i}
@@ -123,6 +86,7 @@ export default function PartnersCarousel({ theme }) {
               target="_blank"
               rel="noopener noreferrer"
               title={partner.description}
+              aria-label={`Partner colaborador: ${partner.name}`}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -142,6 +106,10 @@ export default function PartnersCarousel({ theme }) {
               <img
                 src={partner.logo}
                 alt={`Logo ${partner.name}`}
+                width="130"
+                height="48"
+                loading="lazy"
+                decoding="async"
                 style={{
                   maxHeight: '48px',
                   maxWidth: '130px',
@@ -159,6 +127,20 @@ export default function PartnersCarousel({ theme }) {
       </div>
 
       <style>{`
+        @keyframes partnersMarquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .partners-track {
+          display: flex;
+          gap: 40px;
+          width: max-content;
+          animation: partnersMarquee 30s linear infinite;
+          will-change: transform;
+        }
+        .partners-track:hover {
+          animation-play-state: paused;
+        }
         .partner-card:hover {
           opacity: 1 !important;
           ${theme === 'dark' ? 'transform: translateY(-2px); box-shadow: var(--shadow-md);' : ''}
@@ -170,3 +152,4 @@ export default function PartnersCarousel({ theme }) {
     </section>
   );
 }
+

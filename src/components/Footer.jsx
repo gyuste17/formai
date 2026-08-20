@@ -20,8 +20,12 @@ export default function Footer() {
           {/* Logo & Description */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <img
-              src="/logos/formAI/1-removebg-preview.png"
-              alt="FormAI"
+              src="/logos/formAI/1-removebg-preview.webp"
+              alt="FormAI – Cursos Bonificados FUNDAE"
+              width="160"
+              height="56"
+              loading="lazy"
+              decoding="async"
               style={{ height: '56px', width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }}
             />
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const tools = [
-  { name: 'Microsoft Excel',   file: 'Excel.png',             courseId: 'excel',          size: 52 },
-  { name: 'Power BI',          file: 'Power BI.png',          courseId: 'powerbi',        size: 64 },
-  { name: 'ChatGPT',           file: 'ChatGPT.png',           courseId: 'chatgpt',        size: 52 },
-  { name: 'Microsoft Copilot', file: 'Copilot.png',           courseId: 'copilot',        size: 52 },
-  { name: 'Power Automate',    file: 'Automate.png',          courseId: 'powerautomate',  size: 52 },
-  { name: 'Looker Studio',     file: 'Google Data Studio.png',courseId: 'lookerstudio',   size: 52 },
-  { name: 'Google Workspace',  file: 'GW.png',                courseId: 'googleworkspace',size: 64 },
-  { name: 'Tableau',           file: 'Tableau.png',           courseId: 'tableau',        size: 52 },
-  { name: 'Google Analytics',  file: 'GA4.png',               courseId: 'lookerstudio',   size: 64 },
-  { name: 'Google Gemini',     file: 'Gemini.png',            courseId: 'googleworkspace',size: 52 },
+  { name: 'Microsoft Excel',   file: 'Excel.webp',             courseId: 'excel',          size: 52 },
+  { name: 'Power BI',          file: 'Power BI.webp',          courseId: 'powerbi',        size: 64 },
+  { name: 'ChatGPT',           file: 'ChatGPT.webp',           courseId: 'chatgpt',        size: 52 },
+  { name: 'Microsoft Copilot', file: 'Copilot.webp',           courseId: 'copilot',        size: 52 },
+  { name: 'Power Automate',    file: 'Automate.webp',          courseId: 'powerautomate',  size: 52 },
+  { name: 'Looker Studio',     file: 'Google Data Studio.webp',courseId: 'lookerstudio',   size: 52 },
+  { name: 'Google Workspace',  file: 'GW.webp',                courseId: 'googleworkspace',size: 64 },
+  { name: 'Tableau',           file: 'Tableau.webp',           courseId: 'tableau',        size: 52 },
+  { name: 'Google Analytics',  file: 'GA4.webp',               courseId: 'lookerstudio',   size: 64 },
+  { name: 'Google Gemini',     file: 'Gemini.webp',            courseId: 'googleworkspace',size: 52 },
 ];
 
 // Mostramos 3 slots, cada uno rota independientemente
@@ -65,6 +65,7 @@ export default function ToolsRotator() {
             key={slot}
             href="#cursos"
             title={`Ver curso de ${tool.name}`}
+            aria-label={`Ver curso de ${tool.name}`}
             onClick={e => {
               e.preventDefault();
               document.getElementById('cursos')?.scrollIntoView({ behavior: 'smooth' });
@@ -91,6 +92,10 @@ export default function ToolsRotator() {
             <img
               src={`/logos/herramientas/${tool.file}`}
               alt={tool.name}
+              width={tool.size}
+              height={tool.size}
+              loading="eager"
+              decoding="async"
               style={{
                 width: `${tool.size}px`,
                 height: `${tool.size}px`,

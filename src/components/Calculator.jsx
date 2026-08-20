@@ -89,9 +89,9 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
           {/* Input 1: Employees in Payroll */}
           <div className="slider-container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <span className="form-label" style={{ margin: 0, fontWeight: '600' }}>
+              <label htmlFor="calc-employees" className="form-label" style={{ margin: 0, fontWeight: '600' }}>
                 Plantilla Media (Nº Empleados)
-              </span>
+              </label>
               <span style={{
                 backgroundColor: 'var(--accent-primary-light)',
                 color: 'var(--accent-primary)',
@@ -104,10 +104,12 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
               </span>
             </div>
             <input 
+              id="calc-employees"
               type="range" 
               min="1" 
               max="150" 
               value={employees} 
+              aria-label="Número de empleados en plantilla"
               onChange={(e) => setEmployees(parseInt(e.target.value))}
               className="slider-input"
             />
@@ -122,9 +124,9 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
           {/* Input 2: Number of Students */}
           <div className="slider-container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <span className="form-label" style={{ margin: 0, fontWeight: '600' }}>
+              <label htmlFor="calc-students" className="form-label" style={{ margin: 0, fontWeight: '600' }}>
                 Alumnos en el Curso
-              </span>
+              </label>
               <span style={{
                 backgroundColor: 'var(--accent-primary-light)',
                 color: 'var(--accent-primary)',
@@ -137,10 +139,12 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
               </span>
             </div>
             <input 
+              id="calc-students"
               type="range" 
               min="1" 
               max="40" 
               value={students} 
+              aria-label="Número de alumnos en el curso"
               onChange={(e) => setStudents(parseInt(e.target.value))}
               className="slider-input"
             />
@@ -155,9 +159,9 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
           {/* Input 3: Duration of Course */}
           <div className="slider-container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <span className="form-label" style={{ margin: 0, fontWeight: '600' }}>
+              <label htmlFor="calc-hours" className="form-label" style={{ margin: 0, fontWeight: '600' }}>
                 Horas del Curso
-              </span>
+              </label>
               <span style={{
                 backgroundColor: 'var(--accent-primary-light)',
                 color: 'var(--accent-primary)',
@@ -170,10 +174,12 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
               </span>
             </div>
             <input 
+              id="calc-hours"
               type="range" 
               min="5" 
               max="40" 
               value={hours} 
+              aria-label="Horas de duración del curso"
               onChange={(e) => setHours(parseInt(e.target.value))}
               className="slider-input"
             />
@@ -190,6 +196,8 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
             <span className="form-label" style={{ fontWeight: '600', marginBottom: '10px' }}>Tipo de curso</span>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               <button 
+                type="button"
+                aria-pressed={modality === 'superior'}
                 onClick={() => setModality('superior')}
                 style={{
                   padding: '12px 16px',
@@ -208,6 +216,8 @@ export default function CalculatorComponent({ onSelectCalculatorBudget }) {
                 <div style={{ fontSize: '0.75rem', fontWeight: '500', marginTop: '2px', opacity: 0.8 }}>13 €/hora</div>
               </button>
               <button 
+                type="button"
+                aria-pressed={modality === 'estandar'}
                 onClick={() => setModality('estandar')}
                 style={{
                   padding: '12px 16px',

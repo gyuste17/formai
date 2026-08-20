@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import CourseCard from './components/CourseCard';
-import CourseModal from './components/CourseModal';
 import Calculator from './components/Calculator';
 import FundaeInfo from './components/FundaeInfo';
 import ContactForm from './components/ContactForm';
@@ -10,6 +9,8 @@ import Footer from './components/Footer';
 import PartnersCarousel from './components/PartnersCarousel';
 import ClientsReviews from './components/ClientsReviews';
 import { coursesData } from './data/courses';
+
+const CourseModal = lazy(() => import('./components/CourseModal'));
 
 // Tema por hora: 06–18 → claro, 18–06 → oscuro
 function getDefaultTheme() {
@@ -129,18 +130,20 @@ export default function App() {
 
       <Footer />
 
-      {/* Modal de temario */}
+      {/* Modal de temario diferido */}
       {selectedCourse && (
-        <CourseModal 
-          course={selectedCourse} 
-          onClose={() => setSelectedCourse(null)} 
-          onSelectCourse={(course) => {
-            setSelectedCourse(null);
-            setPreSelectedBudget(null);
-            setPreSelectedCourse(course);
-            document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
+        <Suspense fallback={null}>
+          <CourseModal 
+            course={selectedCourse} 
+            onClose={() => setSelectedCourse(null)} 
+            onSelectCourse={(course) => {
+              setSelectedCourse(null);
+              setPreSelectedBudget(null);
+              setPreSelectedCourse(course);
+              document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          />
+        </Suspense>
       )}
 
       <style>{`

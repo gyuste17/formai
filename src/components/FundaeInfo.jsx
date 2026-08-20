@@ -42,22 +42,9 @@ export default function FundaeInfo() {
   ];
 
   return (
-    <section id="como-funciona" className="section-padding" style={{ backgroundColor: 'var(--bg-secondary)', transition: 'background-color var(--transition-normal)' }}>
-      <div className="container">
-        
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Paso a Paso</span>
-          <h2 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '16px', letterSpacing: '-0.02em' }}>
-            ¿Cómo funciona la formación bonificada?
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', maxWidth: '700px', margin: '0 auto', fontSize: '1.05rem' }}>
-            Una formación bonificada con FUNDAE permite financiar cursos usando las cotizaciones a la Seguridad Social de tu empresa. La empresa adelanta el pago y lo recupera íntegramente como bonificación en los seguros sociales del mes siguiente.
-          </p>
-        </div>
-
-        {/* Steps Grid */}
-        <div style={{
+    <div>
+      {/* Steps Grid */}
+      <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '32px',
@@ -167,16 +154,14 @@ export default function FundaeInfo() {
           </div>
         </div>
 
-      </div>
-
-      <style>{`
-        @media (min-width: 992px) {
-          .benefits-grid {
-            grid-template-columns: 1fr 1fr !important;
-            gap: 64px !important;
+        <style>{`
+          @media (min-width: 992px) {
+            .benefits-grid {
+              grid-template-columns: 1fr 1fr !important;
+              gap: 64px !important;
+            }
           }
-        }
-      `}</style>
-    </section>
-  );
+        `}</style>
+      </div>
+    );
 }

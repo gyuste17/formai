@@ -1,40 +1,64 @@
 import React from 'react';
-import * as Icons from 'lucide-react';
+import {
+  FileSpreadsheet,
+  BarChart3,
+  Sparkles,
+  Bot,
+  RefreshCw,
+  PieChart,
+  Grid,
+  AreaChart,
+  BookOpen,
+  Clock,
+  Sliders
+} from 'lucide-react';
+
+const iconMap = {
+  FileSpreadsheet,
+  BarChart3,
+  Sparkles,
+  Bot,
+  RefreshCw,
+  PieChart,
+  Grid,
+  AreaChart,
+  BookOpen
+};
 
 const toolLogos = {
-  'Microsoft Excel': 'Excel.png',
-  'Excel': 'Excel.png',
-  'Power Query': 'Excel.png',
-  'Power BI': 'Power BI.png',
-  'Power BI Desktop': 'Power BI.png',
-  'Power BI Service': 'Power BI.png',
-  'DAX': 'Power BI.png',
-  'ChatGPT': 'ChatGPT.png',
-  'Claude': 'ChatGPT.png',
-  'OpenAI GPTs': 'ChatGPT.png',
-  'Midjourney': 'ChatGPT.png',
-  'Microsoft Copilot': 'Copilot.png',
-  'Microsoft 365 (Word, Excel, PPT, Teams, Outlook)': 'Copilot.png',
-  'Power Automate': 'Automate.png',
-  'Power Automate Cloud': 'Automate.png',
-  'Microsoft Forms': 'Copilot.png',
-  'SharePoint': 'GW.png',
-  'OneDrive': 'GW.png',
-  'Looker Studio': 'Google Data Studio.png',
-  'Google Sheets': 'GW.png',
-  'Google Analytics': 'GA4.png',
-  'Google Ads': 'GA4.png',
-  'Google Drive': 'GW.png',
-  'Google Gemini': 'Gemini.png',
-  'Tableau': 'Tableau.png',
-  'Tableau Desktop': 'Tableau.png',
-  'Tableau Prep': 'Tableau.png',
-  'Tableau Cloud': 'Tableau.png',
+  'Microsoft Excel': 'Excel.webp',
+  'Excel': 'Excel.webp',
+  'Power Query': 'Excel.webp',
+  'Power BI': 'Power BI.webp',
+  'Power BI Desktop': 'Power BI.webp',
+  'Power BI Service': 'Power BI.webp',
+  'DAX': 'Power BI.webp',
+  'ChatGPT': 'ChatGPT.webp',
+  'Claude': 'ChatGPT.webp',
+  'OpenAI GPTs': 'ChatGPT.webp',
+  'Midjourney': 'ChatGPT.webp',
+  'Microsoft Copilot': 'Copilot.webp',
+  'Microsoft 365 (Word, Excel, PPT, Teams, Outlook)': 'Copilot.webp',
+  'Power Automate': 'Automate.webp',
+  'Power Automate Cloud': 'Automate.webp',
+  'Microsoft Forms': 'Copilot.webp',
+  'SharePoint': 'GW.webp',
+  'OneDrive': 'GW.webp',
+  'Looker Studio': 'Google Data Studio.webp',
+  'Google Sheets': 'GW.webp',
+  'Google Analytics': 'GA4.webp',
+  'Google Ads': 'GA4.webp',
+  'Google Drive': 'GW.webp',
+  'Google Gemini': 'Gemini.webp',
+  'Tableau': 'Tableau.webp',
+  'Tableau Desktop': 'Tableau.webp',
+  'Tableau Prep': 'Tableau.webp',
+  'Tableau Cloud': 'Tableau.webp',
 };
 
 export default function CourseCard({ course, onViewSyllabus }) {
   // Dynamically resolve icon from name
-  const IconComponent = Icons[course.iconName] || Icons.BookOpen;
+  const IconComponent = iconMap[course.iconName] || BookOpen;
 
   return (
     <div className="glass-card course-card animate-fade-in" style={{
@@ -132,11 +156,11 @@ export default function CourseCard({ course, onViewSyllabus }) {
           color: 'var(--text-muted)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Icons.Clock size={16} />
+            <Clock size={16} />
             <span>Duración: <strong>{course.duration} horas</strong></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Icons.Sliders size={16} />
+            <Sliders size={16} />
             <span>Nivel: {course.level}</span>
           </div>
         </div>
@@ -170,6 +194,10 @@ export default function CourseCard({ course, onViewSyllabus }) {
                   <img
                     src={`/logos/herramientas/${logo}`}
                     alt=""
+                    width="16"
+                    height="16"
+                    loading="lazy"
+                    decoding="async"
                     style={{ width: '16px', height: '16px', objectFit: 'contain' }}
                   />
                 )}
@@ -201,7 +229,7 @@ export default function CourseCard({ course, onViewSyllabus }) {
           className="course-card-btn"
         >
           Ver Temario Completo
-          <Icons.BookOpen size={16} />
+          <BookOpen size={16} />
         </button>
       </div>
 

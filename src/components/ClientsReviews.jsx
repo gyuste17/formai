@@ -2,10 +2,10 @@ import React from 'react';
 import { Star, ExternalLink } from 'lucide-react';
 
 const clients = [
-  { name: 'Enfoka',  logo: '/logos/clientes/enfoka.png',  url: 'https://www.enfoka.es/' },
-  { name: 'Voronet', logo: '/logos/clientes/voronet.png', url: 'https://www.voronet.org/' },
-  { name: 'AECIM',   logo: '/logos/clientes/Aecim.png',   url: 'https://aecim.org/' },
-  { name: 'Akkodis', logo: '/logos/clientes/Akkodis.png', url: 'https://www.akkodis.com/es' },
+  { name: 'Enfoka',  logo: '/logos/clientes/enfoka.webp',  url: 'https://www.enfoka.es/' },
+  { name: 'Voronet', logo: '/logos/clientes/voronet.webp', url: 'https://www.voronet.org/' },
+  { name: 'AECIM',   logo: '/logos/clientes/Aecim.webp',   url: 'https://aecim.org/' },
+  { name: 'Akkodis', logo: '/logos/clientes/Akkodis.webp', url: 'https://www.akkodis.com/es' },
 ];
 
 // Reseñas reales — puedes sustituirlas por las que aparezcan en Google
@@ -85,6 +85,7 @@ export default function ClientsReviews() {
               target="_blank"
               rel="noopener noreferrer"
               title={client.name}
+              aria-label={`Cliente: ${client.name}`}
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 padding: '20px 40px',
@@ -99,6 +100,10 @@ export default function ClientsReviews() {
               <img
                 src={client.logo}
                 alt={`Logo ${client.name}`}
+                width="140"
+                height="50"
+                loading="lazy"
+                decoding="async"
                 style={{ maxHeight: '50px', maxWidth: '140px', width: 'auto', objectFit: 'contain', opacity: 0.8, transition: 'opacity 0.2s ease' }}
                 className="client-logo"
               />

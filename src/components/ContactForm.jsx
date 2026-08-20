@@ -242,8 +242,9 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="form-row">
                   <div>
-                    <label className="form-label">Nombre y Apellidos *</label>
+                    <label htmlFor="contact-name" className="form-label">Nombre y Apellidos *</label>
                     <input 
+                      id="contact-name"
                       type="text" 
                       name="name" 
                       value={formData.name} 
@@ -251,11 +252,13 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                       placeholder="Tu nombre"
                       className="form-input"
                       required
+                      aria-required="true"
                     />
                   </div>
                   <div>
-                    <label className="form-label">Empresa *</label>
+                    <label htmlFor="contact-company" className="form-label">Empresa *</label>
                     <input 
+                      id="contact-company"
                       type="text" 
                       name="company" 
                       value={formData.company} 
@@ -263,14 +266,16 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                       placeholder="Nombre de la empresa"
                       className="form-input"
                       required
+                      aria-required="true"
                     />
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="form-row">
                   <div>
-                    <label className="form-label">Correo electrónico *</label>
+                    <label htmlFor="contact-email" className="form-label">Correo electrónico *</label>
                     <input 
+                      id="contact-email"
                       type="email" 
                       name="email" 
                       value={formData.email} 
@@ -278,11 +283,13 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                       placeholder="ejemplo@empresa.com"
                       className="form-input"
                       required
+                      aria-required="true"
                     />
                   </div>
                   <div>
-                    <label className="form-label">Teléfono *</label>
+                    <label htmlFor="contact-phone" className="form-label">Teléfono *</label>
                     <input 
+                      id="contact-phone"
                       type="tel" 
                       name="phone" 
                       value={formData.phone} 
@@ -290,13 +297,15 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                       placeholder="600 000 000"
                       className="form-input"
                       required
+                      aria-required="true"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="form-label">Asunto (Opcional)</label>
+                  <label htmlFor="contact-subject" className="form-label">Asunto (Opcional)</label>
                   <input 
+                    id="contact-subject"
                     type="text" 
                     name="subject" 
                     value={formData.subject} 
@@ -307,8 +316,9 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                 </div>
 
                 <div>
-                  <label className="form-label">Mensaje / Comentarios *</label>
+                  <label htmlFor="contact-message" className="form-label">Mensaje / Comentarios *</label>
                   <textarea 
+                    id="contact-message"
                     name="message" 
                     value={formData.message} 
                     onChange={handleChange} 
@@ -316,6 +326,7 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                     className="form-input"
                     style={{ minHeight: '120px', resize: 'vertical' }}
                     required
+                    aria-required="true"
                   />
                 </div>
 

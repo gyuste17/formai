@@ -22,12 +22,17 @@ export default function Navbar({ theme, toggleTheme }) {
         height: '96px'
       }}>
         {/* Logo */}
-        <a href="#" style={{ display: 'flex', alignItems: 'center' }}>
+        <a href="#" style={{ display: 'flex', alignItems: 'center' }} aria-label="FormAI - Inicio">
           <img
             src={theme === 'dark'
-              ? '/logos/formAI/3-removebg-preview.png'
-              : '/logos/formAI/1-removebg-preview.png'}
+              ? '/logos/formAI/3-removebg-preview.webp'
+              : '/logos/formAI/1-removebg-preview.webp'}
             alt="FormAI – Formación Bonificada en Digitalización"
+            width="220"
+            height="76"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             style={{ height: '76px', width: 'auto', objectFit: 'contain' }}
           />
         </a>
@@ -40,7 +45,7 @@ export default function Navbar({ theme, toggleTheme }) {
           <a href="#contacto" className="nav-link">Contacto</a>
           
           {/* Theme Toggle */}
-          <button onClick={toggleTheme} aria-label="Cambiar tema" style={{
+          <button onClick={toggleTheme} aria-label="Cambiar modo claro / oscuro" style={{
             background: 'none',
             border: 'none',
             cursor: 'pointer',
@@ -80,7 +85,7 @@ export default function Navbar({ theme, toggleTheme }) {
 
         {/* Mobile Toggle & Theme Toggle */}
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }} className="mobile-toggle-area">
-          <button onClick={toggleTheme} aria-label="Cambiar tema" style={{
+          <button onClick={toggleTheme} aria-label="Cambiar modo claro / oscuro" style={{
             background: 'none',
             border: 'none',
             cursor: 'pointer',
@@ -92,15 +97,19 @@ export default function Navbar({ theme, toggleTheme }) {
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
           
-          <button onClick={() => setIsOpen(!isOpen)} aria-label="Menú" style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: 'var(--text-primary)',
-            display: 'flex',
-            alignItems: 'center'
-          }}
-          className="hamburger-btn"
+          <button 
+            onClick={() => setIsOpen(!isOpen)} 
+            aria-label="Abrir menú de navegación" 
+            aria-expanded={isOpen}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--text-primary)',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+            className="hamburger-btn"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
