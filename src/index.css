@@ -270,8 +270,8 @@ button, input, select, textarea {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  -webkit-mask-image: radial-gradient(ellipse at 25% 45%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
-  mask-image: radial-gradient(ellipse at 25% 45%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at 25% 45%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.6) 55%, transparent 80%);
+  mask-image: radial-gradient(ellipse at 25% 45%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.6) 55%, transparent 80%);
   transform: translate3d(0, 0, 0);
   contain: strict;
 }
@@ -290,6 +290,7 @@ button, input, select, textarea {
   will-change: opacity, transform;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
+  filter: saturate(1.08);
 }
 
 .hero-ambient-img-1 {
@@ -313,10 +314,10 @@ button, input, select, textarea {
     transform: scale(1) translate3d(0, 0, 0);
   }
   6% {
-    opacity: 0.18;
+    opacity: 0.25;
   }
   28% {
-    opacity: 0.18;
+    opacity: 0.25;
     transform: scale(1.04) translate3d(6px, -3px, 0);
   }
   35% {
@@ -330,14 +331,19 @@ button, input, select, textarea {
 
 @media (max-width: 768px) {
   .hero-ambient-container {
-    width: 100%;
-    -webkit-mask-image: radial-gradient(ellipse at 50% 32%, rgba(0,0,0,1) 35%, rgba(0,0,0,0.55) 70%, transparent 95%);
-    mask-image: radial-gradient(ellipse at 50% 32%, rgba(0,0,0,1) 35%, rgba(0,0,0,0.55) 70%, transparent 95%);
+    top: 16px;
+    left: 4%;
+    width: 92%;
+    height: 340px;
+    border-radius: 40px;
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0.7) 65%, transparent 95%);
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0.7) 65%, transparent 95%);
   }
 
   .hero-ambient-img {
-    background-size: 85% auto;
-    background-position: center 20px;
+    background-size: cover;
+    background-position: center 25%;
+    border-radius: 40px;
     animation-name: heroCrossFadeMobile;
   }
 }
@@ -345,18 +351,18 @@ button, input, select, textarea {
 @keyframes heroCrossFadeMobile {
   0% {
     opacity: 0;
-    transform: scale(0.98) translate3d(0, 0, 0);
+    transform: scale(0.99) translate3d(0, 0, 0);
   }
   6% {
-    opacity: 0.32;
+    opacity: 0.34;
   }
   28% {
-    opacity: 0.32;
-    transform: scale(1.01) translate3d(3px, -2px, 0);
+    opacity: 0.34;
+    transform: scale(1.02) translate3d(4px, -2px, 0);
   }
   35% {
     opacity: 0;
-    transform: scale(1.03) translate3d(5px, -3px, 0);
+    transform: scale(1.04) translate3d(6px, -3px, 0);
   }
   100% {
     opacity: 0;
@@ -364,11 +370,11 @@ button, input, select, textarea {
 }
 
 [data-theme="dark"] .hero-ambient-img {
-  filter: brightness(0.9) contrast(1.15);
+  filter: brightness(0.9) contrast(1.15) saturate(1.1);
 }
 
 [data-theme="dark"] .hero-ambient-container {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 /* Badge styling */
