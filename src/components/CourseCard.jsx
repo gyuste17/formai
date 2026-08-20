@@ -144,34 +144,15 @@ export default function CourseCard({ course, onViewSyllabus }) {
           </div>
         </div>
 
-        {/* Icon & Title */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
+        {/* Title */}
+        <h3 style={{
+          fontSize: '1.25rem',
+          fontWeight: '700',
+          lineHeight: 1.25,
           marginBottom: '16px'
         }}>
-          <div style={{
-            width: '46px',
-            height: '46px',
-            borderRadius: '12px',
-            backgroundColor: course.id === 'chatgpt' || course.id === 'copilot' ? 'var(--accent-ai-light)' : 'var(--accent-primary-light)',
-            color: course.id === 'chatgpt' || course.id === 'copilot' ? 'var(--accent-ai)' : 'var(--accent-primary)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0
-          }}>
-            <IconComponent size={24} />
-          </div>
-          <h3 style={{
-            fontSize: '1.25rem',
-            fontWeight: '700',
-            lineHeight: 1.2
-          }}>
-            {formatCourseTitle(course.title)}
-          </h3>
-        </div>
+          {formatCourseTitle(course.title)}
+        </h3>
 
         {/* Description */}
         <p style={{

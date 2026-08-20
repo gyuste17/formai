@@ -15,26 +15,23 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
       borderRight: 'none',
       transition: 'all var(--transition-normal)'
     }}>
-      <div className="container" style={{
+      <div className="container navbar-container" style={{
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        height: '96px'
+        alignItems: 'center'
       }}>
         {/* Logo */}
         <a href="#" style={{ display: 'flex', alignItems: 'center' }} aria-label="FormAI - Inicio">
           <img
             src={theme === 'dark'
-              ? '/logos/formAI/3-removebg-preview.webp'
-              : '/logos/formAI/1-removebg-preview.webp'}
+              ? '/logos/formAI/3-removebg-preview.png'
+              : '/logos/formAI/1-removebg-preview.png'}
             alt="FormAI"
-            width="264"
-            height="92"
             loading="eager"
             fetchPriority="high"
             decoding="async"
             className="navbar-logo"
-            style={{ height: '92px', width: 'auto', objectFit: 'contain' }}
+            style={{ width: 'auto', objectFit: 'contain' }}
           />
         </a>
 
@@ -133,9 +130,9 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
 
       {/* Mobile Menu Panel */}
       {isOpen && (
-        <div className="glass-card animate-fade-in" style={{
+        <div className="glass-card animate-fade-in mobile-menu-panel" style={{
           position: 'absolute',
-          top: '96px',
+          top: '76px',
           left: 0,
           right: 0,
           borderLeft: 'none',
@@ -187,15 +184,22 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
 
       {/* Add CSS injection for desktop menu responsiveness in styles */}
       <style>{`
+        .navbar-container {
+          height: 76px;
+        }
         .navbar-logo {
-          height: 92px;
-          width: auto;
-          object-fit: contain;
+          height: 58px;
           transition: height var(--transition-fast);
         }
         @media (max-width: 768px) {
+          .navbar-container {
+            height: 64px !important;
+          }
           .navbar-logo {
-            height: 76px !important;
+            height: 44px !important;
+          }
+          .mobile-menu-panel {
+            top: 64px !important;
           }
         }
         @media (min-width: 769px) {
