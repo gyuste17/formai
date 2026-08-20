@@ -240,6 +240,17 @@ export default function ClientsReviews() {
       </div>
 
       <style>{`
+        .client-card {
+          background-color: #ffffff !important;
+        }
+        [data-theme="dark"] .client-card {
+          background-color: #ffffff !important;
+          border-color: rgba(255, 255, 255, 0.15) !important;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+        [data-theme="dark"] .client-card .client-logo {
+          opacity: 0.95 !important;
+        }
         .client-card:hover {
           border-color: var(--accent-primary) !important;
           box-shadow: var(--shadow-md);
