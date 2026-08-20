@@ -12,6 +12,7 @@ import LeadsManager from './components/LeadsManager';
 import CatalogSection from './components/CatalogSection';
 import CatalogModal from './components/CatalogModal';
 import { coursesData } from './data/courses';
+import { useCorporateHeaderColor } from './hooks/useCorporateHeaderColor';
 
 const CourseModal = lazy(() => import('./components/CourseModal'));
 
@@ -26,6 +27,7 @@ function getDefaultTheme() {
 }
 
 export default function App() {
+  useCorporateHeaderColor();
   const [theme, setTheme] = useState(getDefaultTheme);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [preSelectedCourse, setPreSelectedCourse] = useState(null);
