@@ -284,7 +284,7 @@ button, input, select, textarea {
   background-position: center left;
   background-repeat: no-repeat;
   opacity: 0;
-  animation: heroCrossFade 18s infinite ease-in-out;
+  animation: heroCrossFade 14.4s infinite ease-in-out;
   will-change: opacity, transform;
 }
 
@@ -295,12 +295,12 @@ button, input, select, textarea {
 
 .hero-ambient-img-2 {
   background-image: url('/images/student-849828_1280.webp');
-  animation-delay: 6s;
+  animation-delay: 4.8s;
 }
 
 .hero-ambient-img-3 {
   background-image: url('/images/entrepreneur-593371_1280.webp');
-  animation-delay: 12s;
+  animation-delay: 9.6s;
 }
 
 @keyframes heroCrossFade {
