@@ -192,7 +192,7 @@ export default function Hero() {
           </div>
 
           {/* Herramientas animadas (debajo de la pastilla de crédito) */}
-          <div style={{ width: '100%', maxWidth: '480px', zIndex: 2 }}>
+          <div style={{ width: '100%', maxWidth: '480px', zIndex: 2, minHeight: '136px' }}>
             <ToolsRotator />
           </div>
 

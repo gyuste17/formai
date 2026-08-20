@@ -52,10 +52,11 @@ export default function ToolsRotator() {
   return (
     <div style={{
       display: 'flex',
-      gap: '20px',
+      gap: '16px',
       alignItems: 'center',
       justifyContent: 'center',
       flexWrap: 'wrap',
+      minHeight: '136px',
     }}>
       {visible.map((toolIdx, slot) => {
         const tool = tools[toolIdx];
@@ -74,41 +75,60 @@ export default function ToolsRotator() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '10px',
-              padding: '20px 28px',
+              padding: '16px 12px',
               borderRadius: 'var(--border-radius-md)',
               border: '1px solid var(--border-color)',
               backgroundColor: 'var(--bg-secondary)',
-              minWidth: '110px',
+              width: '124px',
+              height: '136px',
+              boxSizing: 'border-box',
               cursor: 'pointer',
               textDecoration: 'none',
-              transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease',
+              transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease',
               opacity: isFading ? 0 : 1,
-              transform: isFading ? 'translateY(12px) scale(0.9)' : 'translateY(0) scale(1)',
+              transform: isFading ? 'translateY(8px) scale(0.95)' : 'translateY(0) scale(1)',
               boxShadow: 'var(--shadow-sm)',
+              willChange: 'opacity, transform',
             }}
             className="tool-rotator-item"
           >
-            <img
-              src={`/logos/herramientas/${tool.file}`}
-              alt={tool.name}
-              width={tool.size}
-              height={tool.size}
-              loading="eager"
-              decoding="async"
-              style={{
-                width: `${tool.size}px`,
-                height: `${tool.size}px`,
-                objectFit: 'contain',
-              }}
-            />
+            <div style={{
+              width: '52px',
+              height: '52px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              <img
+                src={`/logos/herramientas/${tool.file}`}
+                alt={tool.name}
+                width={52}
+                height={52}
+                loading="eager"
+                decoding="async"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  width: 'auto',
+                  height: 'auto',
+                  objectFit: 'contain',
+                }}
+              />
+            </div>
             <span style={{
-              fontSize: '0.72rem',
+              fontSize: '0.74rem',
               fontWeight: '700',
               color: 'var(--text-muted)',
               textAlign: 'center',
-              lineHeight: 1.2,
-              maxWidth: '90px',
+              lineHeight: 1.15,
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              maxWidth: '100px',
             }}>
               {tool.name}
             </span>
