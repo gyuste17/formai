@@ -8,6 +8,7 @@ import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import PartnersCarousel from './components/PartnersCarousel';
 import ClientsReviews from './components/ClientsReviews';
+import LeadsManager from './components/LeadsManager';
 import { coursesData } from './data/courses';
 
 const CourseModal = lazy(() => import('./components/CourseModal'));
@@ -27,6 +28,17 @@ export default function App() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [preSelectedCourse, setPreSelectedCourse] = useState(null);
   const [preSelectedBudget, setPreSelectedBudget] = useState(null);
+  const [showLeadsManager, setShowLeadsManager] = useState(() => {
+    return typeof window !== 'undefined' && (window.location.hash === '#leads' || window.location.hash === '#admin');
+  });
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setShowLeadsManager(window.location.hash === '#leads' || window.location.hash === '#admin');
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -36,6 +48,18 @@ export default function App() {
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
+
+  if (showLeadsManager) {
+    return (
+      <>
+        <Navbar theme={theme} toggleTheme={toggleTheme} />
+        <LeadsManager onClose={() => {
+          window.location.hash = '';
+          setShowLeadsManager(false);
+        }} />
+      </>
+    );
+  }
 
   return (
     <>

@@ -1,0 +1,24 @@
+{
+  "redirects": [
+    {
+      "source": "/convertir-sheets-dashboard",
+      "destination": "/#cursos",
+      "permanent": true
+    },
+    {
+      "source": "/convertir-sheets-dashboard/",
+      "destination": "/#cursos",
+      "permanent": true
+    },
+    {
+      "source": "/como-bonificar-una-formacion-mediante-fundae-en-2026-guia-completa",
+      "destination": "/#como-funciona",
+      "permanent": true
+    },
+    {
+      "source": "/como-bonificar-una-formacion-mediante-fundae-en-2026-guia-completa/",
+      "destination": "/#como-funciona",
+      "permanent": true
+    }
+  ]
+}

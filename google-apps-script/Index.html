@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormAI - Gestor de Leads</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Outfit', sans-serif;
+
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-heading: #1e293b;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+
+      --accent-primary: #15798a;
+      --accent-primary-hover: #0e5a67;
+      --accent-primary-light: #e6f7f9;
+      --accent-primary-text: #0e6573;
+
+      --accent-ai: #4f46e5;
+      --accent-ai-light: #e0e7ff;
+      --accent-ai-text: #3730a3;
+
+      --accent-success: #059669;
+      --accent-success-light: #ecfdf5;
+      --accent-warning: #d97706;
+      --accent-warning-light: #fffbeb;
+      --accent-danger: #dc2626;
+      --accent-danger-light: #fef2f2;
+
+      --border-color: #cbd5e1;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --border-radius-sm: 8px;
+      --border-radius-md: 14px;
+      --border-radius-lg: 20px;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #020617;
+      --bg-secondary: #0b1329;
+      --bg-tertiary: #16223f;
+      --text-primary: #f8fafc;
+      --text-heading: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+
+      --accent-primary: #38bdf8;
+      --accent-primary-hover: #0ea5e9;
+      --accent-primary-light: #0c4a6e;
+      --accent-primary-text: #7dd3fc;
+
+      --accent-ai: #818cf8;
+      --accent-ai-light: #1e1b4b;
+      --accent-ai-text: #c7d2fe;
+
+      --border-color: #1e293b;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    /* Header & Navigation */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-ai));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 12px rgba(21, 121, 138, 0.3);
+    }
+    .logo-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-heading);
+    }
+    .logo-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: var(--border-radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-primary-hover);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-secondary {
+      background-color: var(--bg-secondary);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+    }
+    .btn-secondary:hover {
+      background-color: var(--bg-tertiary);
+    }
+    .btn-icon {
+      padding: 8px;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-icon:hover {
+      color: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-info h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .metric-info .number {
+      font-size: 1.7rem;
+      font-weight: 800;
+      font-family: var(--font-display);
+      color: var(--text-heading);
+    }
+    .metric-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Toolbar / Filter bar */
+    .toolbar {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      padding: 8px 14px;
+      flex: 1;
+      min-width: 240px;
+      max-width: 400px;
+    }
+    .search-box input {
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      width: 100%;
+      outline: none;
+      font-size: 0.9rem;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: var(--border-radius-sm);
+      font-size: 0.88rem;
+      outline: none;
+    }
+    .view-toggle {
+      display: flex;
+      background: var(--bg-tertiary);
+      padding: 3px;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-color);
+    }
+    .view-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .view-btn.active {
+      background: var(--bg-secondary);
+      color: var(--accent-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .badge-nuevo { background: #fef3c7; color: #b45309; }
+    .badge-contactado { background: #e0f2fe; color: #0369a1; }
+    .badge-propuesta { background: #ede9fe; color: #6d28d9; }
+    .badge-ganado { background: #dcfce7; color: #15803d; }
+    .badge-descartado { background: #f1f5f9; color: #64748b; }
+
+    [data-theme="dark"] .badge-nuevo { background: #451a03; color: #fde68a; }
+    [data-theme="dark"] .badge-contactado { background: #082f49; color: #7dd3fc; }
+    [data-theme="dark"] .badge-propuesta { background: #2e1065; color: #ddd6fe; }
+    [data-theme="dark"] .badge-ganado { background: #052e16; color: #86efac; }
+    [data-theme="dark"] .badge-descartado { background: #1e293b; color: #94a3b8; }
+
+    /* Kanban View */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(260px, 1fr));
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 24px;
+      align-items: start;
+    }
+    .kanban-col {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      display: flex;
+      flex-direction: column;
+      max-height: 80vh;
+      box-shadow: var(--shadow-sm);
+    }
+    .kanban-col-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .kanban-col-count {
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .kanban-cards {
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 150px;
+    }
+    .lead-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      padding: 14px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .lead-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-primary);
+    }
+    .lead-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .lead-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-heading);
+    }
+    .lead-company {
+      font-size: 0.82rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+    .lead-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .lead-subject {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lead-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-color);
+    }
+    .quick-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .quick-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .quick-btn:hover {
+      background: var(--accent-primary);
+      color: #fff;
+      border-color: var(--accent-primary);
+    }
+    .quick-btn.whatsapp:hover {
+      background: #25d366;
+      border-color: #25d366;
+    }
+
+    /* Table View */
+    .table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    th {
+      background: var(--bg-tertiary);
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background-color: var(--bg-tertiary); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+    .form-input, .form-textarea, .form-select-custom {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select-custom:focus {
+      border-color: var(--accent-primary);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* Comments Timeline */
+    .comments-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .comment-bubble {
+      background: var(--bg-tertiary);
+      border-radius: var(--border-radius-sm);
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent-primary);
+      font-size: 0.85rem;
+    }
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    /* Loading Spinner */
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-row { grid-template-columns: 1fr; }
+      .kanban-board { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-container">
+        <div class="logo-icon">F</div>
+        <div>
+          <h1 class="logo-title">FormAI Leads</h1>
+          <p class="logo-subtitle">Gestor de Contactos & Bonificaciones FUNDAE</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="fetchLeads(true)" id="refreshBtn" title="Actualizar datos">
+          <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> Sincronizar
+        </button>
+        <button class="btn btn-primary" onclick="openNewLeadModal()">
+          <i data-lucide="plus" style="width:16px;height:16px;"></i> Nuevo Lead
+        </button>
+        <button class="btn-icon" onclick="toggleTheme()" id="themeBtn" title="Modo Claro/Oscuro">
+          <i data-lucide="moon" style="width:18px;height:18px;" id="themeIcon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Metrics Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-info">
+          <h4>Total Leads</h4>
+          <div class="number" id="metricTotal">0</div>
+        </div>
+        <div class="metric-icon" style="background: var(--accent-primary-light); color: var(--accent-primary);">
+          <i data-lucide="users"></i>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <h4>Nuevos</h4>
+          <div class="number" id="metricNuevos">0</div>
+        </div>
+        <div class="metric-icon" style="background: #fef3c7; color: #b45309;">
+          <i data-lucide="sparkles"></i>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <h4>En Gestión</h4>
+          <div class="number" id="metricGestion">0</div>
+        </div>
+        <div class="metric-icon" style="background: #ede9fe; color: #6d28d9;">
+          <i data-lucide="clock"></i>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-info">
+          <h4>Ganados / Cierre</h4>
+          <div class="number" id="metricGanados">0</div>
+        </div>
+        <div class="metric-icon" style="background: #dcfce7; color: #15803d;">
+          <i data-lucide="check-circle-2"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter & Toolbar -->
+    <div class="toolbar">
+      <div class="search-box">
+        <i data-lucide="search" style="width:18px;height:18px;color:var(--text-muted);"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por nombre, empresa, email..." oninput="renderLeads()">
+      </div>
+      <div class="filter-group">
+        <select class="filter-select" id="statusFilter" onchange="renderLeads()">
+          <option value="ALL">Todos los Estados</option>
+          <option value="Nuevo">Nuevo</option>
+          <option value="Contactado">Contactado</option>
+          <option value="Propuesta / Demo">Propuesta / Demo</option>
+          <option value="Ganado">Ganado</option>
+          <option value="Descartado">Descartado</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="kanbanViewBtn" onclick="switchView('kanban')">
+            <i data-lucide="kanban" style="width:16px;height:16px;"></i> Kanban
+          </button>
+          <button class="view-btn" id="tableViewBtn" onclick="switchView('table')">
+            <i data-lucide="table" style="width:16px;height:16px;"></i> Tabla
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main View Container -->
+    <div id="kanbanContainer" class="kanban-board">
+      <!-- Kanban Columns rendered by JS -->
+    </div>
+
+    <div id="tableContainer" class="table-container" style="display: none;">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Nombre / Contacto</th>
+            <th>Empresa</th>
+            <th>Asunto / Curso</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows rendered by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Lead Detail & Edit Modal -->
+  <div class="modal-overlay" id="leadModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Detalle del Lead</h3>
+        <button class="btn-icon" onclick="closeModal()">
+          <i data-lucide="x" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <form id="leadForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="leadId">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre *</label>
+            <input type="text" id="formName" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Empresa *</label>
+            <input type="text" id="formCompany" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" id="formEmail" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono *</label>
+            <input type="tel" id="formPhone" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Estado</label>
+            <select id="formStatus" class="form-select-custom">
+              <option value="Nuevo">Nuevo</option>
+              <option value="Contactado">Contactado</option>
+              <option value="Propuesta / Demo">Propuesta / Demo</option>
+              <option value="Ganado">Ganado</option>
+              <option value="Descartado">Descartado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Prioridad</label>
+            <select id="formPriority" class="form-select-custom">
+              <option value="Alta">Alta 🔥</option>
+              <option value="Media" selected>Media ⚡</option>
+              <option value="Baja">Baja</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Asunto / Curso de interés</label>
+          <input type="text" id="formSubject" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mensaje / Datos del simulador</label>
+          <textarea id="formMessage" class="form-textarea" rows="3"></textarea>
+        </div>
+
+        <!-- Section: Notes & Comments -->
+        <div class="form-group" id="commentsSection">
+          <label class="form-label">Comentarios y Seguimiento</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="newCommentInput" class="form-input" placeholder="Añadir nota rápida...">
+            <button type="button" class="btn btn-secondary" onclick="addComment()">Añadir</button>
+          </div>
+          <div class="comments-timeline" id="commentsList"></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+          <button type="button" class="btn btn-secondary" style="color: var(--accent-danger);" id="deleteBtn" onclick="deleteCurrentLead()">
+            <i data-lucide="trash-2" style="width:16px;height:16px;"></i> Eliminar
+          </button>
+          <div style="display: flex; gap: 10px;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="saveBtn">Guardar Cambios</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let leadsData = [];
+    let currentView = 'kanban';
+    const COLUMNS = ["Nuevo", "Contactado", "Propuesta / Demo", "Ganado", "Descartado"];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      fetchLeads();
+      lucide.createIcons();
+    });
+
+    // Theme Switcher
+    function initTheme() {
+      const saved = localStorage.getItem('formai-leads-theme') || (new Date().getHours() >= 6 && new Date().getHours() < 18 ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', saved);
+      updateThemeIcon(saved);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('formai-leads-theme', next);
+      updateThemeIcon(next);
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
+
+    // View Switcher
+    function switchView(view) {
+      currentView = view;
+      document.getElementById('kanbanViewBtn').classList.toggle('active', view === 'kanban');
+      document.getElementById('tableViewBtn').classList.toggle('active', view === 'table');
+      document.getElementById('kanbanContainer').style.display = view === 'kanban' ? 'grid' : 'none';
+      document.getElementById('tableContainer').style.display = view === 'table' ? 'block' : 'none';
+      renderLeads();
+    }
+
+    // Fetch leads from Google Apps Script
+    function fetchLeads(showLoader = false) {
+      const refreshBtn = document.getElementById('refreshBtn');
+      if (showLoader && refreshBtn) refreshBtn.innerHTML = '<div class="loader"></div> Actualizando...';
+
+      // Llamada directa a google.script.run si está en Google Apps Script
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(leads) {
+            leadsData = leads || [];
+            updateMetrics();
+            renderLeads();
+            if (refreshBtn) refreshBtn.innerHTML = '<i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> Sincronizar';
+            lucide.createIcons();
+          })
+          .withFailureHandler(function(err) {
+            alert('Error al conectar con Google Sheets: ' + err);
+            if (refreshBtn) refreshBtn.innerHTML = '<i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> Sincronizar';
+            lucide.createIcons();
+          })
+          .fetchAllLeads();
+      } else {
+        // Modo fallback / Mock para preview local
+        leadsData = getMockLeads();
+        updateMetrics();
+        renderLeads();
+        if (refreshBtn) refreshBtn.innerHTML = '<i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> Sincronizar';
+        lucide.createIcons();
+      }
+    }
+
+    // Mock Leads for Preview
+    function getMockLeads() {
+      return [
+        {
+          id: 'lead_1',
+          date: '20/08/2026 17:54:25',
+          name: 'Guillermo Yuste',
+          company: 'Guillermo Yuste',
+          email: 'gyuste17@hotmail.com',
+          phone: '609269480',
+          subject: 'Presupuesto y Bonificación FUNDAE',
+          message: 'Simulación: 15 empleados, 5 alumnos, curso 20h presencial.',
+          status: 'Nuevo',
+          priority: 'Alta',
+          comments: [{ date: '20/08/2026 18:00', author: 'Sistema', text: 'Lead recibido desde formulario web' }]
+        },
+        {
+          id: 'lead_2',
+          date: '20/08/2026 17:53:29',
+          name: 'Chrome Test V5',
+          company: 'Chrome Vercel Company',
+          email: 'vercel-test@formai.es',
+          phone: '600123456',
+          subject: 'Curso de IA Generativa',
+          message: 'Interesados en formación de IA para departamento de marketing.',
+          status: 'Contactado',
+          priority: 'Media',
+          comments: [{ date: '20/08/2026 18:02', author: 'Guillermo', text: 'Llamado por teléfono, enviada información por email' }]
+        },
+        {
+          id: 'lead_3',
+          date: '20/08/2026 17:52:34',
+          name: 'Test V5',
+          company: 'Test Company V5',
+          email: 'test@test.com',
+          phone: '123456789',
+          subject: 'Curso de ChatGPT & Copilot',
+          message: 'Prueba de formulario',
+          status: 'Propuesta / Demo',
+          priority: 'Media',
+          comments: []
+        }
+      ];
+    }
+
+    // Update Metrics
+    function updateMetrics() {
+      document.getElementById('metricTotal').textContent = leadsData.length;
+      document.getElementById('metricNuevos').textContent = leadsData.filter(l => l.status === 'Nuevo').length;
+      document.getElementById('metricGestion').textContent = leadsData.filter(l => ['Contactado', 'Propuesta / Demo'].includes(l.status)).length;
+      document.getElementById('metricGanados').textContent = leadsData.filter(l => l.status === 'Ganado').length;
+    }
+
+    // Filter Leads
+    function getFilteredLeads() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+
+      return leadsData.filter(lead => {
+        const matchesStatus = status === 'ALL' || lead.status === status;
+        const matchesSearch = !search ||
+          lead.name.toLowerCase().includes(search) ||
+          lead.company.toLowerCase().includes(search) ||
+          lead.email.toLowerCase().includes(search) ||
+          lead.phone.toLowerCase().includes(search) ||
+          (lead.subject && lead.subject.toLowerCase().includes(search));
+        return matchesStatus && matchesSearch;
+      });
+    }
+
+    // Render Leads based on active view
+    function renderLeads() {
+      const filtered = getFilteredLeads();
+      if (currentView === 'kanban') {
+        renderKanban(filtered);
+      } else {
+        renderTable(filtered);
+      }
+      lucide.createIcons();
+    }
+
+    // Render Kanban
+    function renderKanban(leads) {
+      const container = document.getElementById('kanbanContainer');
+      container.innerHTML = '';
+
+      COLUMNS.forEach(colName => {
+        const colLeads = leads.filter(l => (l.status || 'Nuevo') === colName);
+        const colDiv = document.createElement('div');
+        colDiv.className = 'kanban-col';
+
+        let badgeClass = 'badge-' + colName.toLowerCase().replace(/[^a-z]/g, '');
+        if (colName === 'Propuesta / Demo') badgeClass = 'badge-propuesta';
+
+        colDiv.innerHTML = `
+          <div class="kanban-col-header">
+            <span class="badge ${badgeClass}">${colName}</span>
+            <span class="kanban-col-count">${colLeads.length}</span>
+          </div>
+          <div class="kanban-cards" ondragover="handleDragOver(event)" ondrop="handleDrop(event, '${colName}')">
+            ${colLeads.map(lead => createCardHtml(lead)).join('')}
+          </div>
+        `;
+        container.appendChild(colDiv);
+      });
+    }
+
+    // Create Card HTML
+    function createCardHtml(lead) {
+      const cleanPhone = (lead.phone || '').replace(/\D/g, '');
+      const waText = encodeURIComponent(`Hola ${lead.name}, te contacto de FormAI respecto a tu solicitud de formación bonificada para ${lead.company}. ¿Cuándo te vendría bien que hablemos 5 minutos?`);
+      const waUrl = `https://wa.me/34${cleanPhone.startsWith('34') ? cleanPhone.substring(2) : cleanPhone}?text=${waText}`;
+
+      return `
+        <div class="lead-card" draggable="true" ondragstart="handleDragStart(event, '${lead.id}')" onclick="openEditModal('${lead.id}')">
+          <div class="lead-card-header">
+            <div>
+              <div class="lead-name">${lead.name}</div>
+              <div class="lead-company">${lead.company || 'Sin empresa'}</div>
+            </div>
+            <div class="lead-date">${(lead.date || '').split(' ')[0]}</div>
+          </div>
+
+          ${lead.subject ? `<div class="lead-subject" title="${lead.subject}">${lead.subject}</div>` : ''}
+
+          <div class="lead-actions-row" onclick="event.stopPropagation()">
+            <div class="quick-actions">
+              ${lead.phone ? `
+                <a href="tel:${lead.phone}" class="quick-btn" title="Llamar">
+                  <i data-lucide="phone" style="width:14px;height:14px;"></i>
+                </a>
+                <a href="${waUrl}" target="_blank" class="quick-btn whatsapp" title="WhatsApp">
+                  <i data-lucide="message-circle" style="width:14px;height:14px;"></i>
+                </a>
+              ` : ''}
+              ${lead.email ? `
+                <a href="mailto:${lead.email}?subject=Formación Bonificada FormAI - ${lead.company}" class="quick-btn" title="Email">
+                  <i data-lucide="mail" style="width:14px;height:14px;"></i>
+                </a>
+              ` : ''}
+            </div>
+            <select class="form-select-custom" style="padding: 2px 6px; font-size: 0.75rem; width: auto;" onchange="changeLeadStatus('${lead.id}', this.value)">
+              ${COLUMNS.map(c => `<option value="${c}" ${lead.status === c ? 'selected' : ''}>${c}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render Table
+    function renderTable(leads) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+
+      if (leads.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No se encontraron leads</td></tr>`;
+        return;
+      }
+
+      leads.forEach(lead => {
+        const cleanPhone = (lead.phone || '').replace(/\D/g, '');
+        const waText = encodeURIComponent(`Hola ${lead.name}, te contacto de FormAI sobre tu consulta de formación bonificada.`);
+        const waUrl = `https://wa.me/34${cleanPhone.startsWith('34') ? cleanPhone.substring(2) : cleanPhone}?text=${waText}`;
+
+        const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.onclick = () => openEditModal(lead.id);
+
+        let badgeClass = 'badge-' + (lead.status || 'nuevo').toLowerCase().replace(/[^a-z]/g, '');
+        if (lead.status === 'Propuesta / Demo') badgeClass = 'badge-propuesta';
+
+        tr.innerHTML = `
+          <td style="color: var(--text-muted); font-size: 0.8rem;">${lead.date || ''}</td>
+          <td>
+            <div style="font-weight: 700; color: var(--text-heading);">${lead.name}</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">${lead.email} | ${lead.phone}</div>
+          </td>
+          <td><strong>${lead.company || '-'}</strong></td>
+          <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${lead.subject || '-'}</td>
+          <td><span class="badge ${badgeClass}">${lead.status || 'Nuevo'}</span></td>
+          <td onclick="event.stopPropagation()">
+            <div class="quick-actions">
+              ${lead.phone ? `
+                <a href="tel:${lead.phone}" class="quick-btn" title="Llamar"><i data-lucide="phone" style="width:14px;height:14px;"></i></a>
+                <a href="${waUrl}" target="_blank" class="quick-btn whatsapp" title="WhatsApp"><i data-lucide="message-circle" style="width:14px;height:14px;"></i></a>
+              ` : ''}
+              ${lead.email ? `
+                <a href="mailto:${lead.email}" class="quick-btn" title="Email"><i data-lucide="mail" style="width:14px;height:14px;"></i></a>
+              ` : ''}
+              <button class="quick-btn" onclick="openEditModal('${lead.id}')" title="Editar"><i data-lucide="edit-2" style="width:14px;height:14px;"></i></button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Drag and drop
+    let draggedLeadId = null;
+    function handleDragStart(e, id) {
+      draggedLeadId = id;
+      e.dataTransfer.setData('text/plain', id);
+    }
+    function handleDragOver(e) {
+      e.preventDefault();
+    }
+    function handleDrop(e, newStatus) {
+      e.preventDefault();
+      if (draggedLeadId) {
+        changeLeadStatus(draggedLeadId, newStatus);
+        draggedLeadId = null;
+      }
+    }
+
+    // Status change
+    function changeLeadStatus(id, newStatus) {
+      const lead = leadsData.find(l => l.id === id);
+      if (!lead) return;
+      lead.status = newStatus;
+      updateMetrics();
+      renderLeads();
+
+      // Persist to Google Apps Script
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.updateLeadStatus(id, newStatus);
+      }
+    }
+
+    // Modal logic
+    function openNewLeadModal() {
+      document.getElementById('modalTitle').textContent = 'Crear Nuevo Lead';
+      document.getElementById('leadId').value = '';
+      document.getElementById('formName').value = '';
+      document.getElementById('formCompany').value = '';
+      document.getElementById('formEmail').value = '';
+      document.getElementById('formPhone').value = '';
+      document.getElementById('formSubject').value = '';
+      document.getElementById('formMessage').value = '';
+      document.getElementById('formStatus').value = 'Nuevo';
+      document.getElementById('formPriority').value = 'Media';
+      document.getElementById('commentsSection').style.display = 'none';
+      document.getElementById('deleteBtn').style.display = 'none';
+      document.getElementById('leadModal').classList.add('active');
+    }
+
+    function openEditModal(id) {
+      const lead = leadsData.find(l => l.id === id);
+      if (!lead) return;
+
+      document.getElementById('modalTitle').textContent = 'Detalle de ' + lead.name;
+      document.getElementById('leadId').value = lead.id;
+      document.getElementById('formName').value = lead.name || '';
+      document.getElementById('formCompany').value = lead.company || '';
+      document.getElementById('formEmail').value = lead.email || '';
+      document.getElementById('formPhone').value = lead.phone || '';
+      document.getElementById('formSubject').value = lead.subject || '';
+      document.getElementById('formMessage').value = lead.message || '';
+      document.getElementById('formStatus').value = lead.status || 'Nuevo';
+      document.getElementById('formPriority').value = lead.priority || 'Media';
+
+      document.getElementById('commentsSection').style.display = 'block';
+      document.getElementById('deleteBtn').style.display = 'inline-flex';
+      renderComments(lead.comments || []);
+
+      document.getElementById('leadModal').classList.add('active');
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      document.getElementById('leadModal').classList.remove('active');
+    }
+
+    function renderComments(comments) {
+      const list = document.getElementById('commentsList');
+      list.innerHTML = '';
+      if (!comments || comments.length === 0) {
+        list.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;padding:8px 0;">No hay notas todavía.</div>';
+        return;
+      }
+      comments.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'comment-bubble';
+        item.innerHTML = `
+          <div class="comment-header">
+            <span>${c.author || 'Admin'}</span>
+            <span>${c.date || ''}</span>
+          </div>
+          <div>${c.text}</div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function addComment() {
+      const input = document.getElementById('newCommentInput');
+      const text = input.value.trim();
+      const id = document.getElementById('leadId').value;
+      if (!text || !id) return;
+
+      const lead = leadsData.find(l => l.id === id);
+      if (!lead) return;
+
+      if (!lead.comments) lead.comments = [];
+      const newComment = {
+        date: new Date().toLocaleDateString('es-ES') + ' ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        author: 'Admin',
+        text: text
+      };
+      lead.comments.push(newComment);
+      input.value = '';
+      renderComments(lead.comments);
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.addLeadComment(id, text, 'Admin');
+      }
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('leadId').value;
+      const leadData = {
+        name: document.getElementById('formName').value,
+        company: document.getElementById('formCompany').value,
+        email: document.getElementById('formEmail').value,
+        phone: document.getElementById('formPhone').value,
+        subject: document.getElementById('formSubject').value,
+        message: document.getElementById('formMessage').value,
+        status: document.getElementById('formStatus').value,
+        priority: document.getElementById('formPriority').value
+      };
+
+      if (id) {
+        // Edit
+        const lead = leadsData.find(l => l.id === id);
+        if (lead) Object.assign(lead, leadData);
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run.updateLeadDetails(id, leadData);
+        }
+      } else {
+        // Create new
+        const newLead = {
+          id: 'lead_' + Date.now(),
+          date: new Date().toLocaleDateString('es-ES') + ' ' + new Date().toLocaleTimeString('es-ES'),
+          ...leadData,
+          comments: []
+        };
+        leadsData.unshift(newLead);
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run.insertNewLead(newLead);
+        }
+      }
+
+      updateMetrics();
+      renderLeads();
+      closeModal();
+    }
+
+    function deleteCurrentLead() {
+      const id = document.getElementById('leadId').value;
+      if (!id || !confirm('¿Estás seguro de eliminar este lead?')) return;
+
+      leadsData = leadsData.filter(l => l.id !== id);
+      updateMetrics();
+      renderLeads();
+      closeModal();
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.deleteLeadById(id);
+      }
+    }
+  </script>
+</body>
+</html>
