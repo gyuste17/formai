@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FileSpreadsheet,
   BarChart3,
@@ -10,7 +10,9 @@ import {
   AreaChart,
   BookOpen,
   Clock,
-  Sliders
+  Sliders,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 const iconMap = {
@@ -94,12 +96,11 @@ export function formatCourseTitle(title) {
 }
 
 export default function CourseCard({ course, onViewSyllabus }) {
-  // Dynamically resolve icon from name
-  const IconComponent = iconMap[course.iconName] || BookOpen;
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className="glass-card course-card animate-fade-in" style={{
-      padding: '30px',
+      padding: '24px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -110,14 +111,14 @@ export default function CourseCard({ course, onViewSyllabus }) {
       overflow: 'hidden'
     }}>
       
-      {/* Upper Content */}
+      {/* Contenido Superior Siempre Visible (Vista Colapsada) */}
       <div>
         {/* Category & Languages */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '20px'
+          marginBottom: '16px'
         }}>
           <span style={{
             fontSize: '0.75rem',
@@ -154,44 +155,12 @@ export default function CourseCard({ course, onViewSyllabus }) {
           {formatCourseTitle(course.title)}
         </h3>
 
-        {/* Description */}
-        <p style={{
-          fontSize: '0.925rem',
-          color: 'var(--text-secondary)',
-          lineHeight: 1.5,
-          marginBottom: '20px'
-        }}>
-          {course.shortDescription}
-        </p>
-
-        {/* Course Attributes */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-          marginBottom: '24px',
-          fontSize: '0.875rem',
-          color: 'var(--text-muted)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Clock size={16} />
-            <span>Duración: <strong>{course.duration} horas</strong></span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Sliders size={16} />
-            <span>Nivel: {course.level}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Action Area */}
-      <div>
-        {/* Tools Badges */}
+        {/* Tools Badges (Logos de herramientas) */}
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
           gap: '6px',
-          marginBottom: '24px'
+          marginBottom: '12px'
         }}>
           {course.tools.map(tool => {
             const logo = toolLogos[tool];
@@ -224,30 +193,109 @@ export default function CourseCard({ course, onViewSyllabus }) {
             );
           })}
         </div>
+      </div>
 
-        {/* CTA Button */}
-        <button 
-          onClick={() => onViewSyllabus(course)}
+      {/* Contenido Desplegable (Animación de acordeón) */}
+      <div>
+        <div style={{
+          display: 'grid',
+          gridTemplateRows: isExpanded ? '1fr' : '0fr',
+          transition: 'grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}>
+          <div style={{ overflow: 'hidden' }}>
+            <div style={{
+              paddingTop: '16px',
+              borderTop: '1px solid var(--border-color)',
+              marginTop: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              {/* Description */}
+              <p style={{
+                fontSize: '0.9rem',
+                color: 'var(--text-secondary)',
+                lineHeight: 1.5
+              }}>
+                {course.shortDescription}
+              </p>
+
+              {/* Course Attributes */}
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                fontSize: '0.85rem',
+                color: 'var(--text-muted)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Clock size={16} />
+                  <span>Duración: <strong>{course.duration} horas</strong></span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sliders size={16} />
+                  <span>Nivel: {course.level}</span>
+                </div>
+              </div>
+
+              {/* CTA Button para abrir el Temario Completo en Modal */}
+              <button 
+                onClick={() => onViewSyllabus(course)}
+                style={{
+                  width: '100%',
+                  backgroundColor: 'var(--accent-primary)',
+                  border: 'none',
+                  color: '#ffffff',
+                  padding: '12px 20px',
+                  borderRadius: 'var(--border-radius-md)',
+                  fontWeight: '600',
+                  fontSize: '0.925rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: 'var(--shadow-sm)',
+                  transition: 'all var(--transition-fast)'
+                }}
+                className="course-card-btn"
+              >
+                Ver Temario Completo
+                <BookOpen size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Toggle Expand / Collapse Button */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
           style={{
             width: '100%',
-            backgroundColor: 'transparent',
-            border: '2px solid var(--accent-primary)',
-            color: 'var(--accent-primary)',
-            padding: '12px 20px',
+            backgroundColor: isExpanded ? 'var(--bg-tertiary)' : 'transparent',
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-primary)',
+            padding: '10px 16px',
             borderRadius: 'var(--border-radius-md)',
             fontWeight: '600',
-            fontSize: '0.925rem',
+            fontSize: '0.875rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '8px',
-            transition: 'all var(--transition-fast)'
+            transition: 'all var(--transition-fast)',
+            marginTop: '12px'
           }}
-          className="course-card-btn"
+          className="course-toggle-btn"
+          aria-expanded={isExpanded}
         >
-          Ver Temario Completo
-          <BookOpen size={16} />
+          <span>{isExpanded ? 'Ocultar detalles' : 'Ver detalles y temario'}</span>
+          {isExpanded ? (
+            <ChevronUp size={16} style={{ color: 'var(--accent-primary)' }} />
+          ) : (
+            <ChevronDown size={16} style={{ color: 'var(--accent-primary)' }} />
+          )}
         </button>
       </div>
 
@@ -257,9 +305,13 @@ export default function CourseCard({ course, onViewSyllabus }) {
           box-shadow: var(--shadow-lg);
           border-color: var(--accent-primary);
         }
+        .course-toggle-btn:hover {
+          background-color: var(--bg-tertiary) !important;
+          border-color: var(--accent-primary) !important;
+        }
         .course-card-btn:hover {
-          background-color: var(--accent-primary) !important;
-          color: #ffffff !important;
+          background-color: var(--accent-primary-hover) !important;
+          transform: translateY(-1px);
         }
       `}</style>
     </div>
