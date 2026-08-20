@@ -11,6 +11,7 @@ import ClientsReviews from './components/ClientsReviews';
 import LeadsManager from './components/LeadsManager';
 import CatalogSection from './components/CatalogSection';
 import CatalogModal from './components/CatalogModal';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { coursesData } from './data/courses';
 import { useCorporateHeaderColor } from './hooks/useCorporateHeaderColor';
 
@@ -33,6 +34,7 @@ export default function App() {
   const [preSelectedCourse, setPreSelectedCourse] = useState(null);
   const [preSelectedBudget, setPreSelectedBudget] = useState(null);
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
+  const [isCatalogExpanded, setIsCatalogExpanded] = useState(false);
   const [showLeadsManager, setShowLeadsManager] = useState(() => {
     return typeof window !== 'undefined' && (window.location.hash === '#leads' || window.location.hash === '#admin');
   });
@@ -89,16 +91,79 @@ export default function App() {
                 Formaciones prácticas y actualizadas adaptadas a las necesidades reales de tu equipo.
               </p>
             </div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '24px'
-            }}>
-              {coursesData.map((course, i) => (
-                <div key={course.id} className="animate-on-scroll" style={{ animationDelay: `${i * 0.07}s` }}>
-                  <CourseCard course={course} onViewSyllabus={setSelectedCourse} />
-                </div>
-              ))}
+
+            {/* Grid de Cursos (Colapsable / Desplegable) */}
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '24px'
+              }}>
+                {(isCatalogExpanded ? coursesData : coursesData.slice(0, 3)).map((course, i) => (
+                  <div key={course.id} className="animate-on-scroll" style={{ animationDelay: `${i * 0.07}s` }}>
+                    <CourseCard course={course} onViewSyllabus={setSelectedCourse} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Botón y degradado para expandir / colapsar el catálogo */}
+              <div style={{
+                position: 'relative',
+                textAlign: 'center',
+                marginTop: isCatalogExpanded ? '48px' : '-60px',
+                paddingTop: isCatalogExpanded ? '0' : '100px',
+                background: isCatalogExpanded ? 'none' : 'linear-gradient(to bottom, rgba(248, 250, 252, 0) 0%, var(--bg-primary) 70%)',
+                zIndex: 10,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px'
+              }} className="expand-catalog-wrapper">
+                <button
+                  onClick={() => {
+                    if (isCatalogExpanded) {
+                      setIsCatalogExpanded(false);
+                      document.getElementById('cursos')?.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      setIsCatalogExpanded(true);
+                    }
+                  }}
+                  className="expand-catalog-btn"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '16px 32px',
+                    borderRadius: 'var(--border-radius-full)',
+                    backgroundColor: 'var(--bg-secondary)',
+                    border: '2px solid var(--accent-primary)',
+                    color: 'var(--text-primary)',
+                    fontWeight: '700',
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    boxShadow: 'var(--shadow-md)',
+                    transition: 'all var(--transition-fast)'
+                  }}
+                >
+                  <span>
+                    {isCatalogExpanded 
+                      ? 'Mostrar menos formaciones' 
+                      : `Ver todas las formaciones (${coursesData.length} cursos)`}
+                  </span>
+                  {isCatalogExpanded ? (
+                    <ChevronUp size={20} style={{ color: 'var(--accent-primary)' }} />
+                  ) : (
+                    <ChevronDown size={20} style={{ color: 'var(--accent-primary)' }} />
+                  )}
+                </button>
+
+                {!isCatalogExpanded && (
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                    Excel, Power BI, ChatGPT, Copilot 365, Automate, Looker Studio y más
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </section>
