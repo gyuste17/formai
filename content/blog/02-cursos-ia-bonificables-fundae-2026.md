@@ -178,32 +178,3 @@ En **FormAI** no solo impartimos formación práctica y aplicada; gestionamos **
 }
 </script>
 ```
-
----
-
-## 📱 Post Adaptado para LinkedIn (B2B Copywriting)
-
-```markdown
-🤖 "¿Podemos bonificar un curso de ChatGPT y Microsoft Copilot para nuestros empleados con FUNDAE?"
-
-Es una de las preguntas que más nos hacen los directores de RRHH cada semana.
-
-La respuesta es corta: SÍ, al 100%.
-
-Y la respuesta técnica es aún mejor:
-Al tratarse de competencias tecnológicas y analíticas avanzadas, FUNDAE clasifica la formación en Inteligencia Artificial como NIVEL SUPERIOR.
-
-Eso significa:
-💰 Módulo económico máximo de 13€ por hora y alumno en Aula Virtual.
-⚡ Formación práctica en directo (Teams/Zoom) adaptada a los flujos reales de tu empresa.
-📊 Deducción directa en el boletín de cotización a la Seguridad Social (RLC/TC1).
-🎯 Coste neto final: 0€ para tu empresa si dispones de crédito formativo.
-
-No hace falta formar a desarrolladores: el verdadero ROI está en enseñar a tu dpto administrativo, financiero, de compras o comercial a ahorrar 4 horas semanales con IA generativa.
-
-En FormAI gestionamos el 100% del trámite burocrático ante FUNDAE para que tú solo tengas que preocuparte de ver a tu equipo ser más productivo.
-
-👉 ¿Quieres saber qué cursos encajan mejor con tu plantilla y cuánto crédito tienes disponible? Escríbeme y te enviamos la propuesta en 24h.
-
-#InteligenciaArtificial #FUNDAE #RecursosHumanos #MicrosoftCopilot #ChatGPT #ProductividadEmpresarial #FormacionBonificada #Innovacion
-```

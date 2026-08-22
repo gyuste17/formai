@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Calendar, Clock, ArrowLeft, Share2, Check, Copy, Sparkles, 
-  HelpCircle, ChevronDown, ChevronUp, Lock, Eye, BookOpen, ShieldCheck, ArrowRight 
+  Calendar, Clock, ArrowLeft, Sparkles, 
+  HelpCircle, ChevronDown, ChevronUp, ExternalLink, ArrowRight, AlertTriangle, Building2
 } from 'lucide-react';
 import { blogPosts } from '../data/blogPosts';
 
@@ -14,7 +14,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
       localStorage.getItem('formai-blog-admin') === 'true'
     );
   });
-  const [copiedLinkedIn, setCopiedLinkedIn] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
   useEffect(() => {
@@ -44,15 +43,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
     ? blogPosts.find(p => p.slug === selectedSlug) 
     : null;
 
-  const handleCopyLinkedIn = (text) => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-      setCopiedLinkedIn(true);
-      setTimeout(() => setCopiedLinkedIn(false), 2500);
-    }
-  };
-
-  // Scroll to top when changing post
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -64,7 +54,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
       <div className="blog-article-view animate-fade-in" style={{ padding: '40px 0 80px 0', minHeight: '80vh' }}>
         <div className="container" style={{ maxWidth: '840px', margin: '0 auto' }}>
           
-          {/* Barra superior de navegación */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
             <button
               onClick={() => {
@@ -104,8 +93,7 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
             )}
           </div>
 
-          {/* Encabezado del Artículo */}
-          <header style={{ marginBottom: '36px' }}>
+          <header style={{ marginBottom: '32px' }}>
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap' }}>
               <span style={{
                 backgroundColor: currentPost.categoryColor + '20',
@@ -149,7 +137,14 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
             </p>
           </header>
 
-          {/* GEO Box / TL;DR para Motores de IA y lectura rápida */}
+          <div style={{ marginBottom: '36px', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
+            <img 
+              src={currentPost.coverImage} 
+              alt={currentPost.title} 
+              style={{ width: '100%', maxHeight: '420px', objectFit: 'cover', display: 'block' }} 
+            />
+          </div>
+
           <div style={{
             backgroundColor: 'var(--bg-secondary)',
             border: '2px solid var(--accent-primary)',
@@ -160,14 +155,13 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', color: 'var(--accent-primary)', fontWeight: '700', fontSize: '0.95rem' }}>
               <Sparkles size={18} />
-              <span>Resumen Ejecutivo (TL;DR)</span>
+              <span>Resumen Ejecutivo (TL;DR para Responsables de RRHH)</span>
             </div>
             <p style={{ color: 'var(--text-primary)', lineHeight: 1.7, fontSize: '1rem', margin: 0 }}>
               {currentPost.tldr}
             </p>
           </div>
 
-          {/* Cuerpo del Artículo */}
           <article className="blog-content-body" style={{ color: 'var(--text-primary)', lineHeight: 1.8, fontSize: '1.05rem' }}>
             
             {currentPost.slug === 'guia-credito-fundae-2026-como-gastarlo' && (
@@ -177,33 +171,39 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
                   Cada mes, tu empresa y tus empleados cotizan a la Seguridad Social en concepto de <strong>Formación Profesional</strong> (un 0,70% de la base de cotización por contingencias comunes: 0,60% a cargo de la empresa y 0,10% a cargo del trabajador).
                 </p>
                 <p>
-                  De esa cotización anual nace el <strong>Crédito de Formación Continua de FUNDAE</strong> (antigua Fundación Tripartita). Si al 31 de diciembre de 2026 no has ejecutado y comunicado tus acciones formativas, ese saldo desaparece de la cuenta de tu empresa y vuelve a las arcas estatales. <strong>No existe retroactividad ni devolución económica.</strong>
+                  De esa cotización anual nace el <strong>Crédito de Formación Continua de FUNDAE</strong> (antigua Fundación Tripartita). Si al 31 de diciembre de 2026 no has ejecutado y comunicado tus acciones formativas a través de la <a href="https://www.fundae.es" target="_blank" rel="noopener noreferrer" className="external-source-link">Sede Electrónica de FUNDAE <ExternalLink size={13} style={{ verticalAlign: 'middle' }} /></a>, ese saldo desaparece de la cuenta de tu empresa y vuelve a las arcas estatales. <strong>No existe retroactividad ni devolución económica.</strong>
                 </p>
 
                 <div style={{
                   backgroundColor: 'rgba(239, 68, 68, 0.08)',
                   border: '1px solid rgba(239, 68, 68, 0.3)',
                   borderRadius: '12px',
-                  padding: '16px 20px',
-                  margin: '24px 0'
+                  padding: '18px 20px',
+                  margin: '28px 0',
+                  display: 'flex',
+                  gap: '12px',
+                  alignItems: 'flex-start'
                 }}>
-                  <strong style={{ color: '#ef4444', display: 'block', marginBottom: '4px' }}>⚠️ Alerta de Caducidad:</strong>
-                  <span>El crédito caduca el 31 de diciembre de 2026. Las PYMES de menos de 50 empleados solo pueden acumularlo si solicitaron formalmente la reserva en la plataforma de FUNDAE antes del 30 de junio.</span>
+                  <AlertTriangle size={24} style={{ color: '#ef4444', flexShrink: 0, marginTop: '2px' }} />
+                  <div>
+                    <strong style={{ color: '#ef4444', display: 'block', marginBottom: '4px' }}>Alerta de Caducidad 2026:</strong>
+                    <span>El crédito caduca el 31 de diciembre de 2026. Las PYMES de menos de 50 empleados solo pueden acumularlo para el siguiente ejercicio si solicitaron formalmente la reserva en la plataforma antes del 30 de junio según el artículo 11 del <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2017-7763" target="_blank" rel="noopener noreferrer" className="external-source-link">Real Decreto 694/2017 <ExternalLink size={12} /></a>.</span>
+                  </div>
                 </div>
 
                 <h2>2. ¿Cuánto crédito tiene tu empresa en 2026?</h2>
                 <p>
-                  El crédito disponible depende de la cuota ingresada el año anterior y de la plantilla media según la <strong>Ley 30/2015</strong> y el <strong>Real Decreto 694/2017</strong>:
+                  El crédito disponible depende de la cuota ingresada el año anterior y de la plantilla media según la <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2015-9733" target="_blank" rel="noopener noreferrer" className="external-source-link">Ley 30/2015 <ExternalLink size={13} /></a> y la normativa reguladora del <a href="https://www.sepe.es" target="_blank" rel="noopener noreferrer" className="external-source-link">SEPE <ExternalLink size={13} /></a>:
                 </p>
 
-                <div style={{ overflowX: 'auto', margin: '24px 0' }}>
+                <div style={{ overflowX: 'auto', margin: '24px 0', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.95rem' }}>
                     <thead>
                       <tr style={{ backgroundColor: 'var(--bg-secondary)', borderBottom: '2px solid var(--border-color)' }}>
-                        <th style={{ padding: '12px 16px' }}>Plantilla</th>
-                        <th style={{ padding: '12px 16px' }}>% Bonificación Cuota</th>
-                        <th style={{ padding: '12px 16px' }}>Crédito Mínimo</th>
-                        <th style={{ padding: '12px 16px' }}>Cofinanciación</th>
+                        <th style={{ padding: '14px 16px' }}>Plantilla de la Empresa</th>
+                        <th style={{ padding: '14px 16px' }}>% Bonificación Cuota</th>
+                        <th style={{ padding: '14px 16px' }}>Crédito Mínimo Garantizado</th>
+                        <th style={{ padding: '14px 16px' }}>Cofinanciación Privada</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -215,19 +215,19 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                         <td style={{ padding: '12px 16px', fontWeight: '600' }}>6 a 9 empleados</td>
-                        <td style={{ padding: '12px 16px' }}>100% de la cuota</td>
+                        <td style={{ padding: '12px 16px' }}>100% de la cuota ingresada</td>
                         <td style={{ padding: '12px 16px' }}>420 €</td>
                         <td style={{ padding: '12px 16px' }}>0% (Exentas)</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                         <td style={{ padding: '12px 16px', fontWeight: '600' }}>10 a 49 empleados</td>
-                        <td style={{ padding: '12px 16px' }}>75% de la cuota</td>
+                        <td style={{ padding: '12px 16px' }}>75% de la cuota ingresada</td>
                         <td style={{ padding: '12px 16px' }}>Según cotización</td>
                         <td style={{ padding: '12px 16px' }}>10%</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                         <td style={{ padding: '12px 16px', fontWeight: '600' }}>50 a 249 empleados</td>
-                        <td style={{ padding: '12px 16px' }}>60% de la cuota</td>
+                        <td style={{ padding: '12px 16px' }}>60% de la cuota ingresada</td>
                         <td style={{ padding: '12px 16px' }}>Según cotización</td>
                         <td style={{ padding: '12px 16px' }}>20%</td>
                       </tr>
@@ -237,22 +237,36 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
 
                 <h2>3. Módulos Económicos Oficiales 2026</h2>
                 <p>
-                  En materias tecnológicas de <strong>Nivel Superior</strong> (como Inteligencia Artificial, ChatGPT, Microsoft Copilot, Power BI y Automatización), FUNDAE fija el módulo en <strong>13,00 € por hora y alumno en Aula Virtual</strong>.
+                  En materias tecnológicas de <strong>Nivel Superior</strong> (como Inteligencia Artificial, ChatGPT, Microsoft Copilot, Power BI y Automatización), FUNDAE fija el módulo en <strong>13,00 € por hora y alumno en Aula Virtual</strong>, frente a los 7,50 €/h de la teleformación tradicional con vídeos grabados.
                 </p>
+
+                <div style={{ margin: '32px 0', borderRadius: '12px', overflow: 'hidden' }}>
+                  <img 
+                    src="/images/desk-3139127_1280.webp" 
+                    alt="Puesto de trabajo optimizado con Inteligencia Artificial" 
+                    style={{ width: '100%', height: '280px', objectFit: 'cover', display: 'block' }} 
+                  />
+                  <span style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '8px', textAlign: 'center' }}>
+                    Capacitación de equipos en herramientas de IA aplicada y análisis de datos en el entorno laboral
+                  </span>
+                </div>
 
                 <div style={{
                   backgroundColor: 'var(--bg-secondary)',
                   borderLeft: '4px solid #10b981',
                   borderRadius: '0 12px 12px 0',
-                  padding: '20px',
+                  padding: '22px',
                   margin: '32px 0'
                 }}>
-                  <h3 style={{ margin: '0 0 12px 0', color: '#10b981', fontSize: '1.15rem' }}>💡 Caso Práctico Real: PYME de 22 trabajadores</h3>
+                  <h3 style={{ margin: '0 0 12px 0', color: '#10b981', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Building2 size={20} />
+                    <span>Caso Práctico Real: PYME de 22 trabajadores</span>
+                  </h3>
                   <ul style={{ margin: 0, paddingLeft: '20px', lineHeight: 1.8 }}>
                     <li><strong>Crédito disponible anual:</strong> 2.600 €</li>
-                    <li><strong>Curso:</strong> IA Generativa & Copilot en Aula Virtual (10 empleados, 20 horas)</li>
-                    <li><strong>Cálculo:</strong> 10 alumnos × 20 horas × 13 €/h = <strong>2.600 € bonificables</strong></li>
-                    <li><strong>Coste neto para la empresa:</strong> <span style={{ color: '#10b981', fontWeight: '800' }}>0 €</span> (deducido en los Seguros Sociales del mes siguiente)</li>
+                    <li><strong>Curso seleccionado:</strong> IA Generativa & Copilot en Aula Virtual (10 empleados, 20 horas en directo)</li>
+                    <li><strong>Cálculo oficial de bonificación:</strong> 10 alumnos × 20 horas × 13 €/h = <strong>2.600 € bonificables</strong></li>
+                    <li><strong>Coste neto final:</strong> <span style={{ color: '#10b981', fontWeight: '800' }}>0 €</span> (deducido en el RLC a través del <a href="https://www.seg-social.es" target="_blank" rel="noopener noreferrer" className="external-source-link">Sistema RED de la Seguridad Social <ExternalLink size={12} /></a>)</li>
                   </ul>
                 </div>
               </div>
@@ -262,14 +276,31 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
               <div>
                 <h2>1. Marco Legal: La IA está 100% amparada por el RD 694/2017</h2>
                 <p>
-                  El artículo 4 del Real Decreto 694/2017 establece expresamente que la formación bonificada debe orientarse a la <em>actualización de competencias profesionales, la transformación digital y la capacitación tecnológica de la plantilla</em>.
+                  El artículo 4 del <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2017-7763" target="_blank" rel="noopener noreferrer" className="external-source-link">Real Decreto 694/2017 <ExternalLink size={13} /></a> establece expresamente que la formación bonificada debe orientarse a la <em>actualización de competencias profesionales, la transformación digital y la capacitación tecnológica de la plantilla</em>.
                 </p>
                 <p>
-                  Las formaciones en <strong>ChatGPT, Microsoft 365 Copilot, Power Automate y Análisis de Datos con IA</strong> cumplen al 100% con los criterios de FUNDAE al aplicarse directamente a procesos laborales reales (redacción de informes, atención al cliente, automatización de tareas y análisis predictivo).
+                  Las formaciones en <strong>ChatGPT, Microsoft 365 Copilot, Power Automate y Análisis de Datos con IA</strong> cumplen al 100% con los criterios oficiales de <a href="https://www.fundae.es" target="_blank" rel="noopener noreferrer" className="external-source-link">FUNDAE <ExternalLink size={13} /></a> al aplicarse directamente a procesos laborales reales (redacción de informes, atención al cliente, automatización de tareas y análisis predictivo).
                 </p>
+
+                <div style={{ margin: '32px 0', borderRadius: '12px', overflow: 'hidden' }}>
+                  <img 
+                    src="/images/startup-594090_1280.webp" 
+                    alt="Equipo en sesión de formación en directo sobre Inteligencia Artificial" 
+                    style={{ width: '100%', height: '280px', objectFit: 'cover', display: 'block' }} 
+                  />
+                  <span style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '8px', textAlign: 'center' }}>
+                    Sesión interactiva en Aula Virtual sobre flujos de trabajo con Microsoft Copilot y ChatGPT
+                  </span>
+                </div>
+
                 <h2>2. Clasificación de Nivel Superior (13 €/h/participante)</h2>
                 <p>
-                  Al tratarse de competencias tecnológicas avanzadas, estos cursos acceden al módulo económico máximo de <strong>13,00 €/hora/alumno</strong> en modalidad Aula Virtual (en directo con formador interactivo).
+                  Al tratarse de competencias tecnológicas avanzadas, estos cursos acceden al módulo económico máximo de <strong>13,00 €/hora/alumno</strong> en modalidad Aula Virtual con formador en directo, frente al módulo básico general de 9,00 €/h.
+                </p>
+
+                <h2>3. Requisitos para la Aprobación del Expediente</h2>
+                <p>
+                  Para garantizar la validez legal ante el <a href="https://www.sepe.es" target="_blank" rel="noopener noreferrer" className="external-source-link">SEPE <ExternalLink size={13} /></a> y la Inspección de Trabajo, la acción formativa debe comunicarse con un mínimo de <strong>2 días naturales de antelación</strong>, contar con una guía didáctica estructurada y registrar la conexión activa de los participantes para acreditar al menos el <strong>75% de asistencia</strong>.
                 </p>
               </div>
             )}
@@ -278,11 +309,23 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
               <div>
                 <h2>1. Comparativa Económica: 13 €/h vs 7,50 €/h</h2>
                 <p>
-                  Para FUNDAE, el <strong>Aula Virtual</strong> computa como formación presencial síncrona en tiempo real con módulo superior de <strong>13,00 €/hora/alumno</strong>, mientras que la <strong>Teleformación</strong> asíncrona (vídeos pregrabados) tiene un tope de <strong>7,50 €/hora/alumno</strong>.
+                  Para FUNDAE, el <strong>Aula Virtual</strong> computa como formación presencial síncrona en tiempo real con módulo superior de <strong>13,00 €/hora/alumno</strong>, mientras que la <strong>Teleformación</strong> asíncrona (vídeos pregrabados en LMS) tiene un tope de <strong>7,50 €/hora/alumno</strong> según las directrices de la <a href="https://www.fundae.es" target="_blank" rel="noopener noreferrer" className="external-source-link">Guía Técnica de FUNDAE <ExternalLink size={13} /></a>.
                 </p>
+
+                <div style={{ margin: '32px 0', borderRadius: '12px', overflow: 'hidden' }}>
+                  <img 
+                    src="/images/laptops-593296_1280.webp" 
+                    alt="Comparativa tecnológica entre Aula Virtual y Teleformación" 
+                    style={{ width: '100%', height: '280px', objectFit: 'cover', display: 'block' }} 
+                  />
+                  <span style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '8px', textAlign: 'center' }}>
+                    Clases en directo mediante Teams o Zoom: mayor interacción y +73% de bonificación económica
+                  </span>
+                </div>
+
                 <h2>2. Requisitos Técnicos Obligatorios</h2>
                 <p>
-                  La plataforma utilizada (Teams, Zoom, Meet) debe registrar los <strong>logs de conexión</strong> (hora de entrada, salida y tiempo total) para justificar que cada alumno ha superado al menos el <strong>75% de asistencia mínima</strong>.
+                  La plataforma utilizada (Microsoft Teams, Zoom, Google Meet) debe registrar los <strong>logs de conexión fehacientes</strong> (hora de entrada, salida y tiempo total acumulado) para justificar que cada alumno ha superado al menos el <strong>75% de asistencia mínima obligatoria</strong>.
                 </p>
               </div>
             )}
@@ -291,18 +334,29 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
               <div>
                 <h2>1. El Retorno de Inversión (ROI) en Tareas Administrativas</h2>
                 <p>
-                  El personal administrativo invierte hasta el 45% de su tiempo en tareas manuales rutinarias. Con la capacitación adecuada en Copilot y ChatGPT, los equipos ahorran una media de <strong>4,2 horas semanales por persona</strong> en actas, conciliaciones, redacción y gestión de hojas de cálculo.
+                  El personal administrativo invierte hasta el 45% de su jornada laboral en tareas manuales rutinarias. Con la capacitación adecuada en Copilot y ChatGPT, los equipos ahorran una media de <strong>4,2 horas semanales por persona</strong> en actas, conciliaciones, redacción de correos y tratamiento de datos en Excel.
                 </p>
+
+                <div style={{ margin: '32px 0', borderRadius: '12px', overflow: 'hidden' }}>
+                  <img 
+                    src="/images/entrepreneur-593371_1280.webp" 
+                    alt="Administrativo utilizando herramientas de IA para gestión documental" 
+                    style={{ width: '100%', height: '280px', objectFit: 'cover', display: 'block' }} 
+                  />
+                  <span style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '8px', textAlign: 'center' }}>
+                    Automatización de tareas rutinarias: redacción de informes y extracción inteligente de datos
+                  </span>
+                </div>
+
                 <h2>2. Formación 100% Bonificable a Coste Cero</h2>
                 <p>
-                  Un curso práctico de 16 horas en Aula Virtual para 8 personas absorbe 1.664 € de crédito de formación, resultando a coste neto 0 € para la empresa.
+                  Un curso práctico de 16 horas en Aula Virtual para 8 personas absorbe 1.664 € de crédito de formación bonificada por la <a href="https://www.seg-social.es" target="_blank" rel="noopener noreferrer" className="external-source-link">Seguridad Social <ExternalLink size={13} /></a>, resultando a coste neto 0 € para la empresa.
                 </p>
               </div>
             )}
 
           </article>
 
-          {/* Sección de FAQs Desplegables */}
           {currentPost.faqs && currentPost.faqs.length > 0 && (
             <section style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid var(--border-color)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
@@ -356,58 +410,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
             </section>
           )}
 
-          {/* Widget para Copiar Post de LinkedIn */}
-          <div style={{
-            marginTop: '48px',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px dashed var(--accent-primary)',
-            borderRadius: '16px',
-            padding: '24px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700', fontSize: '0.95rem', color: 'var(--accent-primary)' }}>
-                <Share2 size={18} />
-                <span>Post preparado para LinkedIn (Listo para publicar)</span>
-              </div>
-              <button
-                onClick={() => handleCopyLinkedIn(currentPost.linkedinPost)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 16px',
-                  borderRadius: 'var(--border-radius-full)',
-                  backgroundColor: copiedLinkedIn ? '#10b981' : 'var(--accent-primary)',
-                  color: '#ffffff',
-                  border: 'none',
-                  fontWeight: '600',
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  transition: 'all var(--transition-fast)'
-                }}
-              >
-                {copiedLinkedIn ? <Check size={16} /> : <Copy size={16} />}
-                {copiedLinkedIn ? '¡Copiado al Portapapeles!' : 'Copiar Texto para LinkedIn'}
-              </button>
-            </div>
-            <pre style={{
-              backgroundColor: 'var(--bg-primary)',
-              padding: '16px',
-              borderRadius: '8px',
-              fontSize: '0.85rem',
-              color: 'var(--text-secondary)',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-              maxHeight: '200px',
-              overflowY: 'auto',
-              border: '1px solid var(--border-color)',
-              margin: 0
-            }}>
-              {currentPost.linkedinPost}
-            </pre>
-          </div>
-
-          {/* CTA Box al final del artículo */}
           <div style={{
             marginTop: '48px',
             background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-ai) 100%)',
@@ -468,12 +470,10 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
     );
   }
 
-  // Vista de Listado de Artículos
   return (
     <div className="blog-list-view" style={{ padding: '48px 0 80px 0', minHeight: '80vh' }}>
       <div className="container">
         
-        {/* Cabecera del Blog */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <span className="badge badge-primary" style={{ marginBottom: '16px' }}>Guías y Artículos Especializados</span>
           <h1 style={{ fontSize: 'calc(2rem + 1vw)', fontWeight: '800', marginBottom: '16px' }}>
@@ -483,7 +483,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
             Guías técnicas, cálculos de crédito, comparativas de normativas y casos prácticos reales para directores de RRHH y responsables de formación.
           </p>
 
-          {/* Selector de Modo Admin para ver todos los borradores */}
           <div style={{ marginTop: '24px', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', backgroundColor: 'var(--bg-secondary)', borderRadius: '20px', fontSize: '0.85rem' }}>
             <span style={{ color: 'var(--text-muted)' }}>
               {isAdminMode ? '🔓 Modo Editor Activo (Viendo los 4 artículos):' : '👁️ Vista Pública (Solo artículos publicados):'}
@@ -509,7 +508,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
           </div>
         </div>
 
-        {/* Grid de Artículos */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
@@ -528,7 +526,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
                 border: '1px solid var(--border-color)'
               }}
             >
-              {/* Imagen de cabecera */}
               <div style={{ position: 'relative', height: '180px', overflow: 'hidden' }}>
                 <img
                   src={post.coverImage}
@@ -568,7 +565,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
                 )}
               </div>
 
-              {/* Contenido de la Card */}
               <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                 <div>
                   <div style={{ display: 'flex', gap: '12px', color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '12px' }}>
@@ -645,6 +641,14 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
         }
         .blog-content-body p {
           margin-bottom: 18px;
+        }
+        .external-source-link {
+          color: var(--accent-primary);
+          text-decoration: underline;
+          font-weight: 600;
+        }
+        .external-source-link:hover {
+          color: var(--accent-hover);
         }
         .read-article-btn:hover {
           background-color: var(--accent-primary) !important;

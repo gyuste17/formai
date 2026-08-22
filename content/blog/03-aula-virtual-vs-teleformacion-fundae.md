@@ -176,32 +176,3 @@ En **FormAI** somos especialistas en formación práctica en **Aula Virtual** pa
 }
 </script>
 ```
-
----
-
-## 📱 Post Adaptado para LinkedIn (B2B Copywriting)
-
-```markdown
-💻 "Queremos formar a nuestro equipo online, ¿nos bonifica FUNDAE lo mismo con vídeos grabados que con clases en directo?"
-
-La respuesta directa es NO. Hay una diferencia de más del 70% en el importe bonificable.
-
-📊 En 2026, la normativa de FUNDAE establece:
-➡️ Teleformación (vídeos grabados en plataforma LMS): Máximo 7,50€ / hora / alumno en nivel superior.
-➡️ Aula Virtual (clases en directo por Teams/Zoom con profesor interactivo): Hasta 13,00€ / hora / alumno.
-
-Pero la diferencia no es solo económica:
-❌ Los cursos de vídeos grabados tienen tasas de abandono superiores al 80% en las empresas.
-✅ El Aula Virtual garantiza >95% de asistencia, resolución de dudas en tiempo real y adaptación a los casos reales de tu negocio.
-
-¿Qué exige FUNDAE para validar el Aula Virtual?
-1. Conexión simultánea bidireccional (voz y vídeo).
-2. Informe de logs de entrada y salida generado por la plataforma.
-3. Asistencia mínima acreditada del 75% por alumno.
-
-En FormAI gestionamos el 100% de la operativa técnica y administrativa para que tu empresa aproveche el módulo de 13€/h a coste 0€.
-
-👉 ¿Prefieres formar a tu equipo en directo o con vídeos? Déjame tu opinión en comentarios.
-
-#RecursosHumanos #FUNDAE #AulaVirtual #Teleformacion #FormacionEmpresas #GestionDelTalento #TransformacionDigital
-```

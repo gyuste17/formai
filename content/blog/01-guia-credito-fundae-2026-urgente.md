@@ -123,15 +123,16 @@ Si un participante no alcanza el 75% de asistencia (o conexión en aula virtual)
 ### ¿Cómo sé exactamente cuánto saldo le queda a mi empresa hoy?
 En **FormAI** realizamos la consulta oficial directa en la base de datos de la [Sede Electrónica de FUNDAE](https://www.fundae.es) sin ningún coste ni compromiso para tu empresa. Solo necesitamos tu CIF y la autorización telemática.
 
+
 ---
 
 ## 🚀 ¿Tienes crédito FUNDAE pendiente en 2026? Comprueba tu saldo en 24h
 
 En **FormAI** nos encargamos de todo el ciclo:
-1. Calculamos tu crédito disponible exacto.
+1. Calculamos tu crédito disponible exacto sin coste ni compromiso.
 2. Diseñamos la formación a medida de tu equipo (Inteligencia Artificial, Automatización, Excel con IA, Power BI).
-3. Tramitamos el 100% de la gestión administrativa y comunicaciones ante FUNDAE.
-4. Tu empresa se deduce el importe en los seguros sociales sin complicaciones.
+3. Tramitamos el 100% de la gestión administrativa y comunicaciones ante la [Sede Oficial de FUNDAE](https://www.fundae.es).
+4. Tu empresa se deduce el importe en los seguros sociales sin complicaciones a través del [Sistema RED de la Seguridad Social](https://www.seg-social.es).
 
 👉 **[Solicita tu Informe Gratuito de Crédito FUNDAE 2026 aquí](https://formai.es/#contacto)** o escríbenos directamente a **contacto@formai.es**.
 
@@ -197,29 +198,4 @@ En **FormAI** nos encargamos de todo el ciclo:
   ]
 }
 </script>
-```
-
----
-
-## 📱 Post Adaptado para LinkedIn (B2B Copywriting)
-
-```markdown
-🚨 ¿Sabías que el crédito de formación de tu empresa caduca el 31 de diciembre y NO se acumula?
-
-Cada mes tu empresa cotiza un 0,70% por Formación Profesional a la Seguridad Social. 
-
-Ese dinero genera una bolsa anual en FUNDAE que muchas PYMES dejan perder por desconocimiento o por falta de tiempo en los dptos de RRHH.
-
-💡 La realidad en 2026:
-➡️ Una empresa de 5 empleados tiene 420€ garantizados a coste cero.
-➡️ Una PYME de 20 trabajadores tiene más de 2.500€ de crédito disponible.
-➡️ Formar a tu equipo en Inteligencia Artificial (ChatGPT, Microsoft Copilot, Power BI) en Aula Virtual se bonifica hasta a 13€/hora/alumno.
-
-Si no lo usas antes de fin de año, ese presupuesto vuelve al Estado.
-
-En FormAI te decimos en menos de 24h cuánto saldo exacto tiene tu empresa y nos encargamos del 100% de la gestión burocrática ante FUNDAE para que tu equipo se forme a coste 0€.
-
-👉 ¿Quieres saber tu saldo actual sin compromiso? Escríbeme por privado o déjame un comentario y te lo calculamos hoy mismo.
-
-#RecursosHumanos #FUNDAE #FormacionBonificada #InteligenciaArtificial #Productividad #PYMES #Talento
 ```

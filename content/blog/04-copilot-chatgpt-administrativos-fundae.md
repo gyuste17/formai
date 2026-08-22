@@ -176,37 +176,3 @@ En **FormAI** adaptamos los ejercicios del curso a los documentos, formatos y ca
 }
 </script>
 ```
-
----
-
-## 📱 Post Adaptado para LinkedIn (B2B Copywriting)
-
-```markdown
-📊 El 45% de la jornada de un departamento administrativo se va en 4 tareas repetitivas:
-
-1. Redactar respuestas a correos estándar.
-2. Pasar a limpio las actas de reuniones.
-3. Buscar datos dispersos en hojas de Excel interminables.
-4. Extraer información manual de contratos y facturas en PDF.
-
-No hace falta contratar más personal para duplicar la capacidad operativa: hace falta formar a tu equipo actual en las herramientas correctas.
-
-💡 Con Inteligencia Artificial (Microsoft Copilot y ChatGPT):
-⚡ Un acta de reunión en Teams se genera en 30 segundos.
-⚡ Un informe comparativo en Excel se formula en lenguaje natural.
-⚡ La redacción de emails complejos pasa de 15 minutos a 1 minuto.
-
-El resultado: Un ahorro medio de más de 4 horas semanales por persona.
-
-Y lo mejor para los dptos de RRHH:
-En 2026 puedes bonificar esta formación al 100% con los créditos de FUNDAE de tu empresa (módulo de 13€/h/alumno en Aula Virtual).
-
-Coste final para la empresa: 0€.
-Impacto en la productividad: Inmediato desde la primera semana.
-
-En FormAI diseñamos cursos prácticos con los documentos reales de tu empresa y nos encargamos de todo el papeleo ante FUNDAE.
-
-👉 ¿Quieres ver el temario completo de 16 horas para dptos administrativos? Escríbeme y te lo envío en PDF.
-
-#Productividad #RecursosHumanos #FUNDAE #MicrosoftCopilot #ChatGPT #Administracion #PYMES #EficienciaOperativa
-```
