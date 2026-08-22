@@ -20,8 +20,13 @@ import {
   Calendar,
   Building,
   ExternalLink,
-  Lock
+  Lock,
+  BookOpen,
+  Copy,
+  Check,
+  Share2
 } from 'lucide-react';
+import { blogPosts } from '../data/blogPosts';
 
 const COLUMNS = ["Nuevo", "Contactado", "Propuesta / Demo", "Ganado", "Descartado"];
 
@@ -84,6 +89,9 @@ export default function LeadsManager({ onClose }) {
     return saved ? JSON.parse(saved) : INITIAL_MOCK_LEADS;
   });
 
+  const [adminTab, setAdminTab] = useState('leads'); // 'leads' | 'blog'
+  const [copiedPostId, setCopiedPostId] = useState(null);
+
   const [view, setView] = useState('kanban'); // 'kanban' | 'table'
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -92,6 +100,14 @@ export default function LeadsManager({ onClose }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewLead, setIsNewLead] = useState(false);
   const [newComment, setNewComment] = useState('');
+
+  const handleCopyLinkedInPost = (postId, text) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedPostId(postId);
+      setTimeout(() => setCopiedPostId(null), 2500);
+    }
+  };
 
   // Form state for edit/create
   const [formData, setFormData] = useState({
@@ -483,46 +499,71 @@ export default function LeadsManager({ onClose }) {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <button
-              onClick={fetchFromGoogleScript}
-              className="btn-secondary"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '9px 16px',
-                borderRadius: 'var(--border-radius-sm)',
-                fontWeight: '600',
-                fontSize: '0.9rem',
-                border: '1px solid var(--border-color)',
-                cursor: 'pointer',
-                backgroundColor: 'var(--bg-secondary)',
-                color: 'var(--text-primary)'
-              }}
-            >
-              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-              {isRefreshing ? 'Sincronizando...' : 'Sincronizar'}
-            </button>
+            {adminTab === 'leads' && (
+              <>
+                <button
+                  onClick={fetchFromGoogleScript}
+                  className="btn-secondary"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '9px 16px',
+                    borderRadius: 'var(--border-radius-sm)',
+                    fontWeight: '600',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)',
+                    cursor: 'pointer',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)'
+                  }}
+                >
+                  <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+                  {isRefreshing ? 'Sincronizando...' : 'Sincronizar'}
+                </button>
 
-            <button
-              onClick={openCreateModal}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '9px 18px',
-                borderRadius: 'var(--border-radius-sm)',
-                fontWeight: '700',
-                fontSize: '0.9rem',
-                border: 'none',
-                cursor: 'pointer',
-                backgroundColor: 'var(--accent-primary)',
-                color: '#ffffff',
-                boxShadow: 'var(--shadow-md)'
-              }}
-            >
-              <Plus size={16} /> Nuevo Lead
-            </button>
+                <button
+                  onClick={openCreateModal}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '9px 18px',
+                    borderRadius: 'var(--border-radius-sm)',
+                    fontWeight: '700',
+                    fontSize: '0.9rem',
+                    border: 'none',
+                    cursor: 'pointer',
+                    backgroundColor: 'var(--accent-primary)',
+                    color: '#ffffff',
+                    boxShadow: 'var(--shadow-md)'
+                  }}
+                >
+                  <Plus size={16} /> Nuevo Lead
+                </button>
+              </>
+            )}
+
+            {adminTab === 'blog' && (
+              <a
+                href="#blog"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '9px 16px',
+                  borderRadius: 'var(--border-radius-sm)',
+                  fontWeight: '600',
+                  fontSize: '0.9rem',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: 'var(--bg-secondary)',
+                  color: 'var(--text-primary)',
+                  textDecoration: 'none'
+                }}
+              >
+                <ExternalLink size={15} /> Ver Blog Público
+              </a>
+            )}
 
             <button
               onClick={handleLogout}
@@ -564,385 +605,372 @@ export default function LeadsManager({ onClose }) {
           </div>
         </div>
 
-        {/* Metrics Grid */}
+        {/* Tab Navigation (Leads vs Blog) */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '16px',
-          marginBottom: '28px'
-        }}>
-          <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
-            <div>
-              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Total Leads</div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: 'var(--text-heading)' }}>{metrics.total}</div>
-            </div>
-            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--accent-primary-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Users size={22} />
-            </div>
-          </div>
-
-          <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
-            <div>
-              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Nuevos Sin Atender</div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: '#d97706' }}>{metrics.nuevos}</div>
-            </div>
-            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(245, 158, 11, 0.15)', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Sparkles size={22} />
-            </div>
-          </div>
-
-          <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
-            <div>
-              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>En Negociación / Propuesta</div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: 'var(--accent-ai)' }}>{metrics.gestion}</div>
-            </div>
-            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--accent-ai-light)', color: 'var(--accent-ai)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Clock size={22} />
-            </div>
-          </div>
-
-          <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
-            <div>
-              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Cursos Ganados / Cierre</div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: '#059669' }}>{metrics.ganados}</div>
-            </div>
-            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <CheckCircle2 size={22} />
-            </div>
-          </div>
-        </div>
-
-        {/* Toolbar & Filters */}
-        <div style={{
-          backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--border-radius-md)',
-          padding: '14px 20px',
-          marginBottom: '24px',
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '14px'
+          gap: '8px',
+          marginBottom: '28px',
+          borderBottom: '1px solid var(--border-color)',
+          paddingBottom: '12px'
         }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            backgroundColor: 'var(--bg-tertiary)',
-            border: '1px solid var(--border-color)',
-            borderRadius: 'var(--border-radius-sm)',
-            padding: '8px 14px',
-            minWidth: '260px',
-            flex: 1,
-            maxWidth: '420px'
-          }}>
-            <Search size={18} color="var(--text-muted)" />
-            <input
-              type="text"
-              placeholder="Buscar por cliente, empresa, email, teléfono..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                border: 'none',
-                background: 'transparent',
-                outline: 'none',
-                width: '100%',
-                color: 'var(--text-primary)',
-                fontSize: '0.9rem'
-              }}
-            />
-          </div>
+          <button
+            onClick={() => setAdminTab('leads')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              borderRadius: 'var(--border-radius-sm)',
+              fontWeight: '700',
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              border: 'none',
+              backgroundColor: adminTab === 'leads' ? 'var(--accent-primary)' : 'var(--bg-secondary)',
+              color: adminTab === 'leads' ? '#ffffff' : 'var(--text-secondary)',
+              transition: 'all var(--transition-fast)'
+            }}
+          >
+            <Users size={18} />
+            <span>Leads & CRM ({leads.length})</span>
+          </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              style={{
-                backgroundColor: 'var(--bg-tertiary)',
-                border: '1px solid var(--border-color)',
-                color: 'var(--text-primary)',
-                padding: '8px 14px',
-                borderRadius: 'var(--border-radius-sm)',
-                fontSize: '0.88rem',
-                outline: 'none',
-                fontWeight: '600'
-              }}
-            >
-              <option value="ALL">Todos los Estados</option>
-              {COLUMNS.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+          <button
+            onClick={() => setAdminTab('blog')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              borderRadius: 'var(--border-radius-sm)',
+              fontWeight: '700',
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              border: 'none',
+              backgroundColor: adminTab === 'blog' ? 'var(--accent-primary)' : 'var(--bg-secondary)',
+              color: adminTab === 'blog' ? '#ffffff' : 'var(--text-secondary)',
+              transition: 'all var(--transition-fast)'
+            }}
+          >
+            <BookOpen size={18} />
+            <span>Guías & Blog ({blogPosts.length} artículos)</span>
+          </button>
+        </div>        {/* Content based on Tab */}
+        {adminTab === 'leads' ? (
+          <>
+            {/* Metrics Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '16px',
+              marginBottom: '28px'
+            }}>
+              <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
+                <div>
+                  <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Total Leads</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: 'var(--text-heading)' }}>{metrics.total}</div>
+                </div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--accent-primary-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Users size={22} />
+                </div>
+              </div>
 
+              <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
+                <div>
+                  <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Nuevos Sin Atender</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: '#d97706' }}>{metrics.nuevos}</div>
+                </div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(245, 158, 11, 0.15)', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Sparkles size={22} />
+                </div>
+              </div>
+
+              <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
+                <div>
+                  <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>En Negociación / Propuesta</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: 'var(--accent-ai)' }}>{metrics.gestion}</div>
+                </div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--accent-ai-light)', color: 'var(--accent-ai)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Clock size={22} />
+                </div>
+              </div>
+
+              <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
+                <div>
+                  <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Ganados (Clientes)</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: '#10b981' }}>{metrics.ganados}</div>
+                </div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <CheckCircle2 size={22} />
+                </div>
+              </div>
+            </div>
+
+            {/* Filter and View Bar */}
             <div style={{
               display: 'flex',
-              backgroundColor: 'var(--bg-tertiary)',
-              padding: '3px',
-              borderRadius: 'var(--border-radius-sm)',
-              border: '1px solid var(--border-color)'
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '16px',
+              marginBottom: '24px'
             }}>
-              <button
-                onClick={() => setView('kanban')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 14px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  backgroundColor: view === 'kanban' ? 'var(--bg-secondary)' : 'transparent',
-                  color: view === 'kanban' ? 'var(--accent-primary)' : 'var(--text-muted)',
-                  fontWeight: '700',
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  boxShadow: view === 'kanban' ? 'var(--shadow-sm)' : 'none'
-                }}
-              >
-                <Kanban size={15} /> Kanban
-              </button>
-              <button
-                onClick={() => setView('table')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 14px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  backgroundColor: view === 'table' ? 'var(--bg-secondary)' : 'transparent',
-                  color: view === 'table' ? 'var(--accent-primary)' : 'var(--text-muted)',
-                  fontWeight: '700',
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  boxShadow: view === 'table' ? 'var(--shadow-sm)' : 'none'
-                }}
-              >
-                <TableIcon size={15} /> Tabla
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: '280px', maxWidth: '500px' }}>
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input
+                    type="text"
+                    placeholder="Buscar por cliente, empresa, email o teléfono..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="form-input"
+                    style={{ paddingLeft: '38px' }}
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+                    >
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Filter size={14} style={{ color: 'var(--text-muted)' }} />
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="form-input"
+                    style={{ padding: '8px 12px', fontSize: '0.85rem' }}
+                  >
+                    <option value="ALL">Todos los Estados</option>
+                    {COLUMNS.map(col => (
+                      <option key={col} value={col}>{col}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', backgroundColor: 'var(--bg-secondary)', padding: '4px', borderRadius: 'var(--border-radius-sm)', border: '1px solid var(--border-color)' }}>
+                  <button
+                    onClick={() => setView('kanban')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 12px',
+                      borderRadius: 'var(--border-radius-sm)',
+                      border: 'none',
+                      backgroundColor: view === 'kanban' ? 'var(--accent-primary)' : 'transparent',
+                      color: view === 'kanban' ? '#fff' : 'var(--text-secondary)',
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Kanban size={14} /> Kanban
+                  </button>
+                  <button
+                    onClick={() => setView('table')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 12px',
+                      borderRadius: 'var(--border-radius-sm)',
+                      border: 'none',
+                      backgroundColor: view === 'table' ? 'var(--accent-primary)' : 'transparent',
+                      color: view === 'table' ? '#fff' : 'var(--text-secondary)',
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <TableIcon size={14} /> Tabla
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* View Mode: Kanban */}
-        {view === 'kanban' && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '16px',
-            alignItems: 'start',
-            overflowX: 'auto',
-            paddingBottom: '20px'
-          }}>
-            {COLUMNS.map(columnName => {
-              const colLeads = filteredLeads.filter(l => (l.status || 'Nuevo') === columnName);
-              const badgeStyle = getBadgeStyle(columnName);
+            {/* Kanban View */}
+            {view === 'kanban' && (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '16px',
+                alignItems: 'start',
+                overflowX: 'auto',
+                paddingBottom: '20px'
+              }}>
+                {COLUMNS.map((columnName) => {
+                  if (statusFilter !== 'ALL' && statusFilter !== columnName) return null;
+                  const columnLeads = filteredLeads.filter(l => (l.status || 'Nuevo') === columnName);
 
-              return (
-                <div
-                  key={columnName}
-                  style={{
-                    backgroundColor: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: 'var(--border-radius-md)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minHeight: '400px',
-                    boxShadow: 'var(--shadow-sm)'
-                  }}
-                >
-                  <div style={{
-                    padding: '14px 16px',
-                    borderBottom: '1px solid var(--border-color)',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <span style={{
-                      backgroundColor: badgeStyle.bg,
-                      color: badgeStyle.text,
-                      border: `1px solid ${badgeStyle.border}`,
-                      padding: '4px 10px',
-                      borderRadius: '20px',
-                      fontSize: '0.8rem',
-                      fontWeight: '700'
-                    }}>
-                      {columnName}
-                    </span>
-                    <span style={{
-                      backgroundColor: 'var(--bg-tertiary)',
-                      color: 'var(--text-muted)',
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      fontSize: '0.75rem',
-                      fontWeight: '700'
-                    }}>
-                      {colLeads.length}
-                    </span>
-                  </div>
-
-                  <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {colLeads.length === 0 ? (
+                  return (
+                    <div
+                      key={columnName}
+                      style={{
+                        backgroundColor: 'var(--bg-secondary)',
+                        borderRadius: 'var(--border-radius-md)',
+                        padding: '16px',
+                        border: '1px solid var(--border-color)',
+                        minHeight: '400px',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                    >
                       <div style={{
-                        padding: '24px 12px',
-                        textAlign: 'center',
-                        color: 'var(--text-muted)',
-                        fontSize: '0.82rem',
-                        border: '1px dashed var(--border-color)',
-                        borderRadius: 'var(--border-radius-sm)'
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '16px',
+                        paddingBottom: '8px',
+                        borderBottom: '2px solid var(--border-color)'
                       }}>
-                        Sin leads en esta fase
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{
+                            width: '10px',
+                            height: '10px',
+                            borderRadius: '50%',
+                            backgroundColor: getStatusColor(columnName)
+                          }} />
+                          <h3 style={{ fontSize: '0.95rem', fontWeight: '700', fontFamily: 'var(--font-display)' }}>
+                            {columnName}
+                          </h3>
+                        </div>
+                        <span style={{
+                          backgroundColor: 'var(--bg-primary)',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          fontSize: '0.75rem',
+                          fontWeight: '700',
+                          color: 'var(--text-muted)'
+                        }}>
+                          {columnLeads.length}
+                        </span>
                       </div>
-                    ) : (
-                      colLeads.map(lead => {
-                        const cleanPhone = (lead.phone || '').replace(/\D/g, '');
-                        const waUrl = `https://wa.me/34${cleanPhone.startsWith('34') ? cleanPhone.substring(2) : cleanPhone}?text=${encodeURIComponent(`Hola ${lead.name}, te contacto de FormAI sobre tu consulta de formación bonificada para ${lead.company}. ¿Podemos agendar una breve llamada?`)}`;
 
-                        return (
-                          <div
-                            key={lead.id}
-                            onClick={() => openEditModal(lead)}
-                            style={{
-                              backgroundColor: 'var(--bg-primary)',
-                              border: '1px solid var(--border-color)',
-                              borderRadius: 'var(--border-radius-sm)',
-                              padding: '14px',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '10px',
-                              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
-                            }}
-                            className="lead-card-hover"
-                          >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                              <div>
-                                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-heading)' }}>
-                                  {lead.name}
-                                </div>
-                                <div style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: '600' }}>
-                                  {lead.company || 'Empresa no especificada'}
-                                </div>
-                              </div>
-                              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                                {(lead.date || '').split(' ')[0]}
-                              </span>
-                            </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+                        {columnLeads.length === 0 ? (
+                          <div style={{
+                            padding: '32px 16px',
+                            textAlign: 'center',
+                            color: 'var(--text-muted)',
+                            fontSize: '0.85rem',
+                            border: '1px dashed var(--border-color)',
+                            borderRadius: 'var(--border-radius-sm)'
+                          }}>
+                            Sin leads en este estado
+                          </div>
+                        ) : (
+                          columnLeads.map((lead) => {
+                            const waUrl = getWhatsAppUrl(lead.phone, lead.name);
 
-                            {lead.subject && (
-                              <div style={{
-                                fontSize: '0.8rem',
-                                color: 'var(--text-secondary)',
-                                backgroundColor: 'var(--bg-secondary)',
-                                padding: '4px 8px',
-                                borderRadius: '4px',
-                                border: '1px solid var(--border-color)',
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis'
-                              }}>
-                                {lead.subject}
-                              </div>
-                            )}
-
-                            <div
-                              onClick={(e) => e.stopPropagation()}
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                paddingTop: '8px',
-                                borderTop: '1px dashed var(--border-color)'
-                              }}
-                            >
-                              <div style={{ display: 'flex', gap: '6px' }}>
-                                {lead.phone && (
-                                  <>
-                                    <a
-                                      href={`tel:${lead.phone}`}
-                                      style={{
-                                        width: '28px',
-                                        height: '28px',
-                                        borderRadius: '6px',
-                                        backgroundColor: 'var(--bg-secondary)',
-                                        border: '1px solid var(--border-color)',
-                                        color: 'var(--text-secondary)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                      }}
-                                      title="Llamar por teléfono"
-                                    >
-                                      <Phone size={13} />
-                                    </a>
-                                    <a
-                                      href={waUrl}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      style={{
-                                        width: '28px',
-                                        height: '28px',
-                                        borderRadius: '6px',
-                                        backgroundColor: '#25d366',
-                                        color: '#ffffff',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                      }}
-                                      title="Abrir WhatsApp"
-                                    >
-                                      <MessageCircle size={13} />
-                                    </a>
-                                  </>
-                                )}
-                                {lead.email && (
-                                  <a
-                                    href={`mailto:${lead.email}?subject=Formación Bonificada FormAI - ${lead.company}`}
-                                    style={{
-                                      width: '28px',
-                                      height: '28px',
-                                      borderRadius: '6px',
-                                      backgroundColor: 'var(--bg-secondary)',
-                                      border: '1px solid var(--border-color)',
-                                      color: 'var(--text-secondary)',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center'
-                                    }}
-                                    title="Enviar Email"
-                                  >
-                                    <Mail size={13} />
-                                  </a>
-                                )}
-                              </div>
-
-                              <select
-                                value={lead.status || 'Nuevo'}
-                                onChange={(e) => handleStatusChange(lead.id, e.target.value)}
+                            return (
+                              <div
+                                key={lead.id}
+                                onClick={() => openEditModal(lead)}
+                                className="glass-card lead-card-hover"
                                 style={{
-                                  padding: '2px 6px',
-                                  fontSize: '0.75rem',
-                                  borderRadius: '4px',
+                                  padding: '14px',
+                                  borderRadius: 'var(--border-radius-sm)',
                                   border: '1px solid var(--border-color)',
-                                  backgroundColor: 'var(--bg-secondary)',
-                                  color: 'var(--text-primary)',
-                                  outline: 'none',
-                                  fontWeight: '600'
+                                  backgroundColor: 'var(--bg-primary)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.2s ease',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '10px'
                                 }}
                               >
-                                {COLUMNS.map(col => (
-                                  <option key={col} value={col}>{col}</option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                  <div>
+                                    <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-heading)' }}>
+                                      {lead.name || 'Sin Nombre'}
+                                    </div>
+                                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                                      <Building size={12} />
+                                      <span>{lead.company || 'Empresa no indicada'}</span>
+                                    </div>
+                                  </div>
+
+                                  <span style={{
+                                    fontSize: '0.7rem',
+                                    fontWeight: '700',
+                                    padding: '2px 6px',
+                                    borderRadius: '6px',
+                                    backgroundColor: getPriorityColor(lead.priority) + '20',
+                                    color: getPriorityColor(lead.priority)
+                                  }}>
+                                    {lead.priority || 'Media'}
+                                  </span>
+                                </div>
+
+                                {lead.subject && (
+                                  <div style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: '600' }}>
+                                    {lead.subject}
+                                  </div>
+                                )}
+
+                                {lead.message && (
+                                  <div style={{
+                                    fontSize: '0.8rem',
+                                    color: 'var(--text-secondary)',
+                                    lineHeight: 1.4,
+                                    maxHeight: '44px',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical'
+                                  }}>
+                                    {lead.message}
+                                  </div>
+                                )}
+
+                                <div style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  paddingTop: '8px',
+                                  borderTop: '1px solid var(--border-color)',
+                                  fontSize: '0.75rem',
+                                  color: 'var(--text-muted)'
+                                }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <Calendar size={11} />
+                                    <span>{lead.date?.split(' ')[0] || 'Reciente'}</span>
+                                  </div>
+
+                                  <div style={{ display: 'flex', gap: '4px' }} onClick={(e) => e.stopPropagation()}>
+                                    {lead.phone && (
+                                      <>
+                                        <a href={`tel:${lead.phone}`} className="btn-icon" title="Llamar">
+                                          <Phone size={12} />
+                                        </a>
+                                        <a href={waUrl} target="_blank" rel="noreferrer" className="btn-icon" style={{ color: '#25d366' }} title="WhatsApp">
+                                          <MessageCircle size={12} />
+                                        </a>
+                                      </>
+                                    )}
+                                    {lead.email && (
+                                      <a href={`mailto:${lead.email}`} className="btn-icon" title="Email">
+                                        <Mail size={12} />
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
         {/* View Mode: Table */}
         {view === 'table' && (
@@ -1042,8 +1070,174 @@ export default function LeadsManager({ onClose }) {
             </table>
           </div>
         )}
+      </>
+    ) : (
+      /* TAB DE GESTIÓN DE BLOG & BORRADORES */
+      <div className="admin-blog-manager" style={{ animation: 'fadeIn 0.2s ease' }}>
+        
+        {/* Métricas de Blog */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '16px',
+          marginBottom: '28px'
+        }}>
+          <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
+            <div>
+              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Total Artículos</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: 'var(--text-heading)' }}>{blogPosts.length}</div>
+            </div>
+            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--accent-primary-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <BookOpen size={22} />
+            </div>
+          </div>
+
+          <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
+            <div>
+              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Publicados en Web</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: '#059669' }}>
+                {blogPosts.filter(p => p.status === 'published').length}
+              </div>
+            </div>
+            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle2 size={22} />
+            </div>
+          </div>
+
+          <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-color)' }}>
+            <div>
+              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '0.5px' }}>Borradores Semanales</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: '800', fontFamily: 'var(--font-display)', color: '#d97706' }}>
+                {blogPosts.filter(p => p.status === 'draft').length}
+              </div>
+            </div>
+            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(245, 158, 11, 0.15)', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Clock size={22} />
+            </div>
+          </div>
+        </div>
+
+        {/* Listado de Artículos para Administrador */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {blogPosts.map((post, idx) => (
+            <div
+              key={post.id}
+              className="glass-card"
+              style={{
+                borderRadius: '16px',
+                border: '1px solid var(--border-color)',
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+                backgroundColor: 'var(--bg-secondary)'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flex: 1, minWidth: '280px' }}>
+                  <img
+                    src={post.coverImage}
+                    alt={post.title}
+                    style={{ width: '80px', height: '60px', borderRadius: '8px', objectFit: 'cover' }}
+                  />
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                      <span style={{
+                        backgroundColor: post.categoryColor + '20',
+                        color: post.categoryColor,
+                        fontWeight: '700',
+                        fontSize: '0.75rem',
+                        padding: '2px 8px',
+                        borderRadius: '12px'
+                      }}>
+                        {post.category}
+                      </span>
+                      <span style={{
+                        backgroundColor: post.status === 'published' ? '#059669' : '#d97706',
+                        color: '#ffffff',
+                        fontWeight: '700',
+                        fontSize: '0.72rem',
+                        padding: '2px 8px',
+                        borderRadius: '12px'
+                      }}>
+                        {post.status === 'published' ? '● Publicado' : `⏳ ${post.scheduledWeek || 'Borrador'}`}
+                      </span>
+                    </div>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}>
+                      {idx + 1}. {post.title}
+                    </h4>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <a
+                    href={`#blog/${post.slug}`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 14px',
+                      borderRadius: 'var(--border-radius-sm)',
+                      backgroundColor: 'var(--accent-primary)',
+                      color: '#ffffff',
+                      fontWeight: '600',
+                      fontSize: '0.85rem',
+                      textDecoration: 'none'
+                    }}
+                  >
+                    <ExternalLink size={14} /> Ver en la Web
+                  </a>
+
+                  <button
+                    onClick={() => handleCopyLinkedInPost(post.id, post.linkedinPost)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 14px',
+                      borderRadius: 'var(--border-radius-sm)',
+                      backgroundColor: copiedPostId === post.id ? '#059669' : 'var(--bg-primary)',
+                      color: copiedPostId === post.id ? '#ffffff' : 'var(--text-primary)',
+                      border: '1px solid var(--border-color)',
+                      fontWeight: '600',
+                      fontSize: '0.85rem',
+                      cursor: 'pointer',
+                      transition: 'all var(--transition-fast)'
+                    }}
+                  >
+                    {copiedPostId === post.id ? <Check size={14} /> : <Copy size={14} />}
+                    {copiedPostId === post.id ? '¡Copiado!' : 'Copiar Copy LinkedIn'}
+                  </button>
+                </div>
+              </div>
+
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5, margin: 0 }}>
+                <strong>Resumen GEO:</strong> {post.tldr}
+              </p>
+
+              <details style={{ backgroundColor: 'var(--bg-primary)', borderRadius: '8px', padding: '10px 14px', border: '1px solid var(--border-color)' }}>
+                <summary style={{ cursor: 'pointer', fontSize: '0.82rem', fontWeight: '700', color: 'var(--accent-primary)' }}>
+                  📄 Ver Copy de LinkedIn preparado para este artículo
+                </summary>
+                <pre style={{
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word',
+                  fontSize: '0.82rem',
+                  color: 'var(--text-secondary)',
+                  marginTop: '10px',
+                  lineHeight: 1.5
+                }}>
+                  {post.linkedinPost}
+                </pre>
+              </details>
+            </div>
+          ))}
+        </div>
 
       </div>
+    )}
+
+  </div>
 
       {/* Modal Edit / Create */}
       {isModalOpen && (

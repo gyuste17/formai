@@ -62,8 +62,7 @@ export default function Footer({ onOpenCatalogModal }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
               <a href="#blog" className="footer-link" style={{ fontWeight: '600', color: 'var(--accent-primary)' }}>📚 Ver Todas las Guías</a>
               <a href="#blog/guia-credito-fundae-2026-como-gastarlo" className="footer-link">Cómo no perder el crédito 2026</a>
-              <a href="#blog/cursos-inteligencia-artificial-bonificables-fundae-2026" className="footer-link">Cursos de IA Bonificables</a>
-              <a href="#blog/aula-virtual-vs-teleformacion-fundae-2026" className="footer-link">Aula Virtual vs Teleformación</a>
+              <a href="#calculadora" className="footer-link">Simulador de Crédito FUNDAE</a>
             </div>
           </div>
 
@@ -93,10 +92,7 @@ export default function Footer({ onOpenCatalogModal }) {
             <a href="#" className="footer-link">Política de Privacidad</a>
             <a href="#" className="footer-link">Aviso Legal</a>
             <a href="#" className="footer-link">Política de Cookies</a>
-            <a href="#blog-admin" className="footer-link" style={{ opacity: 0.4, fontSize: '0.8rem' }} title="Modo Editor Blog">
-              ✍️
-            </a>
-            <a href="#leads" className="footer-link" style={{ opacity: 0.4, fontSize: '0.8rem' }} title="Acceso Gestión Leads">
+            <a href="#admin" className="footer-link" style={{ opacity: 0.4, fontSize: '0.85rem' }} title="Acceso Administración FormAI (Leads & Blog)">
               🔐
             </a>
           </div>

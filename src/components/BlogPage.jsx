@@ -7,16 +7,27 @@ import { blogPosts } from '../data/blogPosts';
 
 export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContact }) {
   const [selectedSlug, setSelectedSlug] = useState(initialSlug || null);
-  const [isAdminMode, setIsAdminMode] = useState(() => {
+  
+  // Solo se activa el modo editor si el usuario ha iniciado sesión con la contraseña en el CRM / Admin
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
     if (typeof window === 'undefined') return false;
     return (
-      window.location.hash.includes('admin') || 
-      localStorage.getItem('formai-blog-admin') === 'true'
+      sessionStorage.getItem('formai_crm_auth') === 'true' || 
+      localStorage.getItem('formai_crm_remember') === 'true'
     );
   });
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
   useEffect(() => {
+    const checkAuth = () => {
+      if (typeof window !== 'undefined') {
+        const auth = sessionStorage.getItem('formai_crm_auth') === 'true' || 
+                     localStorage.getItem('formai_crm_remember') === 'true';
+        setIsAuthenticated(auth);
+      }
+    };
+    checkAuth();
+
     const handleHash = () => {
       const hash = window.location.hash;
       if (hash.startsWith('#blog/')) {
@@ -24,10 +35,6 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
         setSelectedSlug(slug);
       } else if (hash === '#blog' || hash === '#blog-admin') {
         setSelectedSlug(null);
-        if (hash === '#blog-admin') {
-          setIsAdminMode(true);
-          localStorage.setItem('formai-blog-admin', 'true');
-        }
       }
     };
     handleHash();
@@ -35,7 +42,9 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
-  const visiblePosts = isAdminMode 
+  // Los usuarios públicos SOLO ven los artículos con status: 'published'
+  // Los administradores autenticados ven todos (publicados + borradores)
+  const visiblePosts = isAuthenticated 
     ? blogPosts 
     : blogPosts.filter(p => p.status === 'published');
 
@@ -43,11 +52,62 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
     ? blogPosts.find(p => p.slug === selectedSlug) 
     : null;
 
+  const isCurrentPostDraftAndUnauth = currentPost && currentPost.status === 'draft' && !isAuthenticated;
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [selectedSlug]);
+
+  if (isCurrentPostDraftAndUnauth) {
+    return (
+      <div className="container" style={{ maxWidth: '600px', margin: '80px auto', textAlign: 'center', padding: '40px 20px' }}>
+        <div style={{
+          backgroundColor: 'var(--bg-secondary)',
+          borderRadius: '20px',
+          padding: '40px 30px',
+          border: '1px solid var(--border-color)',
+          boxShadow: 'var(--shadow-md)'
+        }}>
+          <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔒</div>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '12px' }}>Contenido no publicado</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '24px' }}>
+            Este artículo se encuentra actualmente en fase de borrador y estará disponible públicamente en las próximas semanas.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => {
+                setSelectedSlug(null);
+                window.location.hash = '#blog';
+              }}
+              className="btn-primary"
+              style={{ padding: '10px 20px', fontSize: '0.9rem', cursor: 'pointer' }}
+            >
+              Ver Guías Disponibles
+            </button>
+            <a
+              href="#admin"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 18px',
+                borderRadius: 'var(--border-radius-full)',
+                backgroundColor: 'var(--bg-primary)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-muted)',
+                fontSize: '0.85rem',
+                textDecoration: 'none'
+              }}
+            >
+              Identificarse como Admin
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (currentPost) {
     return (
@@ -58,7 +118,7 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
             <button
               onClick={() => {
                 setSelectedSlug(null);
-                window.location.hash = isAdminMode ? '#blog-admin' : '#blog';
+                window.location.hash = '#blog';
               }}
               style={{
                 display: 'inline-flex',
@@ -76,10 +136,10 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
               }}
             >
               <ArrowLeft size={18} />
-              Volver a todas las Guías y Artículos
+              Volver a todas las Guías
             </button>
 
-            {isAdminMode && (
+            {isAuthenticated && (
               <span style={{ 
                 fontSize: '0.75rem', 
                 backgroundColor: currentPost.status === 'published' ? '#059669' : '#d97706',
@@ -88,7 +148,7 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
                 borderRadius: '12px',
                 fontWeight: '700'
               }}>
-                {currentPost.status === 'published' ? '● Publicado' : `⏳ Borrador (${currentPost.scheduledWeek || 'Programado'})`}
+                {currentPost.status === 'published' ? '● Publicado' : `⏳ Borrador Privado (${currentPost.scheduledWeek || 'Programado'})`}
               </span>
             )}
           </div>
@@ -483,29 +543,22 @@ export default function BlogPage({ initialSlug, onBackToHome, onNavigateToContac
             Guías técnicas, cálculos de crédito, comparativas de normativas y casos prácticos reales para directores de RRHH y responsables de formación.
           </p>
 
-          <div style={{ marginTop: '24px', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', backgroundColor: 'var(--bg-secondary)', borderRadius: '20px', fontSize: '0.85rem' }}>
-            <span style={{ color: 'var(--text-muted)' }}>
-              {isAdminMode ? '🔓 Modo Editor Activo (Viendo los 4 artículos):' : '👁️ Vista Pública (Solo artículos publicados):'}
-            </span>
-            <button
-              onClick={() => {
-                const next = !isAdminMode;
-                setIsAdminMode(next);
-                localStorage.setItem('formai-blog-admin', next ? 'true' : 'false');
-                window.location.hash = next ? '#blog-admin' : '#blog';
-              }}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--accent-primary)',
-                fontWeight: '700',
-                cursor: 'pointer',
-                textDecoration: 'underline'
-              }}
-            >
-              {isAdminMode ? 'Cambiar a Vista Pública' : 'Ver todos los borradores'}
-            </button>
-          </div>
+          {isAuthenticated && (
+            <div style={{ marginTop: '24px', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', backgroundColor: 'rgba(37, 99, 235, 0.1)', border: '1px solid rgba(37, 99, 235, 0.3)', borderRadius: '20px', fontSize: '0.85rem' }}>
+              <span style={{ color: 'var(--accent-primary)', fontWeight: '700' }}>
+                🔐 Sesión Administrador Activa:
+              </span>
+              <span style={{ color: 'var(--text-secondary)' }}>
+                Viendo 1 artículo publicado y 3 borradores programados.
+              </span>
+              <a 
+                href="#admin" 
+                style={{ marginLeft: '6px', color: 'var(--accent-primary)', fontWeight: '700', textDecoration: 'underline' }}
+              >
+                Ir al Panel de Control
+              </a>
+            </div>
+          )}
         </div>
 
         <div style={{
