@@ -334,6 +334,33 @@ export default function LeadsManager({ onClose }) {
     }
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Nuevo': return '#3b82f6';
+      case 'Contactado': return '#d97706';
+      case 'Propuesta / Demo': return '#8b5cf6';
+      case 'Ganado': return '#10b981';
+      case 'Descartado': return '#ef4444';
+      default: return '#64748b';
+    }
+  };
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'Alta': return '#ef4444';
+      case 'Media': return '#d97706';
+      case 'Baja': return '#10b981';
+      default: return '#64748b';
+    }
+  };
+
+  const getWhatsAppUrl = (phone, name) => {
+    const cleanPhone = (phone || '').replace(/\D/g, '');
+    const formatted = cleanPhone.startsWith('34') ? cleanPhone : `34${cleanPhone}`;
+    const text = encodeURIComponent(`Hola ${name || ''}, te contacto de FormAI sobre tu consulta de formación bonificada FUNDAE. ¿Podemos hablar?`);
+    return `https://wa.me/${formatted}?text=${text}`;
+  };
+
   if (!isAuthenticated) {
     return (
       <div style={{
