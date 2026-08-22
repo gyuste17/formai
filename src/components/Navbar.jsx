@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Sun, Moon, Menu, X, Calculator } from 'lucide-react';
+import { Sun, Moon, Menu, X, Calculator, BookOpen } from 'lucide-react';
 
-export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
+export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogActive }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -36,7 +36,8 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
         </a>
 
         {/* Desktop Menu */}
-        <div style={{ display: 'none', gap: '28px', alignItems: 'center' }} className="desktop-menu">
+        <div style={{ display: 'none', gap: '24px', alignItems: 'center' }} className="desktop-menu">
+          <a href="#" className="nav-link">Inicio</a>
           <a href="#cursos" className="nav-link">Cursos</a>
           <a 
             href="#catalogo" 
@@ -53,7 +54,20 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
             <span style={{ fontSize: '0.68rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '1px 6px', borderRadius: '10px', fontWeight: '700' }}>PDF</span>
           </a>
           <a href="#como-funciona" className="nav-link">¿Cómo funciona?</a>
-          <a href="#calculadora" className="nav-link">Calcular Crédito</a>
+          <a 
+            href="#blog" 
+            className="nav-link" 
+            style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '6px',
+              fontWeight: isBlogActive ? '800' : '600',
+              color: isBlogActive ? 'var(--accent-primary)' : 'inherit'
+            }}
+          >
+            <BookOpen size={15} />
+            <span>Blog & Guías</span>
+          </a>
           <a href="#contacto" className="nav-link">Contacto</a>
           
           {/* Theme Toggle */}
@@ -146,6 +160,7 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
           boxShadow: 'var(--shadow-lg)',
           zIndex: 99
         }}>
+          <a href="#" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>Inicio</a>
           <a href="#cursos" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>Cursos</a>
           <a 
             href="#catalogo" 
@@ -160,6 +175,10 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal }) {
           >
             <span>Catálogo 2026</span>
             <span style={{ fontSize: '0.75rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '2px 8px', borderRadius: '10px', fontWeight: '700' }}>PDF</span>
+          </a>
+          <a href="#blog" onClick={() => setIsOpen(false)} style={{ fontWeight: '600', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <BookOpen size={16} />
+            <span>Blog & Guías FUNDAE</span>
           </a>
           <a href="#como-funciona" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>¿Cómo funciona?</a>
           <a href="#calculadora" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>Calcular Crédito</a>
