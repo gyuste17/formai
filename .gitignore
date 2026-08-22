@@ -32,3 +32,10 @@ Thumbs.db
 # Gemini / Antigravity files
 .agents/
 .gemini/
+
+# Local credentials, apps script and proposals
+.clasp.json
+google-apps-script/
+mails/
+propuestas/
+scripts/test-gemini-lead-draft.js

@@ -89,9 +89,9 @@ export default function Footer({ onOpenCatalogModal }) {
         }}>
           <span>&copy; {currentYear} FormAI. Todos los derechos reservados.</span>
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <a href="#" className="footer-link">Política de Privacidad</a>
-            <a href="#" className="footer-link">Aviso Legal</a>
-            <a href="#" className="footer-link">Política de Cookies</a>
+            <a href="/politica-privacidad.html" className="footer-link">Política de Privacidad</a>
+            <a href="/aviso-legal.html" className="footer-link">Aviso Legal</a>
+            <a href="/politica-cookies.html" className="footer-link">Política de Cookies</a>
             <a href="#admin" className="footer-link" style={{ opacity: 0.4, fontSize: '0.85rem' }} title="Acceso Administración FormAI (Leads & Blog)">
               🔐
             </a>
