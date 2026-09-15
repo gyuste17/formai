@@ -33,6 +33,10 @@ Thumbs.db
 .agents/
 .gemini/
 
+# Environment and Secrets
+.env
+.env*.local
+
 # Local credentials, apps script and proposals
 .clasp.json
 google-apps-script/

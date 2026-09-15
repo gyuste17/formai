@@ -18,7 +18,7 @@ export default function FundaeInfo() {
     {
       num: "3",
       title: "Impartimos y gestionamos todo",
-      desc: "Llevamos a cabo las clases (virtuales o presenciales) y gestionamos el 100% de la burocracia ante la FUNDAE para garantizar la bonificación.",
+      desc: "Llevamos a cabo las clases (virtuales o presenciales) y gestionamos la tramitación oficial ante FUNDAE a través de entidad organizadora acreditada (Full Equipe S.L.) sin burocracia para tu empresa.",
       icon: Award
     }
   ];
@@ -31,7 +31,7 @@ export default function FundaeInfo() {
     },
     {
       title: "Gestión integral FUNDAE",
-      desc: "Olvídate del papeleo. Realizamos toda la gestión de principio a fin.",
+      desc: "Olvídate del papeleo. Trámites oficiales y emisión de certificados a través de entidad acreditada ante FUNDAE (Full Equipe S.L.).",
       icon: ShieldCheck
     },
     {

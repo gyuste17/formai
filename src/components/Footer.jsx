@@ -70,7 +70,7 @@ export default function Footer({ onOpenCatalogModal }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <h3 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>FUNDAE</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.4 }}>
-              Las acciones formativas se bonifican a través del sistema de Formación Programada para Empresas (FUNDAE), regulado por la Ley 30/2015. Todos los trabajadores por cuenta ajena que coticen por Formación Profesional tienen derecho a la bonificación.
+              Las acciones formativas se bonifican a través del sistema de Formación Programada para Empresas (FUNDAE), regulado por la Ley 30/2015. Proyecto liderado por Guillermo Yuste (FormAI), con gestión y tramitación oficial ante la Administración Pública a través de entidad organizadora e impartidora acreditada (Full Equipe S.L.).
             </p>
           </div>
         </div>
