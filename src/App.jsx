@@ -12,6 +12,7 @@ import LeadsManager from './components/LeadsManager';
 import CatalogSection from './components/CatalogSection';
 import CatalogModal from './components/CatalogModal';
 import BlogPage from './components/BlogPage';
+import SpecialistsNetwork from './components/SpecialistsNetwork';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { coursesData } from './data/courses';
 import { useCorporateHeaderColor } from './hooks/useCorporateHeaderColor';
@@ -217,6 +218,9 @@ export default function App() {
               <FundaeInfo />
             </div>
           </section>
+
+          {/* Red de Especialistas en Activo (Modelo FormAI) */}
+          <SpecialistsNetwork />
 
           {/* Clientes + Reseñas Google */}
           <ClientsReviews />

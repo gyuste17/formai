@@ -54,6 +54,7 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
             <span style={{ fontSize: '0.68rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '1px 6px', borderRadius: '10px', fontWeight: '700' }}>PDF</span>
           </a>
           <a href="#como-funciona" className="nav-link">¿Cómo funciona?</a>
+          <a href="#especialistas" className="nav-link">Especialistas</a>
           <a 
             href="#blog" 
             className="nav-link" 
@@ -181,6 +182,7 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
             <span>Blog & Guías FUNDAE</span>
           </a>
           <a href="#como-funciona" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>¿Cómo funciona?</a>
+          <a href="#especialistas" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>Especialistas</a>
           <a href="#calculadora" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>Calcular Crédito</a>
           <a href="#contacto" onClick={() => setIsOpen(false)} style={{ fontWeight: '500' }}>Contacto</a>
           <a href="#calculadora" onClick={() => setIsOpen(false)} style={{
