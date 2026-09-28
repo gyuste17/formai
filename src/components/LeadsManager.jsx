@@ -1633,7 +1633,7 @@ export default function LeadsManager({ onClose }) {
               {!isNewLead && selectedLead && (
                 <div style={{ marginTop: '8px', paddingTop: '16px', borderTop: '1px solid var(--border-color)' }}>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '10px' }}>
-                    Historial de Notas & Seguimiento
+                    Seguimiento
                   </label>
                   <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
                     <input
