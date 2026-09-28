@@ -77,7 +77,73 @@ const INITIAL_MOCK_LEADS = [
     priority: 'Media',
     comments: []
   }
-];
+// Helper para desduplicar y fusionar leads por email o teléfono
+const deduplicateLeadsList = (leadsList) => {
+  if (!Array.isArray(leadsList)) return [];
+  const map = new Map();
+  const ignoredEmails = ['hola@formai.es', 'gyuste17@gmail.com'];
+
+  for (const lead of leadsList) {
+    if (!lead) continue;
+    const rawEmail = (lead.email || '').trim().toLowerCase();
+    if (ignoredEmails.includes(rawEmail)) continue;
+
+    const cleanPhone = (lead.phone || '').replace(/\D/g, '');
+    const key = (rawEmail && rawEmail.includes('@')) 
+      ? rawEmail 
+      : (cleanPhone.length >= 7 ? `phone_${cleanPhone}` : `id_${lead.id}`);
+
+    if (!map.has(key)) {
+      map.set(key, { 
+        ...lead, 
+        comments: Array.isArray(lead.comments) ? [...lead.comments] : [] 
+      });
+    } else {
+      const existing = map.get(key);
+      
+      // Combinar comentarios sin duplicar textos
+      const existingComments = existing.comments || [];
+      const newComments = lead.comments || [];
+      const combinedComments = [...existingComments];
+      
+      for (const nc of newComments) {
+        const textToMatch = typeof nc === 'string' ? nc : (nc.text || '');
+        const alreadyHas = combinedComments.some(ec => {
+          const ecText = typeof ec === 'string' ? ec : (ec.text || '');
+          return ecText.trim() === textToMatch.trim();
+        });
+        if (!alreadyHas && textToMatch) {
+          combinedComments.push(nc);
+        }
+      }
+      existing.comments = combinedComments;
+
+      // Preservar la información más completa
+      if (!existing.name && lead.name) existing.name = lead.name;
+      if (!existing.company && lead.company) existing.company = lead.company;
+      if (!existing.phone && lead.phone) existing.phone = lead.phone;
+      if (!existing.subject && lead.subject) existing.subject = lead.subject;
+      if (!existing.message && lead.message) existing.message = lead.message;
+      if (lead.date && !existing.date) existing.date = lead.date;
+
+      // Prioridad de estados si alguno es más avanzado
+      const statusRank = { 
+        'Ganado': 5, 
+        'Propuesta / Demo': 4, 
+        'Contactado': 3, 
+        'Seguimiento Generado': 3, 
+        'Nuevo': 2, 
+        'Borrador Creado': 2, 
+        'Descartado': 1 
+      };
+      if ((statusRank[lead.status] || 0) > (statusRank[existing.status] || 0)) {
+        existing.status = lead.status;
+      }
+    }
+  }
+
+  return Array.from(map.values());
+};
 
 export default function LeadsManager({ onClose }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -89,7 +155,7 @@ export default function LeadsManager({ onClose }) {
 
   const [leads, setLeads] = useState(() => {
     const saved = localStorage.getItem('formai_crm_leads');
-    return saved ? JSON.parse(saved) : INITIAL_MOCK_LEADS;
+    return saved ? deduplicateLeadsList(JSON.parse(saved)) : deduplicateLeadsList(INITIAL_MOCK_LEADS);
   });
 
   const [adminTab, setAdminTab] = useState('leads'); // 'leads' | 'blog'
@@ -136,7 +202,7 @@ export default function LeadsManager({ onClose }) {
 
   // Save to local storage on changes
   useEffect(() => {
-    localStorage.setItem('formai_crm_leads', JSON.stringify(leads));
+    localStorage.setItem('formai_crm_leads', JSON.stringify(deduplicateLeadsList(leads)));
   }, [leads]);
 
   const handleLogin = (e) => {
@@ -169,13 +235,34 @@ export default function LeadsManager({ onClose }) {
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbxkr3IiqKFK5IIRDc-keYnjNR_yqmtPIAfRN56I2QBNvU6vFfX-40Uv2PYjgNt1pDMm/exec?action=getLeads';
       const res = await fetch(scriptUrl);
       const data = await res.json();
-      if (data && data.success && Array.isArray(data.leads) && data.leads.length > 0) {
-        setLeads(data.leads);
+      if (data && data.success && Array.isArray(data.leads)) {
+        setLeads(deduplicateLeadsList(data.leads));
       }
     } catch (e) {
       console.warn("Utilizando datos locales/almacenados (CORS o script offline)", e);
     } finally {
       setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
+
+  // Limpiar y fusionar duplicados tanto en Google Sheets como en local
+  const handleDeduplicateSheet = async () => {
+    setIsRefreshing(true);
+    try {
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbxkr3IiqKFK5IIRDc-keYnjNR_yqmtPIAfRN56I2QBNvU6vFfX-40Uv2PYjgNt1pDMm/exec?action=deduplicateLeads';
+      const res = await fetch(scriptUrl);
+      const data = await res.json();
+      if (data && data.success) {
+        await fetchFromGoogleScript();
+        alert(`¡Desduplicación completada con éxito!\n\n• Duplicados fusionados: ${data.details?.duplicatesMerged || 0}\n• Leads únicos conservados: ${data.details?.totalAfter || 0}\n• Correos propios descartados: ${data.details?.removedSelfEmails || 0}`);
+      } else {
+        setLeads(prev => deduplicateLeadsList(prev));
+      }
+    } catch (e) {
+      setLeads(prev => deduplicateLeadsList(prev));
+      alert("Desduplicación aplicada a la vista local.");
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -1397,6 +1484,19 @@ export default function LeadsManager({ onClose }) {
                             )}
                             <button onClick={() => openEditModal(lead)} className="btn-icon" style={{ padding: '6px' }} title="Editar">
                               <Edit2 size={13} />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (window.confirm(`¿Estás seguro de eliminar el lead "${lead.name || 'seleccionado'}"?`)) {
+                                  handleDeleteLead(lead.id);
+                                }
+                              }}
+                              className="btn-icon"
+                              style={{ padding: '6px', color: 'var(--accent-danger, #ef4444)' }}
+                              title="Eliminar lead"
+                            >
+                              <Trash2 size={13} />
                             </button>
                           </div>
                         </td>
