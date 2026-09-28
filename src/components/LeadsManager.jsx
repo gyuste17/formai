@@ -77,6 +77,8 @@ const INITIAL_MOCK_LEADS = [
     priority: 'Media',
     comments: []
   }
+];
+
 // Helper para desduplicar y fusionar leads por email o teléfono
 const deduplicateLeadsList = (leadsList) => {
   if (!Array.isArray(leadsList)) return [];
@@ -667,6 +669,29 @@ export default function LeadsManager({ onClose }) {
                 >
                   <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
                   {isRefreshing ? 'Sincronizando...' : 'Sincronizar'}
+                </button>
+
+                <button
+                  onClick={handleDeduplicateSheet}
+                  className="btn-secondary"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '9px 16px',
+                    borderRadius: 'var(--border-radius-sm)',
+                    fontWeight: '600',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)',
+                    cursor: 'pointer',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--accent-ai)',
+                    transition: 'all 0.15s ease'
+                  }}
+                  title="Fusionar y limpiar duplicados en Google Sheets y panel"
+                >
+                  <Sparkles size={16} />
+                  <span>Limpiar Duplicados</span>
                 </button>
 
                 <button
