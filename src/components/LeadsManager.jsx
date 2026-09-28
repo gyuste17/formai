@@ -149,15 +149,25 @@ const deduplicateLeadsList = (leadsList) => {
 
 export default function LeadsManager({ onClose }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return sessionStorage.getItem('formai_crm_auth') === 'true' || localStorage.getItem('formai_crm_remember') === 'true';
+    if (typeof window === 'undefined') return false;
+    try {
+      return sessionStorage.getItem('formai_crm_auth') === 'true' || localStorage.getItem('formai_crm_remember') === 'true';
+    } catch (e) {
+      return false;
+    }
   });
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
   const [leads, setLeads] = useState(() => {
-    const saved = localStorage.getItem('formai_crm_leads');
-    return saved ? deduplicateLeadsList(JSON.parse(saved)) : deduplicateLeadsList(INITIAL_MOCK_LEADS);
+    if (typeof window === 'undefined') return deduplicateLeadsList(INITIAL_MOCK_LEADS);
+    try {
+      const saved = localStorage.getItem('formai_crm_leads');
+      return saved ? deduplicateLeadsList(JSON.parse(saved)) : deduplicateLeadsList(INITIAL_MOCK_LEADS);
+    } catch (e) {
+      return deduplicateLeadsList(INITIAL_MOCK_LEADS);
+    }
   });
 
   const [adminTab, setAdminTab] = useState('leads'); // 'leads' | 'blog'
@@ -176,7 +186,7 @@ export default function LeadsManager({ onClose }) {
   const [isDeleteTargetActive, setIsDeleteTargetActive] = useState(false);
 
   const handleCopyLinkedInPost = (postId, text) => {
-    if (navigator.clipboard) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(text);
       setCopiedPostId(postId);
       setTimeout(() => setCopiedPostId(null), 2500);
@@ -204,7 +214,13 @@ export default function LeadsManager({ onClose }) {
 
   // Save to local storage on changes
   useEffect(() => {
-    localStorage.setItem('formai_crm_leads', JSON.stringify(deduplicateLeadsList(leads)));
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('formai_crm_leads', JSON.stringify(deduplicateLeadsList(leads)));
+      } catch (e) {
+        console.warn('Error saving leads to localStorage', e);
+      }
+    }
   }, [leads]);
 
   const handleLogin = (e) => {
@@ -213,9 +229,13 @@ export default function LeadsManager({ onClose }) {
     // Claves de acceso válidas
     if (cleanPin === 'formai' || cleanPin === '1234' || cleanPin === '2026' || cleanPin === 'admin' || cleanPin === 'gyuste') {
       setIsAuthenticated(true);
-      sessionStorage.setItem('formai_crm_auth', 'true');
-      if (rememberMe) {
-        localStorage.setItem('formai_crm_remember', 'true');
+      if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem('formai_crm_auth', 'true');
+          if (rememberMe) {
+            localStorage.setItem('formai_crm_remember', 'true');
+          }
+        } catch (err) {}
       }
       setPinError('');
     } else {
@@ -225,8 +245,12 @@ export default function LeadsManager({ onClose }) {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    sessionStorage.removeItem('formai_crm_auth');
-    localStorage.removeItem('formai_crm_remember');
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.removeItem('formai_crm_auth');
+        localStorage.removeItem('formai_crm_remember');
+      } catch (err) {}
+    }
     if (onClose) onClose();
   };
 
