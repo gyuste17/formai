@@ -105,6 +105,7 @@ export default function LeadsManager({ onClose }) {
   const [newComment, setNewComment] = useState('');
   const [draggedLead, setDraggedLead] = useState(null);
   const [dragOverColumn, setDragOverColumn] = useState(null);
+  const [isDeleteTargetActive, setIsDeleteTargetActive] = useState(false);
 
   const handleCopyLinkedInPost = (postId, text) => {
     if (navigator.clipboard) {
@@ -857,41 +858,116 @@ export default function LeadsManager({ onClose }) {
               <>
                 {draggedLead && (
                   <div style={{
-                    backgroundColor: 'var(--accent-primary-light)',
-                    border: '1px solid var(--accent-primary)',
-                    borderRadius: 'var(--border-radius-sm)',
-                    padding: '12px 18px',
-                    marginBottom: '16px',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    marginBottom: '18px',
                     animation: 'fadeIn 0.2s ease'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{ fontSize: '1.2rem' }}>🎯</span>
+                    {/* Active Drag Banner */}
+                    <div style={{
+                      backgroundColor: 'var(--accent-primary-light)',
+                      border: '1px solid var(--accent-primary)',
+                      borderRadius: 'var(--border-radius-sm)',
+                      padding: '12px 18px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '1.2rem' }}>🎯</span>
+                        <div>
+                          <span style={{ fontWeight: '700', color: 'var(--accent-primary-text)' }}>
+                            Moviendo lead: {draggedLead.name} ({draggedLead.company || 'Sin empresa'})
+                          </span>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                            Arrastra y suelta en cualquiera de las 5 columnas o en la zona roja para eliminarlo
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => { setDraggedLead(null); setDragOverColumn(null); setIsDeleteTargetActive(false); }}
+                        style={{
+                          background: 'transparent',
+                          border: '1px solid var(--border-color)',
+                          borderRadius: '6px',
+                          padding: '4px 10px',
+                          fontSize: '0.78rem',
+                          cursor: 'pointer',
+                          color: 'var(--text-secondary)'
+                        }}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+
+                    {/* Delete Drop Target Zone */}
+                    <div
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                        if (!isDeleteTargetActive) setIsDeleteTargetActive(true);
+                        if (dragOverColumn) setDragOverColumn(null);
+                      }}
+                      onDragLeave={(e) => {
+                        if (e.currentTarget.contains(e.relatedTarget)) return;
+                        setIsDeleteTargetActive(false);
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const leadId = e.dataTransfer.getData('text/plain') || draggedLead?.id;
+                        if (leadId) {
+                          if (window.confirm(`¿Estás seguro de eliminar el lead "${draggedLead?.name || 'seleccionado'}"?`)) {
+                            handleDeleteLead(leadId);
+                          }
+                        }
+                        setDraggedLead(null);
+                        setDragOverColumn(null);
+                        setIsDeleteTargetActive(false);
+                      }}
+                      style={{
+                        backgroundColor: isDeleteTargetActive ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.08)',
+                        border: `2px dashed ${isDeleteTargetActive ? '#ef4444' : 'rgba(239, 68, 68, 0.4)'}`,
+                        borderRadius: 'var(--border-radius-md)',
+                        padding: '16px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '12px',
+                        cursor: 'copy',
+                        transition: 'all 0.2s ease',
+                        transform: isDeleteTargetActive ? 'scale(1.02)' : 'scale(1)',
+                        boxShadow: isDeleteTargetActive ? '0 8px 24px rgba(239, 68, 68, 0.35)' : 'none'
+                      }}
+                    >
+                      <div style={{
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '50%',
+                        backgroundColor: isDeleteTargetActive ? '#ef4444' : 'rgba(239, 68, 68, 0.15)',
+                        color: isDeleteTargetActive ? '#ffffff' : '#ef4444',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s ease',
+                        transform: isDeleteTargetActive ? 'scale(1.15)' : 'scale(1)'
+                      }}>
+                        <Trash2 size={20} />
+                      </div>
                       <div>
-                        <span style={{ fontWeight: '700', color: 'var(--accent-primary-text)' }}>
-                          Moviendo lead: {draggedLead.name} ({draggedLead.company || 'Sin empresa'})
+                        <span style={{
+                          fontWeight: '800',
+                          fontSize: '0.95rem',
+                          color: '#ef4444',
+                          fontFamily: 'var(--font-display)'
+                        }}>
+                          {isDeleteTargetActive ? '¡SOLTAR AQUÍ PARA ELIMINAR LEAD!' : 'Soltar aquí para Eliminar este Lead'}
                         </span>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                          Suelta en cualquiera de las 5 columnas para cambiar su estado automáticamente
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                          Esta acción removerá el lead del sistema y de Google Sheets
                         </div>
                       </div>
                     </div>
-                    <button
-                      onClick={() => { setDraggedLead(null); setDragOverColumn(null); }}
-                      style={{
-                        background: 'transparent',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '6px',
-                        padding: '4px 10px',
-                        fontSize: '0.78rem',
-                        cursor: 'pointer',
-                        color: 'var(--text-secondary)'
-                      }}
-                    >
-                      Cancelar
-                    </button>
                   </div>
                 )}
 
@@ -916,6 +992,7 @@ export default function LeadsManager({ onClose }) {
                           e.preventDefault();
                           e.dataTransfer.dropEffect = 'move';
                           if (dragOverColumn !== columnName) setDragOverColumn(columnName);
+                          if (isDeleteTargetActive) setIsDeleteTargetActive(false);
                         }}
                         onDragLeave={(e) => {
                           if (e.currentTarget.contains(e.relatedTarget)) return;
@@ -929,6 +1006,7 @@ export default function LeadsManager({ onClose }) {
                           }
                           setDraggedLead(null);
                           setDragOverColumn(null);
+                          setIsDeleteTargetActive(false);
                         }}
                         style={{
                           backgroundColor: isTargeted ? `${statusColor}12` : 'var(--bg-secondary)',
@@ -974,11 +1052,10 @@ export default function LeadsManager({ onClose }) {
                           </span>
                         </div>
 
-                        {/* Mientras se arrastra: Ocultar los leads y mostrar SOLO la zona de soltado limpia */}
-                        {draggedLead ? (
-                          <div style={{
-                            flex: 1,
-                            display: 'flex',
+                        {/* Zona de soltado visual cuando se arrastra */}
+                        <div
+                          style={{
+                            display: draggedLead ? 'flex' : 'none',
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -986,166 +1063,178 @@ export default function LeadsManager({ onClose }) {
                             border: `2px dashed ${isTargeted ? statusColor : 'var(--border-color)'}`,
                             backgroundColor: isTargeted ? `${statusColor}20` : 'var(--bg-primary)',
                             borderRadius: 'var(--border-radius-sm)',
-                            padding: '32px 16px',
+                            padding: '36px 16px',
                             textAlign: 'center',
                             cursor: 'copy',
-                            transition: 'all 0.15s ease'
+                            marginBottom: '12px',
+                            transition: 'all 0.15s ease',
+                            flex: 1
+                          }}
+                        >
+                          <div style={{
+                            width: '52px',
+                            height: '52px',
+                            borderRadius: '50%',
+                            backgroundColor: `${statusColor}25`,
+                            color: statusColor,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'transform 0.2s ease',
+                            transform: isTargeted ? 'scale(1.2)' : 'scale(1)'
                           }}>
+                            <ArrowDownCircle size={28} />
+                          </div>
+                          <div>
                             <div style={{
-                              width: '52px',
-                              height: '52px',
-                              borderRadius: '50%',
-                              backgroundColor: `${statusColor}25`,
-                              color: statusColor,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              transition: 'transform 0.2s ease',
-                              transform: isTargeted ? 'scale(1.2)' : 'scale(1)'
+                              fontWeight: '800',
+                              fontSize: '1rem',
+                              color: isTargeted ? statusColor : 'var(--text-heading)',
+                              fontFamily: 'var(--font-display)'
                             }}>
-                              <ArrowDownCircle size={28} />
+                              {columnName}
                             </div>
-                            <div>
-                              <div style={{
-                                fontWeight: '800',
-                                fontSize: '1rem',
-                                color: isTargeted ? statusColor : 'var(--text-heading)',
-                                fontFamily: 'var(--font-display)'
-                              }}>
-                                {columnName}
-                              </div>
-                              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                                {isTargeted ? '¡Suelta aquí para mover!' : `Soltar para mover a "${columnName}"`}
-                              </div>
+                            <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                              {isTargeted ? '¡Suelta aquí para mover!' : `Soltar para mover a "${columnName}"`}
                             </div>
                           </div>
-                        ) : (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
-                            {columnLeads.length === 0 ? (
-                              <div style={{
-                                padding: '32px 16px',
-                                textAlign: 'center',
-                                color: 'var(--text-muted)',
-                                fontSize: '0.85rem',
-                                border: '1px dashed var(--border-color)',
-                                borderRadius: 'var(--border-radius-sm)'
-                              }}>
-                                Sin leads en este estado
-                              </div>
-                            ) : (
-                              columnLeads.map((lead) => {
-                                const waUrl = getWhatsAppUrl(lead.phone, lead.name);
+                        </div>
 
-                                return (
-                                  <div
-                                    key={lead.id}
-                                    draggable={true}
-                                    onDragStart={(e) => {
-                                      e.dataTransfer.setData('text/plain', lead.id);
-                                      e.dataTransfer.effectAllowed = 'move';
+                        {/* Lista de leads (se oculta con display: none mientras se arrastra para evitar destruir el DOM del elemento que se arrastra) */}
+                        <div style={{
+                          display: draggedLead ? 'none' : 'flex',
+                          flexDirection: 'column',
+                          gap: '12px',
+                          flex: 1
+                        }}>
+                          {columnLeads.length === 0 ? (
+                            <div style={{
+                              padding: '32px 16px',
+                              textAlign: 'center',
+                              color: 'var(--text-muted)',
+                              fontSize: '0.85rem',
+                              border: '1px dashed var(--border-color)',
+                              borderRadius: 'var(--border-radius-sm)'
+                            }}>
+                              Sin leads en este estado
+                            </div>
+                          ) : (
+                            columnLeads.map((lead) => {
+                              const waUrl = getWhatsAppUrl(lead.phone, lead.name);
+
+                              return (
+                                <div
+                                  key={lead.id}
+                                  draggable={true}
+                                  onDragStart={(e) => {
+                                    e.dataTransfer.setData('text/plain', lead.id);
+                                    e.dataTransfer.effectAllowed = 'move';
+                                    // Usar microtask / timeout para que el navegador capture la imagen de arrastre antes de ocultar las tarjetas
+                                    setTimeout(() => {
                                       setDraggedLead(lead);
-                                    }}
-                                    onDragEnd={() => {
-                                      setDraggedLead(null);
-                                      setDragOverColumn(null);
-                                    }}
-                                    onClick={() => openEditModal(lead)}
-                                    className="glass-card lead-card-hover"
-                                    style={{
-                                      padding: '14px',
-                                      borderRadius: 'var(--border-radius-sm)',
-                                      border: '1px solid var(--border-color)',
-                                      backgroundColor: 'var(--bg-primary)',
-                                      cursor: 'grab',
-                                      transition: 'all 0.2s ease',
-                                      display: 'flex',
-                                      flexDirection: 'column',
-                                      gap: '10px'
-                                    }}
-                                  >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                      <div>
-                                        <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-heading)' }}>
-                                          {lead.name || 'Sin Nombre'}
-                                        </div>
-                                        <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                                          <Building size={12} />
-                                          <span>{lead.company || 'Empresa no indicada'}</span>
-                                        </div>
+                                    }, 10);
+                                  }}
+                                  onDragEnd={() => {
+                                    setDraggedLead(null);
+                                    setDragOverColumn(null);
+                                    setIsDeleteTargetActive(false);
+                                  }}
+                                  onClick={() => openEditModal(lead)}
+                                  className="glass-card lead-card-hover"
+                                  style={{
+                                    padding: '14px',
+                                    borderRadius: 'var(--border-radius-sm)',
+                                    border: '1px solid var(--border-color)',
+                                    backgroundColor: 'var(--bg-primary)',
+                                    cursor: 'grab',
+                                    transition: 'all 0.2s ease',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '10px'
+                                  }}
+                                >
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div>
+                                      <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-heading)' }}>
+                                        {lead.name || 'Sin Nombre'}
                                       </div>
-
-                                      <span style={{
-                                        fontSize: '0.7rem',
-                                        fontWeight: '700',
-                                        padding: '2px 6px',
-                                        borderRadius: '6px',
-                                        backgroundColor: getPriorityColor(lead.priority) + '20',
-                                        color: getPriorityColor(lead.priority)
-                                      }}>
-                                        {lead.priority || 'Media'}
-                                      </span>
+                                      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                                        <Building size={12} />
+                                        <span>{lead.company || 'Empresa no indicada'}</span>
+                                      </div>
                                     </div>
 
-                                    {lead.subject && (
-                                      <div style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: '600' }}>
-                                        {lead.subject}
-                                      </div>
-                                    )}
-
-                                    {lead.message && (
-                                      <div style={{
-                                        fontSize: '0.8rem',
-                                        color: 'var(--text-secondary)',
-                                        lineHeight: 1.4,
-                                        maxHeight: '44px',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        display: '-webkit-box',
-                                        WebkitLineClamp: 2,
-                                        WebkitBoxOrient: 'vertical'
-                                      }}>
-                                        {lead.message}
-                                      </div>
-                                    )}
-
-                                    <div style={{
-                                      display: 'flex',
-                                      justifyContent: 'space-between',
-                                      alignItems: 'center',
-                                      paddingTop: '8px',
-                                      borderTop: '1px solid var(--border-color)',
-                                      fontSize: '0.75rem',
-                                      color: 'var(--text-muted)'
+                                    <span style={{
+                                      fontSize: '0.7rem',
+                                      fontWeight: '700',
+                                      padding: '2px 6px',
+                                      borderRadius: '6px',
+                                      backgroundColor: getPriorityColor(lead.priority) + '20',
+                                      color: getPriorityColor(lead.priority)
                                     }}>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                        <Calendar size={11} />
-                                        <span>{lead.date?.split(' ')[0] || 'Reciente'}</span>
-                                      </div>
+                                      {lead.priority || 'Media'}
+                                    </span>
+                                  </div>
 
-                                      <div style={{ display: 'flex', gap: '4px' }} onClick={(e) => e.stopPropagation()}>
-                                        {lead.phone && (
-                                          <>
-                                            <a href={`tel:${lead.phone}`} className="btn-icon" title="Llamar">
-                                              <Phone size={12} />
-                                            </a>
-                                            <a href={waUrl} target="_blank" rel="noreferrer" className="btn-icon" style={{ color: '#25d366' }} title="WhatsApp">
-                                              <MessageCircle size={12} />
-                                            </a>
-                                          </>
-                                        )}
-                                        {lead.email && (
-                                          <a href={`mailto:${lead.email}`} className="btn-icon" title="Email">
-                                            <Mail size={12} />
+                                  {lead.subject && (
+                                    <div style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: '600' }}>
+                                      {lead.subject}
+                                    </div>
+                                  )}
+
+                                  {lead.message && (
+                                    <div style={{
+                                      fontSize: '0.8rem',
+                                      color: 'var(--text-secondary)',
+                                      lineHeight: 1.4,
+                                      maxHeight: '44px',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      display: '-webkit-box',
+                                      WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical'
+                                    }}>
+                                      {lead.message}
+                                    </div>
+                                  )}
+
+                                  <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    paddingTop: '8px',
+                                    borderTop: '1px solid var(--border-color)',
+                                    fontSize: '0.75rem',
+                                    color: 'var(--text-muted)'
+                                  }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                      <Calendar size={11} />
+                                      <span>{lead.date?.split(' ')[0] || 'Reciente'}</span>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '4px' }} onClick={(e) => e.stopPropagation()}>
+                                      {lead.phone && (
+                                        <>
+                                          <a href={`tel:${lead.phone}`} className="btn-icon" title="Llamar">
+                                            <Phone size={12} />
                                           </a>
-                                        )}
-                                      </div>
+                                          <a href={waUrl} target="_blank" rel="noreferrer" className="btn-icon" style={{ color: '#25d366' }} title="WhatsApp">
+                                            <MessageCircle size={12} />
+                                          </a>
+                                        </>
+                                      )}
+                                      {lead.email && (
+                                        <a href={`mailto:${lead.email}`} className="btn-icon" title="Email">
+                                          <Mail size={12} />
+                                        </a>
+                                      )}
                                     </div>
                                   </div>
-                                );
-                              })
-                            )}
-                          </div>
-                        )}
+                                </div>
+                              );
+                            })
+                          )}
+                        </div>
                       </div>
                     );
                   })}
