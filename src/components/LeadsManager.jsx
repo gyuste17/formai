@@ -133,7 +133,7 @@ const deduplicateLeadsList = (leadsList) => {
         'Ganado': 5, 
         'Propuesta / Demo': 4, 
         'Contactado': 3, 
-        'Seguimiento Generado': 3, 
+        'Seguimiento': 3, 
         'Nuevo': 2, 
         'Borrador Creado': 2, 
         'Descartado': 1 
@@ -478,6 +478,12 @@ export default function LeadsManager({ onClose }) {
     const formatted = cleanPhone.startsWith('34') ? cleanPhone : `34${cleanPhone}`;
     const text = encodeURIComponent(`Hola ${name || ''}, te contacto de FormAI sobre tu consulta de formación bonificada FUNDAE. ¿Podemos hablar?`);
     return `https://wa.me/${formatted}?text=${text}`;
+  };
+
+  const getGmailThreadUrl = (email) => {
+    if (!email) return 'https://mail.google.com/mail/u/0/#inbox';
+    const cleanEmail = encodeURIComponent(email.trim());
+    return `https://mail.google.com/mail/u/0/#search/${cleanEmail}`;
   };
 
   if (!isAuthenticated) {
@@ -1360,7 +1366,13 @@ export default function LeadsManager({ onClose }) {
                                         </>
                                       )}
                                       {lead.email && (
-                                        <a href={`mailto:${lead.email}`} className="btn-icon" title="Email">
+                                        <a
+                                          href={getGmailThreadUrl(lead.email)}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="btn-icon"
+                                          title={`Abrir conversación/hilo en Gmail (${lead.email})`}
+                                        >
                                           <Mail size={12} />
                                         </a>
                                       )}
@@ -1527,7 +1539,14 @@ export default function LeadsManager({ onClose }) {
                               </>
                             )}
                             {lead.email && (
-                              <a href={`mailto:${lead.email}`} className="btn-icon" style={{ padding: '6px' }} title="Email">
+                              <a
+                                href={getGmailThreadUrl(lead.email)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn-icon"
+                                style={{ padding: '6px' }}
+                                title={`Abrir conversación/hilo en Gmail (${lead.email})`}
+                              >
                                 <Mail size={13} />
                               </a>
                             )}
