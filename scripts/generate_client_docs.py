@@ -9,7 +9,7 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.drawing.image import Image as OpenpyxlImage
 
-LOGO_PATH = r"C:\Users\gyust\GY Antigravity\formai\public\logos\formAI\1-removebg-preview-trimmed.png"
+LOGO_PATH = r"C:\Users\gyust\GY Antigravity\formai\public\logos\full_equipe.png"
 OUTPUT_BASE = r"C:\Users\gyust\OneDrive - guillermoyuste.es\1. GYusteWebs\formai.es\4.1 Documentos Clientes FormAI"
 
 # Color constants
@@ -184,10 +184,10 @@ def create_ficha_tecnica_template():
     t_doc.columns[1].width = Inches(3.5)
     
     fields_doc = [
-        ("Formador / Dirección Pedagógica:", "Guillermo Yuste Durán (FormAI)"),
-        ("Email / Teléfono Formador:", "hola@formai.es · +34 609 269 480"),
-        ("Entidad Organizadora Homologada:", "Full Equipe S.L. (Entidad Acreditada FUNDAE)"),
-        ("Gestión y Notificación Oficial:", "Tramitación completa ante aplicativo SEPE/FUNDAE")
+        ("Formador / Equipo Docente:", "[Nombre del Formador Asignado]"),
+        ("Email / Teléfono Formador:", "[Contacto del Formador / Coordinación]"),
+        ("Entidad Organizadora Homologada:", "Full Equipe S.L. (Entidad Acreditada FUNDAE - CIF B-85124428)"),
+        ("Gestión y Notificación Oficial:", "Tramitación completa ante aplicativo oficial SEPE/FUNDAE")
     ]
     
     idx = 0
@@ -233,15 +233,27 @@ def create_ficha_tecnica_template():
     # Footer disclaimer
     p_foot = doc.add_paragraph()
     p_foot.paragraph_format.space_before = Pt(20)
-    run_foot = p_foot.add_run("FormAI · Coordinación pedagógica por Guillermo Yuste en colaboración con Full Equipe S.L. (Entidad organizadora acreditada ante FUNDAE).")
+    run_foot = p_foot.add_run("FULL EQUIPE, S.L. · Entidad Organizadora Homologada ante el SEPE y FUNDAE (CIF B-85124428).")
     run_foot.font.name = 'Arial'
     run_foot.font.size = Pt(8)
     run_foot.font.italic = True
     run_foot.font.color.rgb = COLOR_GRAY
 
-    out_path = os.path.join(OUTPUT_BASE, "2. Datos curso y participantes", "Ficha Técnica y Planificación - Plantilla FormAI.docx")
-    doc.save(out_path)
-    print("Created:", out_path)
+    # Save to both destinations
+    dirs = [
+        os.path.join(OUTPUT_BASE, "2. Datos curso y participantes"),
+        r"C:\Users\gyust\OneDrive - guillermoyuste.es\1. GYusteWebs\formai.es\4. Gestión FUNDAE y Plantillas\Plantillas Oficiales FormAI\2. Datos y Planificación"
+    ]
+    for d in dirs:
+        os.makedirs(d, exist_ok=True)
+        out_path = os.path.join(d, "Ficha Técnica y Planificación - Plantilla Full Equipe.docx")
+        doc.save(out_path)
+        print("Created:", out_path)
+        try:
+            from docx2pdf import convert
+            convert(out_path)
+        except Exception as e:
+            pass
 
 # -------------------------------------------------------------
 # 2. RECIBÍ DE MATERIAL DIDÁCTICO (DOCX)
@@ -335,11 +347,22 @@ def create_recibi_material_template():
     p1.add_run("Fecha de Entrega: _____ / _____ / 2026\n\nFirma del/la Alumno/a:\n\n\n\n____________________________________").font.size = Pt(9)
     
     p2 = c2.paragraphs[0]
-    p2.add_run("Formación coordinada por FormAI\nEntidad Organizadora Acreditada: Full Equipe S.L.\n\nFirma del Formador / Responsable:\n\n\n____________________________________").font.size = Pt(9)
+    p2.add_run("Entidad Organizadora Acreditada ante FUNDAE:\nFULL EQUIPE, S.L. (CIF B-85124428)\n\nFirma del Formador / Responsable:\n\n\n____________________________________").font.size = Pt(9)
 
-    out_path = os.path.join(OUTPUT_BASE, "3. Asistencia y Material", "RECIBÍ DE MATERIAL - Plantilla FormAI.docx")
-    doc.save(out_path)
-    print("Created:", out_path)
+    dirs_recibi = [
+        os.path.join(OUTPUT_BASE, "3. Asistencia y Material"),
+        r"C:\Users\gyust\OneDrive - guillermoyuste.es\1. GYusteWebs\formai.es\4. Gestión FUNDAE y Plantillas\Plantillas Oficiales FormAI\3. Control de Asistencia y Material"
+    ]
+    for d in dirs_recibi:
+        os.makedirs(d, exist_ok=True)
+        out_path = os.path.join(d, "RECIBÍ DE MATERIAL - Plantilla Full Equipe.docx")
+        doc.save(out_path)
+        print("Created:", out_path)
+        try:
+            from docx2pdf import convert
+            convert(out_path)
+        except Exception as e:
+            pass
 
 # -------------------------------------------------------------
 # 3. CONTROL DE ASISTENCIA / PARTE DE FIRMAS (DOCX)
@@ -373,8 +396,8 @@ def create_control_asistencia_template():
         ("Empresa Cliente:", "[Razón Social Cliente]"),
         ("Nº Acción / Grupo:", "[Acción ___ / Grupo ___]"),
         ("Fechas y Horario:", "[Días concretos y franja horaria]"),
-        ("Formador / Docente:", "Guillermo Yuste Durán (FormAI)"),
-        ("Entidad Organizadora:", "Full Equipe S.L. (Acreditada FUNDAE)")
+        ("Formador / Docente:", "[Nombre del Formador Asignado]"),
+        ("Entidad Organizadora:", "Full Equipe S.L. (Acreditada FUNDAE - CIF B-85124428)")
     ]
     
     idx = 0
@@ -434,9 +457,20 @@ def create_control_asistencia_template():
     p_note.paragraph_format.space_before = Pt(12)
     p_note.add_run("Nota obligatoria FUNDAE: Cada participante debe firmar personalmente en la casilla correspondiente a cada sesión diaria impartida. El formador certifica la asistencia real de los alumnos.").font.size = Pt(8)
     
-    out_path = os.path.join(OUTPUT_BASE, "3. Asistencia y Material", "CONTROL DE ASISTENCIA - Plantilla FormAI.docx")
-    doc.save(out_path)
-    print("Created:", out_path)
+    dirs_att = [
+        os.path.join(OUTPUT_BASE, "3. Asistencia y Material"),
+        r"C:\Users\gyust\OneDrive - guillermoyuste.es\1. GYusteWebs\formai.es\4. Gestión FUNDAE y Plantillas\Plantillas Oficiales FormAI\3. Control de Asistencia y Material"
+    ]
+    for d in dirs_att:
+        os.makedirs(d, exist_ok=True)
+        out_path = os.path.join(d, "CONTROL DE ASISTENCIA - Plantilla Full Equipe.docx")
+        doc.save(out_path)
+        print("Created:", out_path)
+        try:
+            from docx2pdf import convert
+            convert(out_path)
+        except Exception as e:
+            pass
 
 # -------------------------------------------------------------
 # 4. EXCEL DE DATOS DE LA BONIFICACIÓN (XLSX)
@@ -469,8 +503,9 @@ def create_excel_participantes_template():
     # Title Block
     ws['B2'] = "DATOS NECESARIOS PARA LA BONIFICACIÓN ANTE FUNDAE"
     ws['B2'].font = font_main_title
-    ws['B3'] = "FormAI (Guillermo Yuste) · Gestión tramitada con entidad organizadora acreditada: Full Equipe S.L."
+    ws['B3'] = "Entidad Organizadora Homologada ante FUNDAE: Full Equipe, S.L. (CIF B-85124428)"
     ws['B3'].font = font_sub_title
+    ws.title = "Datos Bonificación FUNDAE"
     
     # Section 1: Empresa
     ws.merge_cells('B5:E5')
@@ -548,19 +583,25 @@ def create_excel_participantes_template():
     for col, width in col_widths.items():
         ws.column_dimensions[col].width = width
 
-    # Add FormAI logo if image exists
+    # Add Full Equipe logo if image exists
     if os.path.exists(LOGO_PATH):
         try:
             img = OpenpyxlImage(LOGO_PATH)
-            img.width = 140
-            img.height = 78
+            img.width = 170
+            img.height = 47
             ws.add_image(img, 'L1')
         except Exception as e:
             print("Logo image insert note:", e)
             
-    out_path = os.path.join(OUTPUT_BASE, "2. Datos curso y participantes", "Datos necesarios para la bonificación - FormAI.xlsx")
-    wb.save(out_path)
-    print("Created:", out_path)
+    dirs_excel = [
+        os.path.join(OUTPUT_BASE, "2. Datos curso y participantes"),
+        r"C:\Users\gyust\OneDrive - guillermoyuste.es\1. GYusteWebs\formai.es\4. Gestión FUNDAE y Plantillas\Plantillas Oficiales FormAI\2. Datos y Planificación"
+    ]
+    for d in dirs_excel:
+        os.makedirs(d, exist_ok=True)
+        out_path = os.path.join(d, "Datos necesarios para la bonificación - Full Equipe.xlsx")
+        wb.save(out_path)
+        print("Created:", out_path)
 
 # -------------------------------------------------------------
 # 5. GUÍA INFORMATIVA DE FIRMA DE ENCOMIENDA (DOCX)
@@ -582,14 +623,14 @@ def create_guia_encomienda():
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(12)
     run_p = p.add_run("Estimado/a cliente:\n\n"
-                      "Para que podamos gestionar la bonificación del curso y que su coste sea deducido al 100% de los seguros sociales de tu empresa, la normativa de FUNDAE (Ley 30/2015) exige formalizar el documento de Adhesión a la Encomienda de Gestión.")
+                      "Para que podamos gestionar la bonificación del curso y que su importe sea deducido al 100% de los seguros sociales de tu empresa, la normativa de FUNDAE (Ley 30/2015) exige formalizar el documento de Adhesión a la Encomienda de Organización de la Formación.")
     run_p.font.name = 'Arial'
     run_p.font.size = Pt(10)
 
     style_section_heading(doc.add_paragraph(), "¿QUÉ ES LA ENCOMIENDA DE GESTIÓN?")
     p_faq1 = doc.add_paragraph()
     p_faq1.paragraph_format.space_after = Pt(10)
-    run_faq1 = p_faq1.add_run("Es la autorización administrativa estándar mediante la cual tu empresa autoriza a nuestra entidad organizadora oficial acreditada, FULL EQUIPE S.L., a consultar el saldo de crédito anual disponible ante el aplicativo del SEPE/FUNDAE y a comunicar telemáticamente el inicio y finalización del curso.")
+    run_faq1 = p_faq1.add_run("Es la autorización administrativa estándar mediante la cual tu empresa autoriza a la entidad organizadora oficial acreditada, FULL EQUIPE, S.L. (CIF B-85124428), a consultar el saldo de crédito anual disponible ante el aplicativo oficial del SEPE/FUNDAE y a comunicar telemáticamente el inicio y finalización del curso.")
     run_faq1.font.name = 'Arial'
     run_faq1.font.size = Pt(9.5)
 
@@ -606,7 +647,7 @@ def create_guia_encomienda():
         ("2. Rellenar datos de la empresa cliente:", "Razón social completa, CIF y domicilio fiscal."),
         ("3. Indicar Cuenta de Cotización (CCC):", "La cuenta de cotización principal a la Seguridad Social."),
         ("4. Firma:", "Firma digital del representante legal (certificado digital de empresa) o firma manual con sello de la compañía."),
-        ("5. Envío:", "Remitir el documento firmado a hola@formai.es para proceder a la comprobación del crédito.")
+        ("5. Envío:", "Remitir el documento firmado para proceder a la comprobación del crédito.")
     ]
     
     for title, desc in steps:
@@ -621,14 +662,25 @@ def create_guia_encomienda():
 
     p_contact = doc.add_paragraph()
     p_contact.paragraph_format.space_before = Pt(20)
-    run_c = p_contact.add_run("¿Dudas con la cumplimentación? Contacta directamente con nosotros en hola@formai.es o al teléfono +34 609 269 480.")
+    run_c = p_contact.add_run("¿Dudas con la cumplimentación? Contacta directamente con nosotros para resolver cualquier consulta sobre la tramitación.")
     run_c.font.bold = True
     run_c.font.color.rgb = COLOR_TEAL
     run_c.font.size = Pt(9.5)
 
-    out_path = os.path.join(OUTPUT_BASE, "1. Encomienda de Gestión - Consulta Crédito", "Guía de Firma - Encomienda de Gestión FUNDAE.docx")
-    doc.save(out_path)
-    print("Created:", out_path)
+    dirs_guia = [
+        os.path.join(OUTPUT_BASE, "1. Encomienda de Gestión - Consulta Crédito"),
+        r"C:\Users\gyust\OneDrive - guillermoyuste.es\1. GYusteWebs\formai.es\4. Gestión FUNDAE y Plantillas\Plantillas Oficiales FormAI\1. Encomienda de Gestión"
+    ]
+    for d in dirs_guia:
+        os.makedirs(d, exist_ok=True)
+        out_path = os.path.join(d, "Guía de Firma - Encomienda de Gestión FUNDAE.docx")
+        doc.save(out_path)
+        print("Created:", out_path)
+        try:
+            from docx2pdf import convert
+            convert(out_path)
+        except Exception as e:
+            pass
 
 if __name__ == "__main__":
     create_ficha_tecnica_template()

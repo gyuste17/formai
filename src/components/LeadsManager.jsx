@@ -24,7 +24,10 @@ import {
   BookOpen,
   Copy,
   Check,
-  Share2
+  Share2,
+  ChevronDown,
+  ArrowDownCircle,
+  FileSpreadsheet
 } from 'lucide-react';
 import { blogPosts } from '../data/blogPosts';
 
@@ -100,6 +103,8 @@ export default function LeadsManager({ onClose }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewLead, setIsNewLead] = useState(false);
   const [newComment, setNewComment] = useState('');
+  const [draggedLead, setDraggedLead] = useState(null);
+  const [dragOverColumn, setDragOverColumn] = useState(null);
 
   const handleCopyLinkedInPost = (postId, text) => {
     if (navigator.clipboard) {
@@ -528,6 +533,33 @@ export default function LeadsManager({ onClose }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             {adminTab === 'leads' && (
               <>
+                <a
+                  href="https://docs.google.com/spreadsheets/d/15Zxuvgnd6vreTmFBzETBLHKM8ue7NIB_yNwESTrITqI/edit?gid=1332475928#gid=1332475928"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '9px 16px',
+                    borderRadius: 'var(--border-radius-sm)',
+                    fontWeight: '600',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)',
+                    cursor: 'pointer',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)',
+                    textDecoration: 'none',
+                    transition: 'all 0.15s ease'
+                  }}
+                  title="Abrir hoja de cálculo oficial en Google Sheets"
+                >
+                  <FileSpreadsheet size={16} color="#059669" />
+                  <span>Google Sheets</span>
+                  <ExternalLink size={13} style={{ opacity: 0.6 }} />
+                </a>
+
                 <button
                   onClick={fetchFromGoogleScript}
                   className="btn-secondary"
@@ -822,181 +854,303 @@ export default function LeadsManager({ onClose }) {
 
             {/* Kanban View */}
             {view === 'kanban' && (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '16px',
-                alignItems: 'start',
-                overflowX: 'auto',
-                paddingBottom: '20px'
-              }}>
-                {COLUMNS.map((columnName) => {
-                  if (statusFilter !== 'ALL' && statusFilter !== columnName) return null;
-                  const columnLeads = filteredLeads.filter(l => (l.status || 'Nuevo') === columnName);
-
-                  return (
-                    <div
-                      key={columnName}
-                      style={{
-                        backgroundColor: 'var(--bg-secondary)',
-                        borderRadius: 'var(--border-radius-md)',
-                        padding: '16px',
-                        border: '1px solid var(--border-color)',
-                        minHeight: '400px',
-                        display: 'flex',
-                        flexDirection: 'column'
-                      }}
-                    >
-                      <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '16px',
-                        paddingBottom: '8px',
-                        borderBottom: '2px solid var(--border-color)'
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{
-                            width: '10px',
-                            height: '10px',
-                            borderRadius: '50%',
-                            backgroundColor: getStatusColor(columnName)
-                          }} />
-                          <h3 style={{ fontSize: '0.95rem', fontWeight: '700', fontFamily: 'var(--font-display)' }}>
-                            {columnName}
-                          </h3>
-                        </div>
-                        <span style={{
-                          backgroundColor: 'var(--bg-primary)',
-                          padding: '2px 8px',
-                          borderRadius: '12px',
-                          fontSize: '0.75rem',
-                          fontWeight: '700',
-                          color: 'var(--text-muted)'
-                        }}>
-                          {columnLeads.length}
+              <>
+                {draggedLead && (
+                  <div style={{
+                    backgroundColor: 'var(--accent-primary-light)',
+                    border: '1px solid var(--accent-primary)',
+                    borderRadius: 'var(--border-radius-sm)',
+                    padding: '12px 18px',
+                    marginBottom: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    animation: 'fadeIn 0.2s ease'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '1.2rem' }}>🎯</span>
+                      <div>
+                        <span style={{ fontWeight: '700', color: 'var(--accent-primary-text)' }}>
+                          Moviendo lead: {draggedLead.name} ({draggedLead.company || 'Sin empresa'})
                         </span>
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
-                        {columnLeads.length === 0 ? (
-                          <div style={{
-                            padding: '32px 16px',
-                            textAlign: 'center',
-                            color: 'var(--text-muted)',
-                            fontSize: '0.85rem',
-                            border: '1px dashed var(--border-color)',
-                            borderRadius: 'var(--border-radius-sm)'
-                          }}>
-                            Sin leads en este estado
-                          </div>
-                        ) : (
-                          columnLeads.map((lead) => {
-                            const waUrl = getWhatsAppUrl(lead.phone, lead.name);
-
-                            return (
-                              <div
-                                key={lead.id}
-                                onClick={() => openEditModal(lead)}
-                                className="glass-card lead-card-hover"
-                                style={{
-                                  padding: '14px',
-                                  borderRadius: 'var(--border-radius-sm)',
-                                  border: '1px solid var(--border-color)',
-                                  backgroundColor: 'var(--bg-primary)',
-                                  cursor: 'pointer',
-                                  transition: 'all 0.2s ease',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '10px'
-                                }}
-                              >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                  <div>
-                                    <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-heading)' }}>
-                                      {lead.name || 'Sin Nombre'}
-                                    </div>
-                                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                                      <Building size={12} />
-                                      <span>{lead.company || 'Empresa no indicada'}</span>
-                                    </div>
-                                  </div>
-
-                                  <span style={{
-                                    fontSize: '0.7rem',
-                                    fontWeight: '700',
-                                    padding: '2px 6px',
-                                    borderRadius: '6px',
-                                    backgroundColor: getPriorityColor(lead.priority) + '20',
-                                    color: getPriorityColor(lead.priority)
-                                  }}>
-                                    {lead.priority || 'Media'}
-                                  </span>
-                                </div>
-
-                                {lead.subject && (
-                                  <div style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: '600' }}>
-                                    {lead.subject}
-                                  </div>
-                                )}
-
-                                {lead.message && (
-                                  <div style={{
-                                    fontSize: '0.8rem',
-                                    color: 'var(--text-secondary)',
-                                    lineHeight: 1.4,
-                                    maxHeight: '44px',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    display: '-webkit-box',
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: 'vertical'
-                                  }}>
-                                    {lead.message}
-                                  </div>
-                                )}
-
-                                <div style={{
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center',
-                                  paddingTop: '8px',
-                                  borderTop: '1px solid var(--border-color)',
-                                  fontSize: '0.75rem',
-                                  color: 'var(--text-muted)'
-                                }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <Calendar size={11} />
-                                    <span>{lead.date?.split(' ')[0] || 'Reciente'}</span>
-                                  </div>
-
-                                  <div style={{ display: 'flex', gap: '4px' }} onClick={(e) => e.stopPropagation()}>
-                                    {lead.phone && (
-                                      <>
-                                        <a href={`tel:${lead.phone}`} className="btn-icon" title="Llamar">
-                                          <Phone size={12} />
-                                        </a>
-                                        <a href={waUrl} target="_blank" rel="noreferrer" className="btn-icon" style={{ color: '#25d366' }} title="WhatsApp">
-                                          <MessageCircle size={12} />
-                                        </a>
-                                      </>
-                                    )}
-                                    {lead.email && (
-                                      <a href={`mailto:${lead.email}`} className="btn-icon" title="Email">
-                                        <Mail size={12} />
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })
-                        )}
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                          Suelta en cualquiera de las 5 columnas para cambiar su estado automáticamente
+                        </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                    <button
+                      onClick={() => { setDraggedLead(null); setDragOverColumn(null); }}
+                      style={{
+                        background: 'transparent',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '6px',
+                        padding: '4px 10px',
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        color: 'var(--text-secondary)'
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                )}
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                  gap: '16px',
+                  alignItems: 'stretch',
+                  overflowX: 'auto',
+                  paddingBottom: '20px'
+                }}>
+                  {COLUMNS.map((columnName) => {
+                    if (statusFilter !== 'ALL' && statusFilter !== columnName && !draggedLead) return null;
+                    const columnLeads = filteredLeads.filter(l => (l.status || 'Nuevo') === columnName);
+                    const isTargeted = dragOverColumn === columnName;
+                    const statusColor = getStatusColor(columnName);
+
+                    return (
+                      <div
+                        key={columnName}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.dataTransfer.dropEffect = 'move';
+                          if (dragOverColumn !== columnName) setDragOverColumn(columnName);
+                        }}
+                        onDragLeave={(e) => {
+                          if (e.currentTarget.contains(e.relatedTarget)) return;
+                          if (dragOverColumn === columnName) setDragOverColumn(null);
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          const leadId = e.dataTransfer.getData('text/plain') || draggedLead?.id;
+                          if (leadId) {
+                            handleStatusChange(leadId, columnName);
+                          }
+                          setDraggedLead(null);
+                          setDragOverColumn(null);
+                        }}
+                        style={{
+                          backgroundColor: isTargeted ? `${statusColor}12` : 'var(--bg-secondary)',
+                          borderRadius: 'var(--border-radius-md)',
+                          padding: '16px',
+                          border: isTargeted ? `2px dashed ${statusColor}` : '1px solid var(--border-color)',
+                          minHeight: '440px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          transition: 'all 0.2s ease',
+                          transform: isTargeted ? 'scale(1.02)' : 'scale(1)',
+                          boxShadow: isTargeted ? `0 8px 24px ${statusColor}30` : 'var(--shadow-sm)'
+                        }}
+                      >
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '16px',
+                          paddingBottom: '8px',
+                          borderBottom: '2px solid var(--border-color)'
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                              width: '10px',
+                              height: '10px',
+                              borderRadius: '50%',
+                              backgroundColor: statusColor
+                            }} />
+                            <h3 style={{ fontSize: '0.95rem', fontWeight: '700', fontFamily: 'var(--font-display)' }}>
+                              {columnName}
+                            </h3>
+                          </div>
+                          <span style={{
+                            backgroundColor: 'var(--bg-primary)',
+                            padding: '2px 8px',
+                            borderRadius: '12px',
+                            fontSize: '0.75rem',
+                            fontWeight: '700',
+                            color: 'var(--text-muted)'
+                          }}>
+                            {columnLeads.length}
+                          </span>
+                        </div>
+
+                        {/* Mientras se arrastra: Ocultar los leads y mostrar SOLO la zona de soltado limpia */}
+                        {draggedLead ? (
+                          <div style={{
+                            flex: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '14px',
+                            border: `2px dashed ${isTargeted ? statusColor : 'var(--border-color)'}`,
+                            backgroundColor: isTargeted ? `${statusColor}20` : 'var(--bg-primary)',
+                            borderRadius: 'var(--border-radius-sm)',
+                            padding: '32px 16px',
+                            textAlign: 'center',
+                            cursor: 'copy',
+                            transition: 'all 0.15s ease'
+                          }}>
+                            <div style={{
+                              width: '52px',
+                              height: '52px',
+                              borderRadius: '50%',
+                              backgroundColor: `${statusColor}25`,
+                              color: statusColor,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'transform 0.2s ease',
+                              transform: isTargeted ? 'scale(1.2)' : 'scale(1)'
+                            }}>
+                              <ArrowDownCircle size={28} />
+                            </div>
+                            <div>
+                              <div style={{
+                                fontWeight: '800',
+                                fontSize: '1rem',
+                                color: isTargeted ? statusColor : 'var(--text-heading)',
+                                fontFamily: 'var(--font-display)'
+                              }}>
+                                {columnName}
+                              </div>
+                              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                {isTargeted ? '¡Suelta aquí para mover!' : `Soltar para mover a "${columnName}"`}
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+                            {columnLeads.length === 0 ? (
+                              <div style={{
+                                padding: '32px 16px',
+                                textAlign: 'center',
+                                color: 'var(--text-muted)',
+                                fontSize: '0.85rem',
+                                border: '1px dashed var(--border-color)',
+                                borderRadius: 'var(--border-radius-sm)'
+                              }}>
+                                Sin leads en este estado
+                              </div>
+                            ) : (
+                              columnLeads.map((lead) => {
+                                const waUrl = getWhatsAppUrl(lead.phone, lead.name);
+
+                                return (
+                                  <div
+                                    key={lead.id}
+                                    draggable={true}
+                                    onDragStart={(e) => {
+                                      e.dataTransfer.setData('text/plain', lead.id);
+                                      e.dataTransfer.effectAllowed = 'move';
+                                      setDraggedLead(lead);
+                                    }}
+                                    onDragEnd={() => {
+                                      setDraggedLead(null);
+                                      setDragOverColumn(null);
+                                    }}
+                                    onClick={() => openEditModal(lead)}
+                                    className="glass-card lead-card-hover"
+                                    style={{
+                                      padding: '14px',
+                                      borderRadius: 'var(--border-radius-sm)',
+                                      border: '1px solid var(--border-color)',
+                                      backgroundColor: 'var(--bg-primary)',
+                                      cursor: 'grab',
+                                      transition: 'all 0.2s ease',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      gap: '10px'
+                                    }}
+                                  >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                      <div>
+                                        <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-heading)' }}>
+                                          {lead.name || 'Sin Nombre'}
+                                        </div>
+                                        <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                                          <Building size={12} />
+                                          <span>{lead.company || 'Empresa no indicada'}</span>
+                                        </div>
+                                      </div>
+
+                                      <span style={{
+                                        fontSize: '0.7rem',
+                                        fontWeight: '700',
+                                        padding: '2px 6px',
+                                        borderRadius: '6px',
+                                        backgroundColor: getPriorityColor(lead.priority) + '20',
+                                        color: getPriorityColor(lead.priority)
+                                      }}>
+                                        {lead.priority || 'Media'}
+                                      </span>
+                                    </div>
+
+                                    {lead.subject && (
+                                      <div style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: '600' }}>
+                                        {lead.subject}
+                                      </div>
+                                    )}
+
+                                    {lead.message && (
+                                      <div style={{
+                                        fontSize: '0.8rem',
+                                        color: 'var(--text-secondary)',
+                                        lineHeight: 1.4,
+                                        maxHeight: '44px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: 'vertical'
+                                      }}>
+                                        {lead.message}
+                                      </div>
+                                    )}
+
+                                    <div style={{
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center',
+                                      paddingTop: '8px',
+                                      borderTop: '1px solid var(--border-color)',
+                                      fontSize: '0.75rem',
+                                      color: 'var(--text-muted)'
+                                    }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        <Calendar size={11} />
+                                        <span>{lead.date?.split(' ')[0] || 'Reciente'}</span>
+                                      </div>
+
+                                      <div style={{ display: 'flex', gap: '4px' }} onClick={(e) => e.stopPropagation()}>
+                                        {lead.phone && (
+                                          <>
+                                            <a href={`tel:${lead.phone}`} className="btn-icon" title="Llamar">
+                                              <Phone size={12} />
+                                            </a>
+                                            <a href={waUrl} target="_blank" rel="noreferrer" className="btn-icon" style={{ color: '#25d366' }} title="WhatsApp">
+                                              <MessageCircle size={12} />
+                                            </a>
+                                          </>
+                                        )}
+                                        {lead.email && (
+                                          <a href={`mailto:${lead.email}`} className="btn-icon" title="Email">
+                                            <Mail size={12} />
+                                          </a>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
             )}
 
         {/* View Mode: Table */}
@@ -1015,7 +1169,7 @@ export default function LeadsManager({ onClose }) {
                   <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Contacto</th>
                   <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Empresa</th>
                   <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Asunto / Interés</th>
-                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Estado</th>
+                  <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Estado (Cambio directo)</th>
                   <th style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase' }}>Acciones</th>
                 </tr>
               </thead>
@@ -1054,19 +1208,87 @@ export default function LeadsManager({ onClose }) {
                         <td style={{ padding: '14px 16px', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {lead.subject || lead.message || '-'}
                         </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <span style={{
-                            backgroundColor: badgeStyle.bg,
-                            color: badgeStyle.text,
-                            border: `1px solid ${badgeStyle.border}`,
-                            padding: '3px 10px',
-                            borderRadius: '16px',
-                            fontSize: '0.75rem',
-                            fontWeight: '700'
-                          }}>
-                            {lead.status || 'Nuevo'}
-                          </span>
+                        
+                        {/* Estado con Selector en Hover / Clic Directo sin abrir modal */}
+                        <td style={{ padding: '14px 16px' }} onClick={(e) => e.stopPropagation()}>
+                          <div className="status-hover-container" style={{ position: 'relative', display: 'inline-block' }}>
+                            <div
+                              className="status-badge-pill"
+                              style={{
+                                backgroundColor: badgeStyle.bg,
+                                color: badgeStyle.text,
+                                border: `1px solid ${badgeStyle.border}`,
+                                padding: '4px 10px',
+                                borderRadius: '16px',
+                                fontSize: '0.78rem',
+                                fontWeight: '700',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease'
+                              }}
+                              title="Pasa el ratón o haz clic para cambiar de estado rápidamente"
+                            >
+                              <span>{lead.status || 'Nuevo'}</span>
+                              <ChevronDown size={12} style={{ opacity: 0.7 }} />
+                            </div>
+
+                            {/* Hover Dropdown Menu */}
+                            <div className="status-hover-menu">
+                              <div style={{
+                                padding: '4px 8px 6px 8px',
+                                fontSize: '0.7rem',
+                                fontWeight: '700',
+                                color: 'var(--text-muted)',
+                                borderBottom: '1px solid var(--border-color)',
+                                marginBottom: '4px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px'
+                              }}>
+                                Cambiar Estado
+                              </div>
+                              {COLUMNS.map(col => {
+                                const colStyle = getBadgeStyle(col);
+                                const isSelected = (lead.status || 'Nuevo') === col;
+                                return (
+                                  <button
+                                    key={col}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleStatusChange(lead.id, col);
+                                    }}
+                                    className="status-menu-btn"
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between',
+                                      gap: '8px',
+                                      padding: '6px 10px',
+                                      borderRadius: '6px',
+                                      border: 'none',
+                                      backgroundColor: isSelected ? colStyle.bg : 'transparent',
+                                      color: isSelected ? colStyle.text : 'var(--text-primary)',
+                                      fontWeight: isSelected ? '700' : '500',
+                                      fontSize: '0.8rem',
+                                      cursor: 'pointer',
+                                      width: '100%',
+                                      textAlign: 'left',
+                                      transition: 'background-color 0.15s'
+                                    }}
+                                  >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: getStatusColor(col) }} />
+                                      <span>{col}</span>
+                                    </div>
+                                    {isSelected && <Check size={12} color={colStyle.text} />}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
                         </td>
+
                         <td style={{ padding: '14px 16px' }} onClick={(e) => e.stopPropagation()}>
                           <div style={{ display: 'flex', gap: '6px' }}>
                             {lead.phone && (
@@ -1544,6 +1766,37 @@ export default function LeadsManager({ onClose }) {
         }
         .animate-spin {
           animation: spin 0.8s linear infinite;
+        }
+        .status-hover-container {
+          position: relative;
+          display: inline-block;
+        }
+        .status-hover-container .status-hover-menu {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          margin-top: 4px;
+          background-color: var(--bg-secondary);
+          border: 1px solid var(--border-color);
+          border-radius: var(--border-radius-sm);
+          box-shadow: var(--shadow-lg);
+          padding: 6px;
+          z-index: 100;
+          min-width: 175px;
+          animation: fadeIn 0.15s ease-out;
+        }
+        .status-hover-container:hover .status-hover-menu,
+        .status-hover-container:focus-within .status-hover-menu {
+          display: flex;
+          flex-direction: column;
+        }
+        .status-menu-btn:hover {
+          background-color: var(--bg-tertiary) !important;
+        }
+        .status-badge-pill:hover {
+          filter: brightness(0.95);
+          box-shadow: var(--shadow-sm);
         }
       `}</style>
     </div>
