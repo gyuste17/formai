@@ -47,7 +47,7 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
     setLoading(true);
 
     // Basic validation
-    if (!formData.name || !formData.email || !formData.phone || !formData.company) {
+    if (!formData.name || !formData.email || !formData.company) {
       setError('Por favor, rellena todos los campos obligatorios (*).');
       setLoading(false);
       return;
@@ -282,7 +282,7 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                     />
                   </div>
                   <div>
-                    <label htmlFor="contact-phone" className="form-label">Teléfono *</label>
+                    <label htmlFor="contact-phone" className="form-label">Teléfono (Opcional)</label>
                     <input 
                       id="contact-phone"
                       type="tel" 
@@ -291,8 +291,6 @@ export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBu
                       onChange={handleChange} 
                       placeholder="600 000 000"
                       className="form-input"
-                      required
-                      aria-required="true"
                     />
                   </div>
                 </div>
