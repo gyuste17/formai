@@ -28,12 +28,35 @@ export default function Hero({ onOpenCatalogModal }) {
         {/* Text Area */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          {/* Badge */}
-          <div style={{ display: 'inline-flex' }}>
+          {/* Badges */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
             <span className="badge badge-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Zap size={14} />
               Formación Bonificada 100% FUNDAE
             </span>
+
+            <a 
+              href="#ai-act"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 14px',
+                borderRadius: 'var(--border-radius-full)',
+                backgroundColor: 'var(--accent-primary-light)',
+                border: '1px solid var(--accent-primary)',
+                color: 'var(--text-primary)',
+                fontSize: '0.84rem',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'all var(--transition-fast)'
+              }}
+              className="hero-ai-act-pill"
+            >
+              <span style={{ fontSize: '0.95rem' }}>🇪🇺</span>
+              <span><strong>AI Act (Art. 4):</strong> Ley europea de formación en IA</span>
+              <ArrowRight size={13} style={{ color: 'var(--accent-primary)' }} />
+            </a>
           </div>
 
           {/* Heading */}

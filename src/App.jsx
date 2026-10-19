@@ -12,6 +12,7 @@ import LeadsManager from './components/LeadsManager';
 import CatalogSection from './components/CatalogSection';
 import CatalogModal from './components/CatalogModal';
 import BlogPage from './components/BlogPage';
+import AiActPage from './components/AiActPage';
 import SpecialistsNetwork from './components/SpecialistsNetwork';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { coursesData } from './data/courses';
@@ -41,8 +42,11 @@ export default function App() {
   const [currentView, setCurrentView] = useState(() => {
     if (typeof window === 'undefined') return 'home';
     const hash = window.location.hash;
+    const path = window.location.pathname;
+    if (path === '/ai-act' || path === '/ai-act/') return 'ai-act';
     if (hash === '#leads' || hash === '#admin') return 'leads';
     if (hash.startsWith('#blog')) return 'blog';
+    if (hash === '#ai-act' || hash.startsWith('#ai-act')) return 'ai-act';
     return 'home';
   });
 
@@ -53,6 +57,8 @@ export default function App() {
         setCurrentView('leads');
       } else if (hash.startsWith('#blog')) {
         setCurrentView('blog');
+      } else if (hash === '#ai-act' || hash.startsWith('#ai-act')) {
+        setCurrentView('ai-act');
       } else {
         setCurrentView('home');
       }
@@ -60,6 +66,12 @@ export default function App() {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentView]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -89,6 +101,7 @@ export default function App() {
         toggleTheme={toggleTheme} 
         onOpenCatalogModal={() => setIsCatalogModalOpen(true)} 
         isBlogActive={currentView === 'blog'}
+        isAiActActive={currentView === 'ai-act'}
       />
 
       {currentView === 'blog' ? (
@@ -104,6 +117,14 @@ export default function App() {
               document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
             }, 100);
           }}
+        />
+      ) : currentView === 'ai-act' ? (
+        <AiActPage 
+          onBackToHome={() => {
+            window.location.hash = '';
+            setCurrentView('home');
+          }}
+          onOpenCatalogModal={() => setIsCatalogModalOpen(true)}
         />
       ) : (
         <main>

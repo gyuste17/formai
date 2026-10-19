@@ -69,7 +69,7 @@ python "C:\Users\gyust\GY Antigravity\Antigravity-Master\scripts\generate_dalle_
 | `premium` | ~$0.05 | Producción final |
 
 - **NO intentar llamar a la API de OpenAI directamente desde scripts propios.**
-- **NO usar modelos obsoletos como `dall-e-3` o `dall-e-2`** (ya no existen). Los modelos actuales son `gpt-image-1`, `gpt-image-2.5-flare`, `gpt-image-2.5-sunburst`.
+- **NO usar modelos obsoletos como `dall-e-3` o `dall-e-2`** (ya no existen). Los modelos actuales son `gpt-image-2.5-flare` y `gpt-image-2.5-sunburst` (Suite GPT-Image-2.5).
 - La clave API se gestiona de forma segura desde `Antigravity-Master/config/openai.json`.
 - Para previsualizar coste sin gastar: añadir `--dry-run`.
 

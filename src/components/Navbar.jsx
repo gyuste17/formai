@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Sun, Moon, Menu, X, Calculator, BookOpen } from 'lucide-react';
+import { Sun, Moon, Menu, X, Calculator, BookOpen, ShieldCheck } from 'lucide-react';
 
-export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogActive }) {
+export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogActive, isAiActActive }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -97,6 +97,21 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
               </a>
             </div>
           </div>
+          <a 
+            href="#ai-act" 
+            className="nav-link" 
+            style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '6px',
+              fontWeight: isAiActActive ? '800' : '600',
+              color: isAiActActive ? 'var(--accent-primary)' : 'inherit'
+            }}
+          >
+            <ShieldCheck size={15} style={{ color: 'var(--accent-primary)' }} />
+            <span>AI Act 🇪🇺</span>
+            <span style={{ fontSize: '0.68rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '1px 6px', borderRadius: '10px', fontWeight: '800' }}>Ley IA</span>
+          </a>
           <a 
             href="#blog" 
             className="nav-link" 
@@ -218,6 +233,23 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
           >
             <span>Catálogo 2026</span>
             <span style={{ fontSize: '0.75rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '2px 8px', borderRadius: '10px', fontWeight: '700' }}>PDF</span>
+          </a>
+          <a 
+            href="#ai-act" 
+            onClick={() => setIsOpen(false)} 
+            style={{ 
+              fontWeight: isAiActActive ? '800' : '600', 
+              color: isAiActActive ? 'var(--accent-primary)' : 'inherit', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between' 
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ShieldCheck size={16} style={{ color: 'var(--accent-primary)' }} />
+              <span>AI Act Europeo 🇪🇺</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '2px 8px', borderRadius: '10px', fontWeight: '800' }}>Art. 4</span>
           </a>
           <a href="#blog" onClick={() => setIsOpen(false)} style={{ fontWeight: '600', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <BookOpen size={16} />

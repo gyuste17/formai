@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle } from 'lucide-react';
 
-export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBudget }) {
+export default function ContactForm({ preSelectedCourse, preSelectedCalculatorBudget, initialSubject, initialMessage }) {
   const [formData, setFormData] = useState({
     name: '',
     company: '',
     email: '',
     phone: '',
-    subject: '',
-    message: ''
+    subject: initialSubject || '',
+    message: initialMessage || ''
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Pre-fill values if initial props change
+  useEffect(() => {
+    if (initialSubject || initialMessage) {
+      setFormData(prev => ({
+        ...prev,
+        subject: initialSubject || prev.subject,
+        message: initialMessage || prev.message
+      }));
+    }
+  }, [initialSubject, initialMessage]);
 
   // Pre-fill values if props change
   useEffect(() => {

@@ -58,9 +58,10 @@ export default function Footer({ onOpenCatalogModal }) {
 
           {/* Blog & Guías FUNDAE */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Guías & Blog FUNDAE</h3>
+            <h3 style={{ fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Guías & Regulación</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              <a href="#blog" className="footer-link" style={{ fontWeight: '600', color: 'var(--accent-primary)' }}>📚 Ver Todas las Guías</a>
+              <a href="#ai-act" className="footer-link" style={{ fontWeight: '700', color: 'var(--accent-primary)' }}>🇪🇺 Cumplimiento AI Act (Art. 4)</a>
+              <a href="#blog" className="footer-link">📚 Blog & Guías FUNDAE</a>
               <a href="#blog/guia-credito-fundae-2026-como-gastarlo" className="footer-link">Cómo no perder el crédito 2026</a>
               <a href="#calculadora" className="footer-link">Simulador de Crédito FUNDAE</a>
             </div>
