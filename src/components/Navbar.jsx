@@ -36,9 +36,8 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
         </a>
 
         {/* Desktop Menu */}
-        <div style={{ display: 'none', gap: '24px', alignItems: 'center' }} className="desktop-menu">
-          <a href="#" className="nav-link">Inicio</a>
-          <a href="#cursos" className="nav-link">Cursos</a>
+        <div style={{ display: 'none', gap: '16px', alignItems: 'center', flexWrap: 'nowrap' }} className="desktop-menu">
+          <a href="#cursos" className="nav-link" style={{ whiteSpace: 'nowrap' }}>Cursos</a>
           <a 
             href="#catalogo" 
             className="nav-link" 
@@ -48,7 +47,7 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
                 onOpenCatalogModal();
               }
             }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}
           >
             <span>Catálogo 2026</span>
             <span style={{ fontSize: '0.68rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '1px 6px', borderRadius: '10px', fontWeight: '700' }}>PDF</span>
@@ -66,7 +65,8 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '4px',
-                color: 'inherit'
+                color: 'inherit',
+                whiteSpace: 'nowrap'
               }}
             >
               ¿Cómo funciona?
@@ -103,14 +103,21 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
             style={{ 
               display: 'inline-flex', 
               alignItems: 'center', 
-              gap: '6px',
-              fontWeight: isAiActActive ? '800' : '600',
-              color: isAiActActive ? 'var(--accent-primary)' : 'inherit'
+              gap: '5px',
+              padding: '5px 12px',
+              borderRadius: 'var(--border-radius-full)',
+              backgroundColor: isAiActActive ? 'var(--accent-primary)' : 'var(--accent-primary-light)',
+              color: isAiActActive ? '#ffffff' : 'var(--accent-primary-text, var(--accent-primary))',
+              fontWeight: '700',
+              fontSize: '0.84rem',
+              whiteSpace: 'nowrap',
+              border: '1px solid var(--accent-primary)',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all var(--transition-fast)'
             }}
           >
-            <ShieldCheck size={15} style={{ color: 'var(--accent-primary)' }} />
+            <ShieldCheck size={14} style={{ flexShrink: 0 }} />
             <span>AI Act 🇪🇺</span>
-            <span style={{ fontSize: '0.68rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '1px 6px', borderRadius: '10px', fontWeight: '800' }}>Ley IA</span>
           </a>
           <a 
             href="#blog" 
@@ -118,15 +125,16 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
             style={{ 
               display: 'inline-flex', 
               alignItems: 'center', 
-              gap: '6px',
-              fontWeight: isBlogActive ? '800' : '600',
-              color: isBlogActive ? 'var(--accent-primary)' : 'inherit'
+              gap: '5px',
+              fontWeight: isBlogActive ? '800' : '500',
+              color: isBlogActive ? 'var(--accent-primary)' : 'inherit',
+              whiteSpace: 'nowrap'
             }}
           >
             <BookOpen size={15} />
-            <span>Blog & Guías</span>
+            <span>Blog</span>
           </a>
-          <a href="#contacto" className="nav-link">Contacto</a>
+          <a href="#contacto" className="nav-link" style={{ whiteSpace: 'nowrap' }}>Contacto</a>
           
           {/* Theme Toggle */}
           <button onClick={toggleTheme} aria-label="Cambiar modo claro / oscuro" style={{
@@ -139,6 +147,7 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            flexShrink: 0,
             transition: 'background-color var(--transition-fast)'
           }}
           className="theme-toggle-btn"
@@ -150,19 +159,21 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
           <a href="#calculadora" style={{
             background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-ai) 100%)',
             color: '#ffffff',
-            padding: '10px 20px',
+            padding: '8px 16px',
             borderRadius: 'var(--border-radius-full)',
             fontWeight: '600',
-            fontSize: '0.95rem',
+            fontSize: '0.9rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '6px',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
             boxShadow: 'var(--shadow-sm)',
             transition: 'transform var(--transition-fast), box-shadow var(--transition-fast)'
           }}
           className="cta-btn"
           >
-            <Calculator size={16} />
+            <Calculator size={15} />
             Calcular Crédito
           </a>
         </div>
@@ -291,11 +302,11 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
           display: block;
           transition: height var(--transition-fast);
         }
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           .navbar-container {
-            height: 48px !important;
-            padding-left: 12px !important;
-            padding-right: 12px !important;
+            height: 52px !important;
+            padding-left: 14px !important;
+            padding-right: 14px !important;
             margin: 0 !important;
           }
           .navbar-logo {
@@ -305,18 +316,34 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
             padding: 0 !important;
           }
           .mobile-menu-panel {
-            top: 48px !important;
+            top: 52px !important;
           }
           .mobile-toggle-area {
-            gap: 4px !important;
+            gap: 6px !important;
+            display: flex !important;
           }
           .mobile-toggle-area button {
             padding: 6px !important;
           }
+          .desktop-menu {
+            display: none !important;
+          }
         }
-        @media (min-width: 769px) {
-          .desktop-menu { display: flex !important; }
-          .mobile-toggle-area { display: none !important; }
+        @media (min-width: 1025px) {
+          .desktop-menu {
+            display: flex !important;
+            gap: clamp(10px, 1.2vw, 18px) !important;
+            align-items: center;
+            flex-wrap: nowrap !important;
+          }
+          .mobile-toggle-area {
+            display: none !important;
+          }
+        }
+        .desktop-menu .nav-link,
+        .desktop-menu button {
+          white-space: nowrap !important;
+          font-size: 0.9rem !important;
         }
         .nav-link:hover {
           color: var(--accent-primary);

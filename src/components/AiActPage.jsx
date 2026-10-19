@@ -3,32 +3,23 @@ import {
   ShieldCheck, AlertTriangle, CheckCircle2, ArrowRight, ArrowLeft, 
   FileText, Users, Building2, Scale, Lock, Sparkles, BookOpen, 
   HelpCircle, ChevronDown, ChevronUp, Clock, Calendar, DownloadCloud,
-  Send, Calculator as CalcIcon, Award
+  Send, Calculator as CalcIcon, Award, Zap, Sliders, Check, X,
+  Layers, ArrowUpRight, ShieldAlert, Cpu, Eye
 } from 'lucide-react';
 import ContactForm from './ContactForm';
 
 export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
-  // Test interactivo de diagnóstico de obligación
-  const [checklist, setChecklist] = useState({
-    chatgpt: false,
-    copilot: false,
-    rrhh: false,
-    marketing: false,
-    shadowAi: false,
-  });
+  // Tab activo en el Esquema Interactivo de Impacto Legal
+  const [activeArea, setActiveArea] = useState('ofimatica');
+
+  // Toggle para el interactivo Human-in-the-loop en el Bento Grid
+  const [isSupervised, setIsSupervised] = useState(true);
 
   // FAQs desplegables
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
-  // Estado para el cálculo rápido de crédito
-  const [employeesCount, setEmployeesCount] = useState(15);
-  
-  const checkedCount = Object.values(checklist).filter(Boolean).length;
-  const isObligated = checkedCount > 0;
-
-  const toggleCheck = (key) => {
-    setChecklist(prev => ({ ...prev, [key]: !prev[key] }));
-  };
+  // Estado para el slider de cálculo de crédito
+  const [employeesCount, setEmployeesCount] = useState(18);
 
   const calculateEstimateCredit = (num) => {
     if (num <= 5) return 420;
@@ -39,18 +30,81 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
   };
 
   const estimatedCredit = calculateEstimateCredit(employeesCount);
+  const estimatedStudents = Math.min(employeesCount, Math.max(3, Math.round(employeesCount * 0.6)));
 
-  const scrollToContact = (subjectText = '') => {
+  const scrollToContact = (subject = '') => {
     const el = document.getElementById('contacto-aiact');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  // Datos del Esquema Interactivo de Impacto Legal
+  const legalImpactAreas = {
+    ofimatica: {
+      title: 'IA Cotidiana, Asistentes & Ofimática',
+      badge: 'Riesgo Específico · Art. 4',
+      badgeColor: '#0284c7',
+      riskLevel: 'Moderado (Obligación de Alfabetización)',
+      riskPercent: 65,
+      riskTone: '#0284c7',
+      tools: 'ChatGPT, Microsoft Copilot en Excel/Word/Teams, Claude, Gemini',
+      whatTeamDoes: 'Redacción de correos, generación de fórmulas en hojas de cálculo, actas de reuniones y resúmenes de documentación comercial.',
+      legalRule: 'Artículo 4 del Reglamento (UE) 2024/1689: Exige medidas de alfabetización continua al personal que usa IA.',
+      consequence: 'Sin formación, empleados introducen datos confidenciales en prompts públicos (infracción grave RGPD hasta 20M€) y confían en alucinaciones en contratos.',
+      solution: 'Itinerario 1 (Alfabetización Transversal 8h-16h) o Itinerario 2 (Copilot 365 12h-20h), 100% bonificables por FUNDAE.',
+      itineraryId: 'itinerario-1'
+    },
+    rrhh: {
+      title: 'Recursos Humanos, Selección & Evaluación',
+      badge: 'ALTO RIESGO · Anexo III',
+      badgeColor: '#dc2626',
+      riskLevel: 'Alto Riesgo (Regulación Estricta)',
+      riskPercent: 95,
+      riskTone: '#dc2626',
+      tools: 'Software ATS con IA, cribado automático de CVs, tests predictivos, analítica de productividad',
+      whatTeamDoes: 'Filtrado previo de candidatos, redacción y ranking de perfiles, evaluación de rendimiento laboral o monitorización de empleados.',
+      legalRule: 'Anexo III.4 y Artículos 26 y 27: Calificado expresamente como "Sistemas de IA de Alto Riesgo". Exige supervisión humana, transparencia y formación.',
+      consequence: 'Sanciones de hasta 15 millones de euros o 3% de la facturación anual por uso no transparente o sesgos discriminatorios en contratación.',
+      solution: 'Itinerario 3 (Gobernanza de IA, Directivos & RRHH 8h): diseño de protocolos humanos y marco de compliance bonificable.',
+      itineraryId: 'itinerario-3'
+    },
+    shadowAi: {
+      title: '"Shadow AI" & Cuentas Personales',
+      badge: 'Riesgo Crítico de Fuga RGPD',
+      badgeColor: '#ea580c',
+      riskLevel: 'Crítico (Brechas de Seguridad)',
+      riskPercent: 88,
+      riskTone: '#ea580c',
+      tools: 'Cuentas gratuitas de ChatGPT/DeepSeek/Midjourney utilizadas en ordenadores corporativos',
+      whatTeamDoes: 'Los empleados recurren a la IA por iniciativa propia para resolver tareas más rápido, sin directrices de la empresa.',
+      legalRule: 'Artículo 32 del RGPD y Art. 4 del AI Act: Responsabilidad directa del administrador por no disponer de política interna de uso aceptable.',
+      consequence: 'Fugas masivas de secretos industriales y datos de clientes hacia servidores de entrenamiento de terceros fuera de la UE.',
+      solution: 'Plan de Formación Transversal + Entrega de la Política Interna Corporativa de FormAI para su firma formal en la plantilla.',
+      itineraryId: 'itinerario-1'
+    },
+    marketing: {
+      title: 'Marketing, Ventas & Atención a Clientes',
+      badge: 'Deber de Transparencia · Art. 50',
+      badgeColor: '#7c3aed',
+      riskLevel: 'Medio-Alto (Deber de Información)',
+      riskPercent: 72,
+      riskTone: '#7c3aed',
+      tools: 'Generación de imágenes sintéticas, chatbots de soporte, bots de prospección comercial',
+      whatTeamDoes: 'Creación de campañas, redacción de copys comerciales, respuestas automáticas a clientes y segmentación de leads.',
+      legalRule: 'Artículo 50: Obligación de avisar a los usuarios de que están interactuando con un sistema de IA o visualizando contenido sintético.',
+      consequence: 'Publicidad engañosa, infracción de derechos de autor e incumplimiento del deber de transparencia hacia consumidores.',
+      solution: 'Itinerario de IA aplicada y ética publicitaria, bonificado 100% mediante FUNDAE.',
+      itineraryId: 'itinerario-2'
+    }
+  };
+
+  const currentArea = legalImpactAreas[activeArea];
+
   const faqs = [
     {
       q: '¿Qué es exactamente el Artículo 4 del AI Act y a quién obliga?',
-      a: 'El Artículo 4 del Reglamento Europeo de Inteligencia Artificial (Reglamento UE 2024/1689) establece la obligación de "Alfabetización en materia de IA" (AI Literacy). Obliga a los proveedores y a los responsables del despliegue (es decir, a cualquier empresa pública o privada cuyos trabajadores utilicen sistemas de IA en su operativa habitual) a adoptar medidas para asegurar que su personal cuenta con un nivel suficiente de competencias, comprensión de riesgos y uso seguro de la IA.'
+      a: 'El Artículo 4 del Reglamento Europeo de Inteligencia Artificial (Reglamento UE 2024/1689) establece la obligación de "Alfabetización en materia de IA" (AI Literacy). Obliga a todos los responsables del despliegue (es decir, cualquier empresa en España cuyos trabajadores utilicen sistemas de IA en su operativa habitual) a adoptar medidas para asegurar que su personal cuenta con un nivel suficiente de competencias, comprensión de riesgos y uso seguro de la IA.'
     },
     {
       q: '¿Aplica esta exigencia a PYMES o solo a grandes corporaciones?',
@@ -75,7 +129,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
   ];
 
   return (
-    <div className="aiact-page-wrapper" style={{ paddingBottom: '80px' }}>
+    <div className="aiact-page-wrapper" style={{ paddingBottom: '90px' }}>
       
       {/* Barra de Retorno y Breadcrumbs */}
       <div style={{
@@ -106,41 +160,50 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             <span>Reglamento (UE) 2024/1689</span>
             <span>·</span>
-            <span style={{ color: 'var(--accent-primary)', fontWeight: '600' }}>Artículo 4: AI Literacy</span>
+            <span style={{ color: 'var(--accent-primary)', fontWeight: '700' }}>Artículo 4: AI Literacy</span>
           </div>
         </div>
       </div>
 
-      {/* Hero Principal */}
+      {/* Hero Principal con Halo Animado y Microinteracciones */}
       <section style={{
-        padding: '64px 0 56px 0',
-        background: 'radial-gradient(ellipse at 50% 0%, var(--accent-primary-light) 0%, transparent 70%)',
-        position: 'relative'
+        padding: '68px 0 60px 0',
+        background: 'radial-gradient(ellipse at 50% 0%, var(--accent-primary-light) 0%, transparent 75%)',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
-        <div className="container" style={{ maxWidth: '960px', textAlign: 'center' }}>
+        <div className="container" style={{ maxWidth: '980px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           
-          {/* Badge institucional europeo */}
+          {/* Badge institucional europeo con micro-pulso */}
           <div style={{ display: 'inline-flex', marginBottom: '24px' }}>
-            <span style={{
+            <span className="badge-pulse-glow" style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '10px',
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
-              padding: '8px 18px',
+              padding: '8px 20px',
               borderRadius: 'var(--border-radius-full)',
               fontSize: '0.88rem',
               fontWeight: '700',
               color: 'var(--text-primary)',
-              boxShadow: 'var(--shadow-sm)'
+              boxShadow: 'var(--shadow-md)'
             }}>
-              <span style={{ fontSize: '1.2rem' }}>🇪🇺</span>
+              <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>🇪🇺</span>
               <span>Reglamento Europeo de IA (AI Act) · Obligación Legal en Vigor</span>
+              <span style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: '#10b981',
+                boxShadow: '0 0 8px #10b981',
+                display: 'inline-block'
+              }} />
             </span>
           </div>
 
           <h1 style={{
-            fontSize: 'calc(2.2rem + 1.3vw)',
+            fontSize: 'calc(2.2rem + 1.4vw)',
             fontWeight: '800',
             lineHeight: 1.15,
             letterSpacing: '-0.03em',
@@ -154,13 +217,13 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
             fontSize: '1.18rem',
             color: 'var(--text-secondary)',
             lineHeight: 1.6,
-            maxWidth: '780px',
+            maxWidth: '800px',
             margin: '0 auto 36px auto'
           }}>
-            La ley europea ya obliga a las empresas que utilizan Inteligencia Artificial a garantizar la formación continua de su personal. En <strong>FormAI</strong> diseñamos e impartimos tu plan oficial de alfabetización en IA, <strong>bonificado al 100% en los Seguros Sociales</strong> y con dossier justificativo auditable ante la AESIA.
+            La legislación europea ya obliga a las empresas cuyos empleados utilizan herramientas de Inteligencia Artificial a acreditar su capacitación continua. En <strong>FormAI</strong> diseñamos e impartimos tu plan de alfabetización en IA, <strong>bonificado al 100% en los Seguros Sociales</strong> y con dossier justificativo para auditorías de la AESIA.
           </p>
 
-          {/* Quick Badges de Garantía */}
+          {/* Quick Badges de Garantía con elevación hover */}
           <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -168,53 +231,56 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
             gap: '16px',
             marginBottom: '40px'
           }}>
-            <div style={{
+            <div className="hover-lift-sm" style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '8px 16px',
+              padding: '9px 18px',
               borderRadius: 'var(--border-radius-sm)',
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
-              fontSize: '0.85rem',
-              fontWeight: '600'
+              fontSize: '0.88rem',
+              fontWeight: '600',
+              boxShadow: 'var(--shadow-sm)'
             }}>
               <ShieldCheck size={18} style={{ color: 'var(--accent-primary)' }} />
               <span>Conforme a Directrices AESIA</span>
             </div>
 
-            <div style={{
+            <div className="hover-lift-sm" style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '8px 16px',
+              padding: '9px 18px',
               borderRadius: 'var(--border-radius-sm)',
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
-              fontSize: '0.85rem',
-              fontWeight: '600'
+              fontSize: '0.88rem',
+              fontWeight: '600',
+              boxShadow: 'var(--shadow-sm)'
             }}>
               <Scale size={18} style={{ color: 'var(--accent-primary)' }} />
               <span>100% Bonificable FUNDAE (Coste 0€)</span>
             </div>
 
-            <div style={{
+            <div className="hover-lift-sm" style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '8px 16px',
+              padding: '9px 18px',
               borderRadius: 'var(--border-radius-sm)',
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
-              fontSize: '0.85rem',
-              fontWeight: '600'
+              fontSize: '0.88rem',
+              fontWeight: '600',
+              boxShadow: 'var(--shadow-sm)'
             }}>
               <FileText size={18} style={{ color: 'var(--accent-primary)' }} />
               <span>Certificado Oficial & Dossier Auditable</span>
             </div>
           </div>
 
-          {/* Acciones principales */}
+          {/* Botones de Acción */}
           <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -223,7 +289,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
           }}>
             <button
               onClick={() => {
-                const el = document.getElementById('test-diagnostico');
+                const el = document.getElementById('esquema-impacto');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
               style={{
@@ -243,7 +309,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
               }}
               className="btn-primary"
             >
-              <span>Comprobar si tu empresa está obligada</span>
+              <span>Explorar Esquema de Impacto Legal</span>
               <ArrowRight size={18} />
             </button>
 
@@ -261,387 +327,529 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                boxShadow: 'var(--shadow-sm)'
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all var(--transition-fast)'
               }}
               className="btn-secondary"
             >
               <CalcIcon size={18} style={{ color: 'var(--accent-primary)' }} />
-              <span>Solicitar Plan de Formación</span>
+              <span>Calcular Crédito y Solicitar Plan</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* Test de Diagnóstico Interactivo */}
-      <section id="test-diagnostico" style={{ padding: '64px 0', backgroundColor: 'var(--bg-secondary)' }}>
-        <div className="container" style={{ maxWidth: '860px' }}>
+      {/* SECCIÓN RENOVADA: ESQUEMA INTERACTIVO DE IMPACTO LEGAL */}
+      <section id="esquema-impacto" style={{ padding: '72px 0', backgroundColor: 'var(--bg-secondary)' }}>
+        <div className="container" style={{ maxWidth: '1020px' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Diagnóstico Rápido de Compliance</span>
-            <h2 style={{ fontSize: '1.9rem', fontWeight: '800', marginBottom: '12px' }}>
-              ¿Afecta el <span className="gradient-text">Artículo 4</span> a tu organización?
+            <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Arquitectura Jurídica de la IA</span>
+            <h2 style={{ fontSize: 'calc(1.8rem + 0.6vw)', fontWeight: '800', marginBottom: '12px' }}>
+              Esquema de <span className="gradient-text">Impacto Legal y Riesgos</span> por Área
             </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.5 }}>
-              Marca las situaciones que se dan actualmente en tu empresa o entre tus empleados:
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '720px', margin: '0 auto' }}>
+              El AI Act no sanciona el uso de la IA, sino su despliegue sin formación ni control. Selecciona el área operativa de tu empresa para visualizar su flujo regulatorio, nivel de exposición y solución bonificable:
             </p>
           </div>
 
-          <div className="glass-card" style={{
-            padding: '32px',
-            borderRadius: '20px',
-            border: '1px solid var(--border-color)',
-            boxShadow: 'var(--shadow-md)'
+          {/* Navegador de Pestañas Interactivas con micro-animaciones */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+            gap: '12px',
+            marginBottom: '32px'
           }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              
-              <label style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '14px',
-                padding: '16px',
-                borderRadius: '12px',
-                backgroundColor: checklist.chatgpt ? 'var(--accent-primary-light)' : 'var(--bg-primary)',
-                border: checklist.chatgpt ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}>
-                <input 
-                  type="checkbox" 
-                  checked={checklist.chatgpt} 
-                  onChange={() => toggleCheck('chatgpt')}
-                  style={{ marginTop: '4px', transform: 'scale(1.2)', cursor: 'pointer' }}
-                />
-                <div>
-                  <div style={{ fontWeight: '700', fontSize: '0.98rem', marginBottom: '4px' }}>
-                    1. Empleados que usan ChatGPT, Claude o Gemini
-                  </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                    Utilizan modelos de lenguaje para redactar correos, resumir actas, traducir o generar documentación técnica o comercial.
-                  </div>
-                </div>
-              </label>
+            {[
+              { id: 'ofimatica', label: '💼 Ofimática & Copilot', subtitle: 'Excel, ChatGPT, Teams' },
+              { id: 'rrhh', label: '👥 RRHH & Contratación', subtitle: 'Alto Riesgo (Anexo III)' },
+              { id: 'shadowAi', label: '🛡️ "Shadow AI" Oculta', subtitle: 'Fugas de Datos RGPD' },
+              { id: 'marketing', label: '🤖 Ventas & Marketing', subtitle: 'Bots y Contenido IA' }
+            ].map(tab => {
+              const isSelected = activeArea === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveArea(tab.id)}
+                  style={{
+                    backgroundColor: isSelected ? 'var(--accent-primary)' : 'var(--bg-primary)',
+                    color: isSelected ? '#ffffff' : 'var(--text-primary)',
+                    border: isSelected ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
+                    padding: '16px 14px',
+                    borderRadius: '14px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    boxShadow: isSelected ? 'var(--shadow-md)' : 'none',
+                    transition: 'all var(--transition-fast)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}
+                  className="interactive-tab-btn"
+                >
+                  <span style={{ fontWeight: '800', fontSize: '0.98rem' }}>{tab.label}</span>
+                  <span style={{ fontSize: '0.8rem', opacity: isSelected ? 0.9 : 0.65 }}>{tab.subtitle}</span>
+                </button>
+              );
+            })}
+          </div>
 
-              <label style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '14px',
-                padding: '16px',
-                borderRadius: '12px',
-                backgroundColor: checklist.copilot ? 'var(--accent-primary-light)' : 'var(--bg-primary)',
-                border: checklist.copilot ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}>
-                <input 
-                  type="checkbox" 
-                  checked={checklist.copilot} 
-                  onChange={() => toggleCheck('copilot')}
-                  style={{ marginTop: '4px', transform: 'scale(1.2)', cursor: 'pointer' }}
-                />
-                <div>
-                  <div style={{ fontWeight: '700', fontSize: '0.98rem', marginBottom: '4px' }}>
-                    2. Microsoft 365 Copilot o asistentes en Office / Excel
-                  </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                    Manejo de hojas de cálculo con IA, fórmulas generadas automáticamente o copilotos integrados en Teams, Word o PowerPoint.
-                  </div>
-                </div>
-              </label>
-
-              <label style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '14px',
-                padding: '16px',
-                borderRadius: '12px',
-                backgroundColor: checklist.marketing ? 'var(--accent-primary-light)' : 'var(--bg-primary)',
-                border: checklist.marketing ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}>
-                <input 
-                  type="checkbox" 
-                  checked={checklist.marketing} 
-                  onChange={() => toggleCheck('marketing')}
-                  style={{ marginTop: '4px', transform: 'scale(1.2)', cursor: 'pointer' }}
-                />
-                <div>
-                  <div style={{ fontWeight: '700', fontSize: '0.98rem', marginBottom: '4px' }}>
-                    3. Equipos de Marketing, Ventas o Atención al Cliente
-                  </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                    Generación de contenidos para redes, creatividades, chatbots de respuesta a clientes o análisis de bases de datos comerciales.
-                  </div>
-                </div>
-              </label>
-
-              <label style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '14px',
-                padding: '16px',
-                borderRadius: '12px',
-                backgroundColor: checklist.rrhh ? 'var(--accent-primary-light)' : 'var(--bg-primary)',
-                border: checklist.rrhh ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}>
-                <input 
-                  type="checkbox" 
-                  checked={checklist.rrhh} 
-                  onChange={() => toggleCheck('rrhh')}
-                  style={{ marginTop: '4px', transform: 'scale(1.2)', cursor: 'pointer' }}
-                />
-                <div>
-                  <div style={{ fontWeight: '700', fontSize: '0.98rem', marginBottom: '4px' }}>
-                    4. Recursos Humanos y Selección asistida por IA
-                  </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                    Filtrado de currículums, redacción de ofertas, evaluaciones de rendimiento o categorización automática de candidatos.
-                  </div>
-                </div>
-              </label>
-
-              <label style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '14px',
-                padding: '16px',
-                borderRadius: '12px',
-                backgroundColor: checklist.shadowAi ? 'var(--accent-primary-light)' : 'var(--bg-primary)',
-                border: checklist.shadowAi ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}>
-                <input 
-                  type="checkbox" 
-                  checked={checklist.shadowAi} 
-                  onChange={() => toggleCheck('shadowAi')}
-                  style={{ marginTop: '4px', transform: 'scale(1.2)', cursor: 'pointer' }}
-                />
-                <div>
-                  <div style={{ fontWeight: '700', fontSize: '0.98rem', marginBottom: '4px' }}>
-                    5. "Shadow AI" (Uso informal sin política de seguridad definida)
-                  </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                    Trabajadores usando cuentas personales de IA sin directrices claras sobre qué información de la empresa se puede o no introducir.
-                  </div>
-                </div>
-              </label>
-            </div>
-
-            {/* Resultado dinámico */}
+          {/* Panel Dinámico del Esquema Visual con Diagrama de Flujo Conectado */}
+          <div className="glass-card animate-fade-in" style={{
+            padding: '36px',
+            borderRadius: '24px',
+            border: '2px solid var(--border-color)',
+            boxShadow: 'var(--shadow-lg)'
+          }}>
+            
+            {/* Cabecera del Área con Nivel de Riesgo y Medidor */}
             <div style={{
-              marginTop: '28px',
-              padding: '24px',
-              borderRadius: '16px',
-              backgroundColor: isObligated ? 'rgba(239, 68, 68, 0.08)' : 'var(--bg-tertiary)',
-              border: isObligated ? '2px solid rgba(239, 68, 68, 0.3)' : '1px dashed var(--border-color)',
-              transition: 'all var(--transition-normal)'
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              flexWrap: 'wrap',
+              gap: '20px',
+              paddingBottom: '24px',
+              borderBottom: '1px solid var(--border-color)',
+              marginBottom: '32px'
             }}>
-              {isObligated ? (
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                  <AlertTriangle size={32} style={{ color: '#dc2626', flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: '#b91c1c', marginBottom: '6px' }}>
-                      Obligación Legal Directa: Tu empresa califica como Responsable del Despliegue (*Deployer*)
-                    </h3>
-                    <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.55, marginBottom: '16px' }}>
-                      Al utilizar herramientas de IA en la operativa diaria, el <strong>Artículo 4 del Reglamento (UE) 2024/1689</strong> te obliga a acreditar medidas formativas para evitar fugas de datos confidenciales, errores no supervisados y asegurar la alfabetización técnica de tu equipo.
-                    </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                      <button
-                        onClick={() => scrollToContact()}
-                        style={{
-                          backgroundColor: '#dc2626',
-                          color: '#ffffff',
-                          padding: '10px 20px',
-                          borderRadius: 'var(--border-radius-sm)',
-                          fontWeight: '700',
-                          fontSize: '0.9rem',
-                          border: 'none',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px'
-                        }}
-                      >
-                        Regularizar situación con Formación FUNDAE (Coste 0€)
-                        <ArrowRight size={15} />
-                      </button>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                        Bonificable al 100% de la Seguridad Social
-                      </span>
-                    </div>
-                  </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                  <span style={{
+                    backgroundColor: `${currentArea.riskTone}18`,
+                    color: currentArea.riskTone,
+                    fontWeight: '800',
+                    fontSize: '0.82rem',
+                    padding: '4px 12px',
+                    borderRadius: 'var(--border-radius-full)',
+                    border: `1px solid ${currentArea.riskTone}40`
+                  }}>
+                    {currentArea.badge}
+                  </span>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Herramientas: <strong>{currentArea.tools}</strong></span>
                 </div>
-              ) : (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
-                  <HelpCircle size={24} style={{ margin: '0 auto 8px auto', opacity: 0.7 }} />
-                  <div>Selecciona una o más opciones para evaluar el impacto legal en tu empresa.</div>
+                <h3 style={{ fontSize: '1.45rem', fontWeight: '800', color: 'var(--text-heading)' }}>
+                  {currentArea.title}
+                </h3>
+              </div>
+
+              {/* Medidor Visual de Exposición Legal */}
+              <div style={{
+                backgroundColor: 'var(--bg-primary)',
+                padding: '14px 20px',
+                borderRadius: '14px',
+                border: '1px solid var(--border-color)',
+                minWidth: '240px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '6px' }}>
+                  <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Nivel de Exposición:</span>
+                  <span style={{ fontWeight: '800', color: currentArea.riskTone }}>{currentArea.riskLevel}</span>
                 </div>
-              )}
+                {/* Barra de progreso animada */}
+                <div style={{
+                  width: '100%',
+                  height: '8px',
+                  backgroundColor: 'var(--border-color)',
+                  borderRadius: '4px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    width: `${currentArea.riskPercent}%`,
+                    height: '100%',
+                    backgroundColor: currentArea.riskTone,
+                    borderRadius: '4px',
+                    transition: 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+                  }} />
+                </div>
+              </div>
             </div>
+
+            {/* Diagrama de Flujo Visual (3 Pasos Conectados) */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '20px',
+              position: 'relative',
+              marginBottom: '32px'
+            }}>
+              
+              {/* Paso 1: Práctica Real */}
+              <div style={{
+                backgroundColor: 'var(--bg-primary)',
+                borderRadius: '16px',
+                padding: '22px',
+                border: '1px solid var(--border-color)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: '700' }}>
+                  <span style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--border-color)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '0.75rem',
+                    color: 'var(--text-primary)'
+                  }}>1</span>
+                  <span>USO EN LA PLANTILLA</span>
+                </div>
+                <div style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-primary)' }}>
+                  ¿Qué hace el equipo?
+                </div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
+                  {currentArea.whatTeamDoes}
+                </p>
+              </div>
+
+              {/* Paso 2: Impacto Normativo */}
+              <div style={{
+                backgroundColor: 'var(--bg-primary)',
+                borderRadius: '16px',
+                padding: '22px',
+                border: '1px solid var(--border-color)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-primary)', fontSize: '0.82rem', fontWeight: '700' }}>
+                  <span style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--accent-primary-light)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '0.75rem',
+                    color: 'var(--accent-primary)'
+                  }}>2</span>
+                  <span>MARCO REGULATORIO</span>
+                </div>
+                <div style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-primary)' }}>
+                  ¿Qué exige la ley?
+                </div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
+                  {currentArea.legalRule}
+                </p>
+              </div>
+
+              {/* Paso 3: Consecuencia / Riesgo */}
+              <div style={{
+                backgroundColor: `${currentArea.riskTone}08`,
+                borderRadius: '16px',
+                padding: '22px',
+                border: `1px solid ${currentArea.riskTone}35`,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: currentArea.riskTone, fontSize: '0.82rem', fontWeight: '700' }}>
+                  <ShieldAlert size={16} />
+                  <span>RIESGO DE NO FORMAR</span>
+                </div>
+                <div style={{ fontWeight: '700', fontSize: '1rem', color: currentArea.riskTone }}>
+                  Consecuencia directa
+                </div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
+                  {currentArea.consequence}
+                </p>
+              </div>
+
+            </div>
+
+            {/* Solución Conforme FormAI Integrada */}
+            <div style={{
+              backgroundColor: 'var(--accent-primary-light)',
+              borderRadius: '18px',
+              padding: '22px 28px',
+              border: '2px solid var(--accent-primary)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '18px'
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800', color: 'var(--accent-primary-text, var(--accent-primary))', fontSize: '0.92rem', marginBottom: '4px' }}>
+                  <CheckCircle2 size={18} />
+                  <span>Solución Oficial FormAI (Coste 0€ con FUNDAE):</span>
+                </div>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-primary)', margin: 0, fontWeight: '500' }}>
+                  {currentArea.solution}
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  const target = document.getElementById(currentArea.itineraryId);
+                  if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    scrollToContact();
+                  }
+                }}
+                style={{
+                  backgroundColor: 'var(--accent-primary)',
+                  color: '#ffffff',
+                  padding: '11px 22px',
+                  borderRadius: 'var(--border-radius-sm)',
+                  fontWeight: '700',
+                  fontSize: '0.88rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+              >
+                Ver Plan y Temario Conforme
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* Los 4 Pilares Exigidos por el Artículo 4 */}
-      <section style={{ padding: '72px 0' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <span className="badge badge-ai" style={{ marginBottom: '12px' }}>Exigencias Regulatorias</span>
+      {/* BENTO GRID: CUMPLIMIENTO INNOVADOR & EVIDENCIAS */}
+      <section style={{ padding: '76px 0' }}>
+        <div className="container" style={{ maxWidth: '1020px' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+            <span className="badge badge-ai" style={{ marginBottom: '12px' }}>Ecosistema de Cumplimiento</span>
             <h2 style={{ fontSize: 'calc(1.8rem + 0.6vw)', fontWeight: '800', marginBottom: '14px' }}>
-              ¿Qué exige la ley exactamente en <span className="gradient-text">Alfabetización en IA</span>?
+              El <span className="gradient-text">Pack Integral de Compliance</span> de FormAI
             </h2>
             <p style={{ color: 'var(--text-secondary)', maxWidth: '680px', margin: '0 auto', fontSize: '1.05rem', lineHeight: 1.6 }}>
-              El legislador europeo y la AESIA en España determinan que la formación en IA debe abarcar cuatro dimensiones esenciales:
+              No solo capacitamos a tu equipo: dotamos a la empresa de todas las garantías jurídicas y técnicas que exige la normativa europea.
             </p>
           </div>
 
+          {/* Bento Grid Asimétrico */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(12, 1fr)',
             gap: '24px'
           }}>
             
-            {/* Pilar 1 */}
-            <div className="glass-card" style={{
-              padding: '28px',
-              borderRadius: '16px',
+            {/* Bento Card 1: Dossier Oficial para AESIA (Gran Card 7 cols) */}
+            <div className="glass-card hover-lift" style={{
+              gridColumn: 'span 7',
+              borderRadius: '24px',
+              padding: '36px',
               border: '1px solid var(--border-color)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '14px'
+              justifyContent: 'space-between',
+              boxShadow: 'var(--shadow-md)',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
+              <div>
+                <div style={{ display: 'inline-flex', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '0.78rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '4px 12px', borderRadius: '12px', fontWeight: '800' }}>
+                    AUDITABLE ANTE AESIA E INSPECCIÓN
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', marginBottom: '12px' }}>
+                  Dossier Técnico Justificativo del Artículo 4
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', lineHeight: 1.6, marginBottom: '24px' }}>
+                  Documento formal firmado por nuestros especialistas acreditados que certifica la diligencia debida de la empresa: horas lectivas, competencias adquiridas, módulos de mitigación de sesgos y registro fehaciente de asistencia.
+                </p>
+              </div>
+
+              {/* Mockup visual de verificación digital */}
               <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '12px',
-                backgroundColor: 'var(--accent-primary-light)',
+                backgroundColor: 'var(--bg-primary)',
+                borderRadius: '16px',
+                padding: '16px 20px',
+                border: '1px solid var(--border-color)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent-primary)'
+                justifyContent: 'space-between',
+                fontSize: '0.82rem'
               }}>
-                <Sparkles size={24} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Award size={22} style={{ color: 'var(--accent-primary)' }} />
+                  <div>
+                    <div style={{ fontWeight: '700', color: 'var(--text-primary)' }}>Certificado Nominal con QR de Verificación</div>
+                    <div style={{ color: 'var(--text-muted)' }}>Válido ante requerimientos laborales y regulatorios</div>
+                  </div>
+                </div>
+                <span style={{ color: '#10b981', fontWeight: '800' }}>✓ Homologado</span>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: '800' }}>1. Comprensión Técnica y Límites</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.55 }}>
-                Los empleados deben comprender cómo procesa la información un modelo de IA, qué son las <strong>alucinaciones</strong>, por qué pueden inventar citas o cifras y cómo validar críticamente cualquier resultado.
-              </p>
             </div>
 
-            {/* Pilar 2 */}
-            <div className="glass-card" style={{
-              padding: '28px',
-              borderRadius: '16px',
+            {/* Bento Card 2: Human-in-the-Loop Interactivo (5 cols) */}
+            <div className="glass-card hover-lift" style={{
+              gridColumn: 'span 5',
+              borderRadius: '24px',
+              padding: '32px',
               border: '1px solid var(--border-color)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '14px'
+              justifyContent: 'space-between',
+              boxShadow: 'var(--shadow-md)'
             }}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '12px',
-                backgroundColor: 'var(--accent-primary-light)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent-primary)'
-              }}>
-                <Lock size={24} />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', color: 'var(--accent-ai)' }}>
+                  <Eye size={22} />
+                  <span style={{ fontWeight: '800', fontSize: '0.85rem', textTransform: 'uppercase' }}>Supervisión Humana Activa</span>
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '10px' }}>
+                  Human-in-the-Loop
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
+                  El AI Act prohíbe delegar ciegamente decisiones en la IA sin supervisión humana.
+                </p>
+
+                {/* Switch interactivo de simulación */}
+                <div style={{
+                  backgroundColor: 'var(--bg-primary)',
+                  borderRadius: '14px',
+                  padding: '16px',
+                  border: '1px solid var(--border-color)',
+                  marginBottom: '16px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <span style={{ fontSize: '0.82rem', fontWeight: '700' }}>Estado Operativo:</span>
+                    <button
+                      onClick={() => setIsSupervised(!isSupervised)}
+                      style={{
+                        padding: '4px 12px',
+                        borderRadius: '20px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontSize: '0.78rem',
+                        fontWeight: '800',
+                        backgroundColor: isSupervised ? '#10b981' : '#ef4444',
+                        color: '#ffffff',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      {isSupervised ? '✓ Supervisado (Conforme)' : '✗ Sin Control (Riesgo)'}
+                    </button>
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: isSupervised ? '#059669' : '#b91c1c', lineHeight: 1.4 }}>
+                    {isSupervised 
+                      ? 'Todo output de IA es validado por personal alfabetizado antes de emitirse o aplicarse.'
+                      : 'La plantilla aplica datos y contratos de la IA sin filtros: riesgo inminente de alucinaciones y sanciones.'}
+                  </div>
+                </div>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: '800' }}>2. Privacidad y Seguridad (RGPD)</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.55 }}>
-                Prohibición de introducir secretos comerciales, datos de clientes, contratos o claves en herramientas públicas. Pautas estrictas de anonimización y configuración empresarial de privacidad.
-              </p>
+
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                Enseñamos a tus empleados los protocolos de validación crítica.
+              </div>
             </div>
 
-            {/* Pilar 3 */}
-            <div className="glass-card" style={{
-              padding: '28px',
-              borderRadius: '16px',
+            {/* Bento Card 3: Bonificación 100% FUNDAE (5 cols) */}
+            <div className="glass-card hover-lift" style={{
+              gridColumn: 'span 5',
+              borderRadius: '24px',
+              padding: '32px',
               border: '1px solid var(--border-color)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '14px'
+              justifyContent: 'space-between',
+              boxShadow: 'var(--shadow-md)'
             }}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '12px',
-                backgroundColor: 'var(--accent-primary-light)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent-primary)'
-              }}>
-                <Users size={24} />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', color: 'var(--accent-primary)' }}>
+                  <Scale size={22} />
+                  <span style={{ fontWeight: '800', fontSize: '0.85rem', textTransform: 'uppercase' }}>Crédito Anual Garantizado</span>
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '10px' }}>
+                  Financiación al 100% (Coste 0€)
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
+                  Las empresas disponen de un crédito que caduca cada 31 de diciembre. La formación en IA en Aula Virtual se bonifica a <strong>13 €/hora/alumno</strong> deduciéndolo de los Seguros Sociales.
+                </p>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: '800' }}>3. Supervisión Humana Activa</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.55 }}>
-                El principio del <em>Human-in-the-loop</em>: ninguna decisión vinculante (laboral, comercial o administrativa) puede delegarse de forma 100% automatizada sin criterio humano responsable.
-              </p>
+
+              <div style={{
+                backgroundColor: 'var(--bg-primary)',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                border: '1px dashed var(--accent-primary)',
+                textAlign: 'center',
+                fontWeight: '700',
+                color: 'var(--accent-primary)',
+                fontSize: '0.88rem'
+              }}>
+                💶 Coste Neto para tu Empresa: 0 Euros
+              </div>
             </div>
 
-            {/* Pilar 4 */}
-            <div className="glass-card" style={{
-              padding: '28px',
-              borderRadius: '16px',
+            {/* Bento Card 4: Política Interna de IA de Regalo (7 cols) */}
+            <div className="glass-card hover-lift" style={{
+              gridColumn: 'span 7',
+              borderRadius: '24px',
+              padding: '36px',
               border: '1px solid var(--border-color)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '14px'
+              justifyContent: 'space-between',
+              boxShadow: 'var(--shadow-md)'
             }}>
-              <div style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '12px',
-                backgroundColor: 'var(--accent-primary-light)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent-primary)'
-              }}>
-                <FileText size={24} />
+              <div>
+                <div style={{ display: 'inline-flex', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '0.78rem', backgroundColor: 'rgba(124, 58, 237, 0.12)', color: '#7c3aed', padding: '4px 12px', borderRadius: '12px', fontWeight: '800' }}>
+                    INCLUIDO SIN COSTE ADICIONAL
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: '800', marginBottom: '12px' }}>
+                  Plantilla de Política Interna de Uso de IA
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', lineHeight: 1.6, marginBottom: '20px' }}>
+                  Entregamos a la Dirección de tu empresa un manual corporativo de uso ético y seguro de IA listo para implementar. Define qué datos pueden procesarse, qué herramientas están autorizadas y qué responsabilidades asumen los empleados.
+                </p>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: '800' }}>4. Evidencia y Trazabilidad</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.55 }}>
-                La empresa debe contar con registros de asistencia, temarios homologados y diplomas que demuestren que ha cumplido con la diligencia debida ante una inspección de trabajo o requerimiento de la AESIA.
-              </p>
+
+              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>✓ Adaptado al RGPD</span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>✓ Aprobado para auditorías</span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>✓ Redactado en lenguaje accesible</span>
+              </div>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* Cronograma Oficial del AI Act */}
-      <section style={{ padding: '64px 0', backgroundColor: 'var(--bg-secondary)' }}>
-        <div className="container" style={{ maxWidth: '920px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Calendario de Aplicación</span>
+      {/* CRONOGRAMA DINÁMICO DE LA LEY EUROPEA */}
+      <section style={{ padding: '72px 0', backgroundColor: 'var(--bg-secondary)' }}>
+        <div className="container" style={{ maxWidth: '940px' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+            <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Calendario Regulatorio</span>
             <h2 style={{ fontSize: '1.9rem', fontWeight: '800', marginBottom: '12px' }}>
-              Plazos del Reglamento Europeo de IA
+              Los Plazos del AI Act y su Estado Real
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>
-              El calendario normativo ya ha comenzado a exigir responsabilidades a las empresas españolas:
+              La ley se implanta de manera escalonada en toda la Unión Europea:
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             
             {/* Hito 1 */}
-            <div style={{
+            <div className="timeline-node" style={{
               display: 'grid',
-              gridTemplateColumns: '160px 1fr',
+              gridTemplateColumns: '170px 1fr',
               gap: '24px',
               padding: '20px 24px',
               backgroundColor: 'var(--bg-primary)',
-              borderRadius: '14px',
+              borderRadius: '16px',
               border: '1px solid var(--border-color)',
-              alignItems: 'center'
+              alignItems: 'center',
+              opacity: 0.85
             }}>
               <div style={{ fontWeight: '800', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
                 Agosto 2024
@@ -651,46 +859,49 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   Entrada en vigor del Reglamento (UE) 2024/1689
                 </div>
                 <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                  Publicación oficial en el DOUE y constitución del marco regulador europeo.
+                  Publicación oficial en el DOUE y creación de la Agencia Española de Supervisión de la IA (AESIA).
                 </div>
               </div>
             </div>
 
-            {/* Hito 2 - CLAVE */}
-            <div style={{
+            {/* Hito 2 - OBLIGACIÓN EN VIGOR */}
+            <div className="timeline-node timeline-node-active" style={{
               display: 'grid',
-              gridTemplateColumns: '160px 1fr',
+              gridTemplateColumns: '170px 1fr',
               gap: '24px',
-              padding: '24px',
+              padding: '24px 28px',
               backgroundColor: 'var(--accent-primary-light)',
-              borderRadius: '14px',
+              borderRadius: '16px',
               border: '2px solid var(--accent-primary)',
               alignItems: 'center',
-              boxShadow: 'var(--shadow-sm)'
+              boxShadow: 'var(--shadow-md)',
+              position: 'relative'
             }}>
-              <div style={{ fontWeight: '800', color: 'var(--accent-primary)', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '1.2rem' }}>⚡</span>
+              <div style={{ fontWeight: '800', color: 'var(--accent-primary)', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.25rem' }}>⚡</span>
                 Febrero 2025
               </div>
               <div>
-                <div style={{ fontWeight: '800', fontSize: '1.05rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ fontWeight: '800', fontSize: '1.08rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                   <span>Artículo 4: Alfabetización en IA de aplicación OBLIGATORIA</span>
-                  <span style={{ backgroundColor: 'var(--accent-primary)', color: '#fff', fontSize: '0.72rem', padding: '2px 8px', borderRadius: '10px' }}>EN VIGOR</span>
+                  <span style={{ backgroundColor: 'var(--accent-primary)', color: '#ffffff', fontSize: '0.74rem', padding: '3px 10px', borderRadius: '12px', fontWeight: '800' }}>
+                    OBLIGACIÓN VIGENTE
+                  </span>
                 </div>
-                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                  Todas las empresas que usan IA deben capacitar a sus plantillas. Prohibición de prácticas de riesgo inaceptable (social scoring, manipulación cognitiva).
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '6px', lineHeight: 1.5 }}>
+                  Todas las empresas que usan IA deben capacitar formalmente a sus plantillas. Prohibición tajante de prácticas de riesgo inaceptable (social scoring, manipulación cognitiva).
                 </div>
               </div>
             </div>
 
             {/* Hito 3 */}
-            <div style={{
+            <div className="timeline-node" style={{
               display: 'grid',
-              gridTemplateColumns: '160px 1fr',
+              gridTemplateColumns: '170px 1fr',
               gap: '24px',
               padding: '20px 24px',
               backgroundColor: 'var(--bg-primary)',
-              borderRadius: '14px',
+              borderRadius: '16px',
               border: '1px solid var(--border-color)',
               alignItems: 'center'
             }}>
@@ -702,19 +913,19 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   Modelos de IA de uso general (GPAI)
                 </div>
                 <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                  Obligaciones de transparencia, derechos de autor y auditorías para grandes proveedores de modelos.
+                  Obligaciones de transparencia, licencias de propiedad intelectual y auditorías para grandes proveedores de modelos.
                 </div>
               </div>
             </div>
 
             {/* Hito 4 */}
-            <div style={{
+            <div className="timeline-node" style={{
               display: 'grid',
-              gridTemplateColumns: '160px 1fr',
+              gridTemplateColumns: '170px 1fr',
               gap: '24px',
               padding: '20px 24px',
               backgroundColor: 'var(--bg-primary)',
-              borderRadius: '14px',
+              borderRadius: '16px',
               border: '1px solid var(--border-color)',
               alignItems: 'center'
             }}>
@@ -726,7 +937,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   Sistemas de Alto Riesgo (Anexo III)
                 </div>
                 <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                  Entran en vigor exigencias estrictas sobre sistemas de IA aplicados a <strong>Recursos Humanos</strong> (evaluación, contratación, promoción y despido de empleados).
+                  Exigencias exhaustivas para sistemas de IA aplicados a <strong>Recursos Humanos</strong> (evaluación, contratación, promoción y despido de empleados).
                 </div>
               </div>
             </div>
@@ -735,16 +946,16 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
         </div>
       </section>
 
-      {/* Itinerarios FormAI Especializados */}
-      <section style={{ padding: '72px 0' }}>
+      {/* ITINERARIOS FORMATIVOS OFICIALES */}
+      <section style={{ padding: '76px 0' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <span className="badge badge-ai" style={{ marginBottom: '12px' }}>Planes Formativos Conformes</span>
+            <span className="badge badge-ai" style={{ marginBottom: '12px' }}>Itinerarios Homologados</span>
             <h2 style={{ fontSize: 'calc(1.8rem + 0.6vw)', fontWeight: '800', marginBottom: '14px' }}>
-              Itinerarios FormAI de <span className="gradient-text">Cumplimiento del Artículo 4</span>
+              Planes de <span className="gradient-text">Alfabetización Conforme al Art. 4</span>
             </h2>
             <p style={{ color: 'var(--text-secondary)', maxWidth: '680px', margin: '0 auto', fontSize: '1.05rem', lineHeight: 1.6 }}>
-              Diseñados con el principio de proporcionalidad de la UE: cada rol recibe la capacitación adecuada a su nivel de exposición y responsabilidad.
+              Diseñados con el principio de proporcionalidad de la UE: cada departamento recibe la formación exacta que requiere su operativa diaria.
             </p>
           </div>
 
@@ -755,8 +966,8 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
           }}>
             
             {/* Itinerario 1 */}
-            <div className="glass-card" style={{
-              borderRadius: '20px',
+            <div id="itinerario-1" className="glass-card hover-lift" style={{
+              borderRadius: '24px',
               padding: '32px',
               border: '1px solid var(--border-color)',
               display: 'flex',
@@ -778,13 +989,13 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                 </h3>
                 
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-                  Ideal para toda la plantilla, administración, comerciales y soporte que utilicen ChatGPT, Claude o asistentes digitales.
+                  Para toda la plantilla, administración, comerciales y soporte que utilicen ChatGPT, Claude o asistentes digitales.
                 </p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
                   <div style={{ display: 'flex', gap: '8px', fontSize: '0.86rem' }}>
                     <CheckCircle2 size={16} style={{ color: 'var(--accent-primary)', flexShrink: 0, marginTop: '2px' }} />
-                    <span>Fundamentos de LLMs y cómo evitar alucinaciones.</span>
+                    <span>Fundamentos de LLMs y mitigación de alucinaciones.</span>
                   </div>
                   <div style={{ display: 'flex', gap: '8px', fontSize: '0.86rem' }}>
                     <CheckCircle2 size={16} style={{ color: 'var(--accent-primary)', flexShrink: 0, marginTop: '2px' }} />
@@ -819,7 +1030,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   style={{
                     width: '100%',
                     backgroundColor: 'var(--accent-primary)',
-                    color: '#fff',
+                    color: '#ffffff',
                     padding: '12px',
                     borderRadius: 'var(--border-radius-sm)',
                     fontWeight: '700',
@@ -838,8 +1049,8 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
             </div>
 
             {/* Itinerario 2 */}
-            <div className="glass-card" style={{
-              borderRadius: '20px',
+            <div id="itinerario-2" className="glass-card hover-lift" style={{
+              borderRadius: '24px',
               padding: '32px',
               border: '2px solid var(--accent-primary)',
               display: 'flex',
@@ -853,7 +1064,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                 top: '-12px',
                 right: '24px',
                 backgroundColor: 'var(--accent-primary)',
-                color: '#fff',
+                color: '#ffffff',
                 padding: '3px 12px',
                 borderRadius: '12px',
                 fontSize: '0.75rem',
@@ -871,11 +1082,11 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                 </div>
 
                 <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '12px', lineHeight: 1.3 }}>
-                  Microsoft 365 Copilot & Automatización Corporativa Segura
+                  Microsoft 365 Copilot & Automatización Segura
                 </h3>
                 
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-                  Para controllers, mandos intermedios y departamentos financieros que gestionan datos empresariales en el ecosistema Microsoft.
+                  Para controllers, mandos intermedios y departamentos financieros que gestionan datos empresariales en Office y Teams.
                 </p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
@@ -889,7 +1100,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   </div>
                   <div style={{ display: 'flex', gap: '8px', fontSize: '0.86rem' }}>
                     <CheckCircle2 size={16} style={{ color: 'var(--accent-primary)', flexShrink: 0, marginTop: '2px' }} />
-                    <span>Permisos de datos sensibles dentro de Microsoft Graph.</span>
+                    <span>Permisos y aislamiento de datos en Microsoft Graph.</span>
                   </div>
                   <div style={{ display: 'flex', gap: '8px', fontSize: '0.86rem' }}>
                     <CheckCircle2 size={16} style={{ color: 'var(--accent-primary)', flexShrink: 0, marginTop: '2px' }} />
@@ -916,7 +1127,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   style={{
                     width: '100%',
                     backgroundColor: 'var(--accent-primary)',
-                    color: '#fff',
+                    color: '#ffffff',
                     padding: '12px',
                     borderRadius: 'var(--border-radius-sm)',
                     fontWeight: '700',
@@ -935,8 +1146,8 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
             </div>
 
             {/* Itinerario 3 */}
-            <div className="glass-card" style={{
-              borderRadius: '20px',
+            <div id="itinerario-3" className="glass-card hover-lift" style={{
+              borderRadius: '24px',
               padding: '32px',
               border: '1px solid var(--border-color)',
               display: 'flex',
@@ -999,7 +1210,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   style={{
                     width: '100%',
                     backgroundColor: 'var(--accent-primary)',
-                    color: '#fff',
+                    color: '#ffffff',
                     padding: '12px',
                     borderRadius: 'var(--border-radius-sm)',
                     fontWeight: '700',
@@ -1021,95 +1232,212 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
         </div>
       </section>
 
-      {/* Qué Entrega FormAI: Pack de Compliance */}
-      <section style={{ padding: '64px 0', backgroundColor: 'var(--bg-secondary)' }}>
-        <div className="container" style={{ maxWidth: '960px' }}>
+      {/* COMPARATIVA SPLIT: EMPRESA VULNERABLE VS CERTIFICADA */}
+      <section style={{ padding: '72px 0', backgroundColor: 'var(--bg-secondary)' }}>
+        <div className="container" style={{ maxWidth: '980px' }}>
+          
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Tranquilidad para tu Empresa</span>
+            <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Análisis de Situación</span>
             <h2 style={{ fontSize: '1.9rem', fontWeight: '800', marginBottom: '12px' }}>
-              El Pack de Cumplimiento Oficial FormAI
+              ¿En qué situación se encuentra tu empresa hoy?
             </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: 1.6 }}>
-              No solo impartimos formación práctica: te entregamos todas las evidencias legales exigidas por la normativa.
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>
+              La diferencia entre operar expuesto o respaldado legalmente:
             </p>
           </div>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '24px'
           }}>
             
+            {/* Panel Vulnerable */}
             <div style={{
-              padding: '24px',
-              backgroundColor: 'var(--bg-primary)',
-              borderRadius: '16px',
-              border: '1px solid var(--border-color)',
+              backgroundColor: 'rgba(239, 68, 68, 0.05)',
+              borderRadius: '20px',
+              padding: '32px',
+              border: '2px solid rgba(239, 68, 68, 0.25)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '12px'
+              gap: '16px'
             }}>
-              <Award size={32} style={{ color: 'var(--accent-primary)' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Diplomas Oficiales Individuales</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                Certificado nominal con código de verificación para cada trabajador participante, detallando competencias en alfabetización en IA y horas lectivas.
-              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#dc2626', fontWeight: '800' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(239, 68, 68, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <X size={18} />
+                </div>
+                <span>EMPRESA SIN PLAN DE ALFABETIZACIÓN</span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#dc2626', fontWeight: '800' }}>✗</span>
+                  <span>Prompts con datos de clientes y secretos empresariales introducidos en herramientas públicas de IA.</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#dc2626', fontWeight: '800' }}>✗</span>
+                  <span>Alucinaciones y datos erróneos no contrastados en propuestas comerciales y contratos.</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#dc2626', fontWeight: '800' }}>✗</span>
+                  <span>Incumplimiento directo del Artículo 4 ante una inspección de la AESIA o de Trabajo.</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#dc2626', fontWeight: '800' }}>✗</span>
+                  <span>Pérdida anual del crédito formativo de FUNDAE que la empresa ya ha cotizado a la Seguridad Social.</span>
+                </div>
+              </div>
             </div>
 
+            {/* Panel Certificado */}
             <div style={{
-              padding: '24px',
-              backgroundColor: 'var(--bg-primary)',
-              borderRadius: '16px',
-              border: '1px solid var(--border-color)',
+              backgroundColor: 'rgba(16, 185, 129, 0.06)',
+              borderRadius: '20px',
+              padding: '32px',
+              border: '2px solid rgba(16, 185, 129, 0.35)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '12px'
+              gap: '16px'
             }}>
-              <FileText size={32} style={{ color: 'var(--accent-primary)' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Dossier Técnico para Auditorías</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                Documento justificativo firmado por formadores acreditados, preparado para presentar de inmediato ante Inspecciones de Trabajo o requerimientos de la AESIA.
-              </p>
-            </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#059669', fontWeight: '800' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Check size={18} />
+                </div>
+                <span>EMPRESA CERTIFICADA CON FORMAI</span>
+              </div>
 
-            <div style={{
-              padding: '24px',
-              backgroundColor: 'var(--bg-primary)',
-              borderRadius: '16px',
-              border: '1px solid var(--border-color)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px'
-            }}>
-              <Lock size={32} style={{ color: 'var(--accent-primary)' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Plantilla de Política Interna de IA</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                Entregamos a la Dirección de la empresa una guía y política interna adaptada para regular el uso aceptable de herramientas de IA entre todos los trabajadores.
-              </p>
-            </div>
-
-            <div style={{
-              padding: '24px',
-              backgroundColor: 'var(--bg-primary)',
-              borderRadius: '16px',
-              border: '1px solid var(--border-color)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px'
-            }}>
-              <Scale size={32} style={{ color: 'var(--accent-primary)' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Gestión Integral de FUNDAE</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                Cero burocracia para Recursos Humanos: tramitamos las altas de grupos, seguimiento de participantes y liquidación en los Seguros Sociales a coste 0€.
-              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#059669', fontWeight: '800' }}>✓</span>
+                  <span>Plantilla capacitada en prompting seguro, privacidad RGPD y detección de errores.</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#059669', fontWeight: '800' }}>✓</span>
+                  <span>Supervisión humana reforzada y protocolo corporativo de uso aceptable formalmente implantado.</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#059669', fontWeight: '800' }}>✓</span>
+                  <span>Dossier técnico y diplomas oficiales con QR listos para cualquier requerimiento de auditoría.</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span style={{ color: '#059669', fontWeight: '800' }}>✓</span>
+                  <span><strong>Coste neto 0€</strong> gracias a la bonificación íntegra a través de los créditos FUNDAE.</span>
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* Preguntas Frecuentes sobre el AI Act */}
+      {/* SIMULADOR RÁPIDO DE CRÉDITO FUNDAE */}
       <section style={{ padding: '72px 0' }}>
+        <div className="container" style={{ maxWidth: '820px' }}>
+          
+          <div className="glass-card" style={{
+            padding: '40px',
+            borderRadius: '24px',
+            border: '2px solid var(--border-color)',
+            boxShadow: 'var(--shadow-lg)',
+            textAlign: 'center'
+          }}>
+            <span className="badge badge-primary" style={{ marginBottom: '14px' }}>Simulador de Crédito</span>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: '800', marginBottom: '12px' }}>
+              Calcula la Cobertura para tu Plan de Alfabetización
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.98rem', marginBottom: '32px' }}>
+              Selecciona el número aproximado de empleados en plantilla para estimar tu crédito anual:
+            </p>
+
+            {/* Slider interactivo */}
+            <div style={{ maxWidth: '480px', margin: '0 auto 28px auto' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <span style={{ fontSize: '0.95rem', fontWeight: '600', color: 'var(--text-muted)' }}>Plantilla contratada:</span>
+                <span style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--accent-primary)' }}>
+                  {employeesCount} empleados
+                </span>
+              </div>
+              <input 
+                type="range"
+                min="1"
+                max="120"
+                value={employeesCount}
+                onChange={(e) => setEmployeesCount(parseInt(e.target.value, 10))}
+                style={{
+                  width: '100%',
+                  height: '8px',
+                  borderRadius: '6px',
+                  accentColor: 'var(--accent-primary)',
+                  cursor: 'pointer'
+                }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '6px' }}>
+                <span>1 empleado</span>
+                <span>50 empleados</span>
+                <span>120+ empleados</span>
+              </div>
+            </div>
+
+            {/* Resultado visual */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '16px',
+              backgroundColor: 'var(--bg-primary)',
+              borderRadius: '16px',
+              padding: '24px',
+              border: '1px solid var(--border-color)',
+              marginBottom: '28px'
+            }}>
+              <div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: '600' }}>Crédito Anual Estimado:</div>
+                <div style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--accent-primary)', marginTop: '4px' }}>
+                  ~{estimatedCredit.toLocaleString('es-ES')} €
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: '600' }}>Alumnos Cubiertos al 100%:</div>
+                <div style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+                  {estimatedStudents} participantes
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: '600' }}>Coste Neto de Gestión:</div>
+                <div style={{ fontSize: '1.6rem', fontWeight: '800', color: '#10b981', marginTop: '4px' }}>
+                  0 € (100% Bonificado)
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => scrollToContact()}
+              style={{
+                backgroundColor: 'var(--accent-primary)',
+                color: '#ffffff',
+                padding: '14px 28px',
+                borderRadius: 'var(--border-radius-md)',
+                fontWeight: '700',
+                fontSize: '0.98rem',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                boxShadow: 'var(--shadow-md)'
+              }}
+            >
+              Solicitar Validación Exacta de Crédito sin Compromiso
+              <ArrowRight size={17} />
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      {/* PREGUNTAS FRECUENTES SOBRE EL AI ACT */}
+      <section style={{ padding: '64px 0', backgroundColor: 'var(--bg-secondary)' }}>
         <div className="container" style={{ maxWidth: '820px' }}>
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <span className="badge badge-ai" style={{ marginBottom: '12px' }}>Dudas Frecuentes</span>
@@ -1129,7 +1457,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
                   key={idx}
                   className="glass-card"
                   style={{
-                    borderRadius: '14px',
+                    borderRadius: '16px',
                     border: '1px solid var(--border-color)',
                     overflow: 'hidden',
                     transition: 'all var(--transition-fast)'
@@ -1180,8 +1508,8 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
         </div>
       </section>
 
-      {/* Formulario y Contacto Directo */}
-      <section id="contacto-aiact" style={{ padding: '72px 0', backgroundColor: 'var(--bg-secondary)' }}>
+      {/* FORMULARIO DE CONTACTO PRIORITARIO */}
+      <section id="contacto-aiact" style={{ padding: '76px 0' }}>
         <div className="container" style={{ maxWidth: '960px' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -1196,7 +1524,7 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
 
           <div className="glass-card" style={{
             padding: '36px',
-            borderRadius: '20px',
+            borderRadius: '24px',
             border: '1px solid var(--border-color)',
             boxShadow: 'var(--shadow-lg)'
           }}>
@@ -1208,6 +1536,60 @@ export default function AiActPage({ onBackToHome, onOpenCatalogModal }) {
 
         </div>
       </section>
+
+      {/* CSS ESPECÍFICO PARA ANIMACIONES Y MICRO-INTERACCIONES */}
+      <style>{`
+        @keyframes pulseGlow {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+          }
+          50% {
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+          }
+        }
+        .badge-pulse-glow {
+          animation: pulseGlow 3s infinite;
+        }
+        .hover-lift {
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease !important;
+        }
+        .hover-lift:hover {
+          transform: translateY(-4px);
+          box-shadow: var(--shadow-xl) !important;
+        }
+        .hover-lift-sm {
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-lift-sm:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-md);
+        }
+        .interactive-tab-btn:hover {
+          transform: translateY(-2px);
+        }
+        .timeline-node {
+          transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .timeline-node:hover {
+          border-color: var(--accent-primary) !important;
+          transform: translateX(4px);
+        }
+        @media (max-width: 860px) {
+          .glass-card {
+            padding: 24px !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .timeline-node {
+            grid-template-columns: 1fr !important;
+            gap: 8px !important;
+          }
+          [style*="gridColumn: 'span 7'"],
+          [style*="gridColumn: 'span 5'"] {
+            grid-column: span 12 !important;
+          }
+        }
+      `}</style>
 
     </div>
   );
