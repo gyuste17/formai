@@ -29,6 +29,26 @@
       "source": "/ai-act/",
       "destination": "/#ai-act",
       "permanent": false
+    },
+    {
+      "source": "/auditoria-ia",
+      "destination": "/#auditoria-ia",
+      "permanent": false
+    },
+    {
+      "source": "/auditoria-ia/",
+      "destination": "/#auditoria-ia",
+      "permanent": false
+    },
+    {
+      "source": "/evaluacion-ia",
+      "destination": "/#auditoria-ia",
+      "permanent": false
+    },
+    {
+      "source": "/evaluacion-ia/",
+      "destination": "/#auditoria-ia",
+      "permanent": false
     }
   ]
 }

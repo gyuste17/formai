@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Sun, Moon, Menu, X, Calculator, BookOpen, ShieldCheck } from 'lucide-react';
+import { Sun, Moon, Menu, X, Calculator, BookOpen, ShieldCheck, BarChart3 } from 'lucide-react';
 
-export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogActive, isAiActActive }) {
+export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogActive, isAiActActive, isAuditoriaActive }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -118,6 +118,27 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
           >
             <ShieldCheck size={14} style={{ flexShrink: 0 }} />
             <span>AI Act 🇪🇺</span>
+          </a>
+          <a 
+            href="#auditoria-ia" 
+            className="nav-link" 
+            style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '5px',
+              padding: '5px 12px',
+              borderRadius: 'var(--border-radius-full)',
+              backgroundColor: isAuditoriaActive ? 'var(--accent-primary)' : 'transparent',
+              color: isAuditoriaActive ? '#ffffff' : 'inherit',
+              fontWeight: isAuditoriaActive ? '700' : '500',
+              fontSize: '0.84rem',
+              whiteSpace: 'nowrap',
+              border: isAuditoriaActive ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
+              transition: 'all var(--transition-fast)'
+            }}
+          >
+            <BarChart3 size={14} style={{ flexShrink: 0, color: isAuditoriaActive ? '#ffffff' : 'var(--accent-primary)' }} />
+            <span>Test Madurez</span>
           </a>
           <a 
             href="#blog" 
@@ -261,6 +282,23 @@ export default function Navbar({ theme, toggleTheme, onOpenCatalogModal, isBlogA
               <span>AI Act Europeo 🇪🇺</span>
             </div>
             <span style={{ fontSize: '0.75rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '2px 8px', borderRadius: '10px', fontWeight: '800' }}>Art. 4</span>
+          </a>
+          <a 
+            href="#auditoria-ia" 
+            onClick={() => setIsOpen(false)} 
+            style={{ 
+              fontWeight: isAuditoriaActive ? '800' : '600', 
+              color: isAuditoriaActive ? 'var(--accent-primary)' : 'inherit', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between' 
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <BarChart3 size={16} style={{ color: 'var(--accent-primary)' }} />
+              <span>Test Madurez en IA</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', backgroundColor: 'var(--accent-primary-light)', color: 'var(--accent-primary)', padding: '2px 8px', borderRadius: '10px', fontWeight: '800' }}>Nuevo</span>
           </a>
           <a href="#blog" onClick={() => setIsOpen(false)} style={{ fontWeight: '600', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <BookOpen size={16} />

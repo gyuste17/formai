@@ -112,12 +112,16 @@ Cuando el usuario pida gestionar un nuevo lead recibido por email (o indique *"G
 2. **Evaluación de Cualificación:**
    - Analizar si es B2B cualificado, semi-cualificado (intermediario/consultora de RRHH) o particular no bonificable.
    - Detectar puntos de fricción o datos faltantes (grupos < 7-8 alumnos, requerimiento presencial vs aula virtual, crédito FUNDAE disponible).
-3. **Redacción de Borrador en Gmail:**
-   - Crear borrador vinculado al hilo mediante `In-Reply-To` y `References`.
-   - Formato corporativo FormAI: `verdana, sans-serif`, color `#073763`, párrafos cortos (1-3 líneas), viñetas limpias y cierre propositivo (llamada ágil de 10-15 min).
-   - Firma oficial completa de FormAI con logotipo e imagen corporativa.
+3. **Redacción de Borrador en Gmail (Pautas Maestras de Respuesta):**
+   - **Duración estándar:** Proponer siempre **10 a 16 horas** (sesiones prácticas de 2-3h o 4 de 3-4h) y alternativa intensiva de **6 a 9 horas** si van justos de calendario.
+   - **Pregunta técnica clave:** Incluir siempre: *¿Usáis alguna herramienta de IA corporativa (ChatGPT, Gemini, Claude, Copilot) o tenéis algún objetivo especial?*
+   - **Presupuesto y bonificación 100% FUNDAE:** Explicar el cálculo de horas/alumnos (Aula Virtual = 9 €/al/h; ej. 7 alumnos = 63 €/h, 10 alumnos = 90 €/h) para justificar la viabilidad de coste cero directo.
+   - **Gestión FUNDAE (Entidad Organizadora):** **NUNCA** decir que FormAI es la entidad organizadora. Indicar siempre que trabajamos con **Full Equipe S.L.** (Entidad Organizadora homologada ante el SEPE / FUNDAE) y que el 10% de organización es 100% bonificable.
+   - **Formadores freelance en activo:** Explicar que trabajamos con especialistas y freelancers en activo, y que en función de fechas, horarios y modalidad se propone el formador idóneo y se coordina una llamada previa de alineación técnica con él/ella.
+   - **Formato y estilo corporativo:** `verdana, sans-serif`, color `#073763`, párrafos cortos (1-3 líneas), viñetas limpias y cierre propositivo (llamada breve de 10-15 min). Firma oficial completa FormAI.
 4. **Registro en Google Sheets y Panel CRM (`formai.es/#admin`):**
    - Insertar o actualizar el lead vía endpoint backend (`createLead` / `CRM.gs`) con datos de contacto, requerimientos y estado inicial (`Nuevo`), asegurando que no se generen duplicados.
+
 
 
 

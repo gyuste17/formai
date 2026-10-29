@@ -519,3 +519,33 @@ button, input, select, textarea {
   accent-color: var(--accent-primary);
   cursor: pointer;
 }
+
+/* Print Styles for Executive Dossier Export */
+@media print {
+  nav, .glass-card, .theme-toggle-btn, .mobile-toggle-area, #cookie-banner, .cookie-banner, button, .print\:hidden {
+    display: none !important;
+  }
+  body, html, main {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .max-w-4xl, .max-w-6xl {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .shadow-sm, .shadow-md, .shadow-lg {
+    box-shadow: none !important;
+  }
+  .border, .border-b {
+    border-color: #cbd5e1 !important;
+  }
+  .rounded-2xl, .rounded-xl {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

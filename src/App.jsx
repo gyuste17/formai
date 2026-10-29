@@ -20,6 +20,7 @@ import { useCorporateHeaderColor } from './hooks/useCorporateHeaderColor';
 import CookieBanner from './components/CookieBanner';
 
 const CourseModal = lazy(() => import('./components/CourseModal'));
+const AiMaturityAssessment = lazy(() => import('./components/AiMaturityAssessment'));
 
 // Tema por hora: 06–18 → claro, 18–06 → oscuro
 function getDefaultTheme() {
@@ -44,9 +45,11 @@ export default function App() {
     const hash = window.location.hash;
     const path = window.location.pathname;
     if (path === '/ai-act' || path === '/ai-act/') return 'ai-act';
+    if (path === '/auditoria-ia' || path === '/auditoria-ia/' || path === '/evaluacion-ia') return 'auditoria-ia';
     if (hash === '#leads' || hash === '#admin') return 'leads';
     if (hash.startsWith('#blog')) return 'blog';
     if (hash === '#ai-act' || hash.startsWith('#ai-act')) return 'ai-act';
+    if (hash === '#auditoria-ia' || hash.startsWith('#auditoria') || hash.startsWith('#evaluacion-ia')) return 'auditoria-ia';
     return 'home';
   });
 
@@ -59,6 +62,8 @@ export default function App() {
         setCurrentView('blog');
       } else if (hash === '#ai-act' || hash.startsWith('#ai-act')) {
         setCurrentView('ai-act');
+      } else if (hash === '#auditoria-ia' || hash.startsWith('#auditoria') || hash.startsWith('#evaluacion-ia')) {
+        setCurrentView('auditoria-ia');
       } else {
         setCurrentView('home');
       }
@@ -102,6 +107,7 @@ export default function App() {
         onOpenCatalogModal={() => setIsCatalogModalOpen(true)} 
         isBlogActive={currentView === 'blog'}
         isAiActActive={currentView === 'ai-act'}
+        isAuditoriaActive={currentView === 'auditoria-ia'}
       />
 
       {currentView === 'blog' ? (
@@ -126,6 +132,26 @@ export default function App() {
           }}
           onOpenCatalogModal={() => setIsCatalogModalOpen(true)}
         />
+      ) : currentView === 'auditoria-ia' ? (
+        <Suspense fallback={
+          <div className="min-h-screen bg-[#fafbfc] flex items-center justify-center p-8 text-slate-500 font-sans text-sm">
+            Cargando autoevaluación de madurez...
+          </div>
+        }>
+          <AiMaturityAssessment
+            onBackToHome={() => {
+              window.location.hash = '';
+              setCurrentView('home');
+            }}
+            onNavigateToContact={() => {
+              window.location.hash = '#contacto';
+              setCurrentView('home');
+              setTimeout(() => {
+                document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
+          />
+        </Suspense>
       ) : (
         <main>
           {/* Hero */}
