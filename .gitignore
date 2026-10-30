@@ -43,3 +43,6 @@ google-apps-script/
 mails/
 propuestas/
 scripts/test-gemini-lead-draft.js
+
+# Claude Code (local)
+.claude/settings.local.json
