@@ -430,18 +430,10 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 </div>
               )}
 
-              {/* Píldora de Contexto Estratégico */}
-              {currentQuestion.hint && (
-                <div className="ai-maturity-strategic-hint">
-                  <Info size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    {currentQuestion.hint}
-                  </div>
-                </div>
-              )}
               </div>
 
-              {/* Opciones */}
+              {/* Opciones + contexto */}
+              <div className="ai-maturity-wizard-right">
               <div className="ai-maturity-options-list" role="radiogroup" aria-label={currentQuestion.title}>
                 {currentQuestion.options.map((opt, optIdx, allOpts) => {
                   const isSelected = answers[currentQuestion.id] === opt.id;
@@ -466,14 +458,11 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                       }}
                       className={`ai-maturity-option-item ${isUnknown ? 'unknown-option' : ''} ${isSelected ? 'selected' : ''} ${isFullWidth ? 'is-wide' : ''}`}
                     >
-                      <div className="ai-maturity-opt-top">
-                        <span className="ai-maturity-opt-icon" aria-hidden="true">
-                          {OptIcon ? <OptIcon size={20} strokeWidth={1.8} /> : <HelpCircle size={20} strokeWidth={1.8} />}
-                        </span>
-                        <div className="ai-maturity-radio-circle">
-                          {isSelected && <Check size={12} strokeWidth={3} />}
-                        </div>
-                      </div>
+                      <span className="ai-maturity-opt-icon" aria-hidden="true">
+                        {isSelected
+                          ? <Check size={18} strokeWidth={2.6} />
+                          : OptIcon ? <OptIcon size={18} strokeWidth={1.8} /> : <HelpCircle size={18} strokeWidth={1.8} />}
+                      </span>
 
                       <div className="ai-maturity-opt-body">
                         <div className="ai-maturity-opt-label-row">
@@ -490,9 +479,20 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                           {opt.description}
                         </p>
                       </div>
+
                     </div>
                   );
                 })}
+              </div>
+              {/* Píldora de Contexto Estratégico */}
+              {currentQuestion.hint && (
+                <div className="ai-maturity-strategic-hint">
+                  <Info size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div>
+                    {currentQuestion.hint}
+                  </div>
+                </div>
+              )}
               </div>
               </div>
             </div>

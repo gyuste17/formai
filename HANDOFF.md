@@ -6,6 +6,7 @@ Entradas más recientes arriba. Formato: fecha · agente · rama · hecho / pend
 
 ## 2026-11-04 (2) · Claude · `claude/auditoria-benchmark`
 **Hecho:** `main` ya incluye mosaico/iconos/10 preguntas (merge 45871f4, en producción). Benchmark: no había fuente (venía del primer commit de Antigravity), así que se eliminó la media sectorial (48), las medias por dimensión y "420 empresas"; radar y barras muestran solo la puntuación de la empresa. Añadida franja "contexto de mercado" (`AI_MARKET_CONTEXT` en `aiMaturityData.js`) con datos enlazados: INE 1T 2026 = 33,6 % de empresas españolas 10+ empleados usan IA (nota 22/10/2026) y Eurostat 2025 = 20,0 % UE (isoc_eb_ai). Son datos de adopción, no de madurez: no comparables con la puntuación 0-100. Quitado también "Metodología basada en Gartner, Microsoft AI" (sin respaldo); ahora "Alineada con el EU AI Act".
+**También en esta rama:** opciones compactas (icono a la izquierda, etiqueta en línea con el texto, sin radio: el icono pasa a check al seleccionar; "No lo sé" en una línea) para que quepan sin scroll (≤734 px de alto útil en 1440×780); título del dossier final estaba oscuro sobre fondo oscuro (heredaba el color global de h3) y ahora es blanco.
 **Pendiente:** merge/push de esta rama; actualizar cifras cada año (INE octubre, Eurostat diciembre). Si se quiere un benchmark de madurez real habría que encuestar o citar un informe concreto (p. ej. de consultora) con su enlace.
 
 ## 2026-11-04 · Claude · `claude/auditoria-contenido`
