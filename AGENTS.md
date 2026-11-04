@@ -35,3 +35,18 @@ Este workspace cuenta con una arquitectura de **4 Subagentes Especializados** di
 - **Colores:** Fondos oscuros / neutros limpios con acentos en azul eléctrico, cian y morado sutil.
 - **Tono:** Profesional, directo, didáctico, orientado a resultados empresariales y retorno de inversión (ROI) en formación bonificada.
 - **Público objetivo:** Directores de Recursos Humanos, CEOs, Responsables de Formación y Talento, y profesionales en España.
+
+---
+
+## 📏 Veracidad de datos y fuentes (obligatorio para todos los agentes)
+
+Contexto: en la auditoría de madurez en IA (`#auditoria-ia`) había cifras que parecían datos de mercado pero no tenían fuente (media sectorial "48 pts", "420 empresas", "28 % de pérdida de productividad", "80 % más rápido", "Metodología basada en Gartner, Microsoft AI"). Se eliminaron en noviembre de 2026. No volver a introducirlas.
+
+- **Nunca inventar** estadísticas, porcentajes, tamaños de muestra, benchmarks, citas ni atribuciones (Gartner, McKinsey, BCG, INE, Eurostat, etc.), ni en textos de la web, blog, LinkedIn, informes o comentarios de código que parezcan datos reales.
+- **Toda cifra publicada debe tener fuente verificable**: abrir la fuente oficial, comprobar el dato, periodo y población, y enlazarla en la página (`<a href target="_blank" rel="noopener noreferrer">`). Si no se puede verificar, **no se publica**: se omite o se redacta de forma cualitativa.
+- **Datos del proyecto con fuente** viven centralizados y con enlace: p. ej. `AI_MARKET_CONTEXT` en `src/data/aiMaturityData.js` (INE 1T 2026: 33,6 %; Eurostat 2025: 20,0 %). Actualizar cada año (INE: octubre; Eurostat: diciembre) y no mezclar periodos sin indicarlo.
+- **No presentar un dato de adopción como si fuera de madurez** ni compararlos entre sí (son métricas distintas).
+- **Datos del propio marco** (puntuaciones, niveles, umbrales) son criterio de FormAI: presentarlos como tales ("marco propio de FormAI"), no como estándar de terceros.
+- **No atribuir metodología a terceros** que no se haya usado realmente. Referencias legales (EU AI Act, Reglamento UE 2024/1689) sí, con su artículo.
+- **Cifras de FUNDAE / formación bonificada**: usar solo las del propio proyecto o de la normativa oficial vigente (crédito mínimo, cofinanciación, etc.); si cambian, verificar en fundae.es / BOE antes de usarlas.
+- Si un texto heredado contiene una cifra sin fuente, **avisar al usuario y retirarla o pedir la fuente** en lugar de mantenerla.

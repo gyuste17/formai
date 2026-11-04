@@ -11,7 +11,7 @@ import {
   MonitorPlay, Presentation, GraduationCap, EyeOff, ThumbsUp, Gauge
 } from 'lucide-react';
 import {
-  AI_BENCHMARK_METADATA,
+  AI_MARKET_CONTEXT,
   AI_MATURITY_DIMENSIONS,
   AI_MATURITY_QUESTIONS,
   AI_MATURITY_LEVELS,
@@ -190,16 +190,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
       return `${x},${y}`;
     }).join(' ');
 
-    // Puntos del benchmark industrial
-    const benchmarkCoords = AI_MATURITY_DIMENSIONS.map((dim, i) => {
-      const angle = (Math.PI * 2 / totalDimensions) * i - Math.PI / 2;
-      const r = (dim.benchmarkAverage / 100) * radius;
-      const x = center + r * Math.cos(angle);
-      const y = center + r * Math.sin(angle);
-      return `${x},${y}`;
-    }).join(' ');
-
-    return { companyCoords, benchmarkCoords, center, radius };
+    return { companyCoords, center, radius };
   }, [results]);
 
   return (
@@ -224,7 +215,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
               <>
                 <span className="ai-maturity-badge">
                   <Sparkles size={12} />
-                  Benchmark 2026
+                  Auditoría IA 2026
                 </span>
                 {companyName && (
                   <span className="ai-maturity-badge ai-maturity-badge--muted">
@@ -261,7 +252,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                   </h1>
 
                   <p className="ai-maturity-desc">
-                    Auditoría técnica de capacidades, infraestructura y gobernanza de datos para la Dirección General y Recursos Humanos frente a los estándares de la industria europea.
+                    Auditoría técnica de capacidades, infraestructura y gobernanza de datos para la Dirección General y Recursos Humanos según buenas prácticas y el EU AI Act.
                   </p>
                 </div>
 
@@ -299,7 +290,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 <div className="ai-maturity-hero">
                   <div className="ai-maturity-pill-tag">
                     <ShieldCheck size={14} />
-                    <span>Metodología basada en Gartner, Microsoft AI & EU AI Act</span>
+                    <span>Alineada con el EU AI Act (Reglamento UE 2024/1689)</span>
                   </div>
 
                   <h1 className="ai-maturity-title">
@@ -310,7 +301,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                   </h1>
 
                   <p className="ai-maturity-desc">
-                    Descubre en 3 minutos la posición tecnológica real de tu empresa frente a los estándares de la industria europea, identifica cuellos de botella y obtén un informe ejecutivo para tu Comité de Dirección o Matriz.
+                    Descubre en 3 minutos la posición tecnológica real de tu empresa según buenas prácticas y el EU AI Act, identifica cuellos de botella y obtén un informe ejecutivo para tu Comité de Dirección o Matriz.
                   </p>
                 </div>
 
@@ -439,18 +430,10 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 </div>
               )}
 
-              {/* Píldora de Contexto Estratégico */}
-              {currentQuestion.hint && (
-                <div className="ai-maturity-strategic-hint">
-                  <Info size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    {currentQuestion.hint}
-                  </div>
-                </div>
-              )}
               </div>
 
-              {/* Opciones */}
+              {/* Opciones + contexto */}
+              <div className="ai-maturity-wizard-right">
               <div className="ai-maturity-options-list" role="radiogroup" aria-label={currentQuestion.title}>
                 {currentQuestion.options.map((opt, optIdx, allOpts) => {
                   const isSelected = answers[currentQuestion.id] === opt.id;
@@ -475,14 +458,11 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                       }}
                       className={`ai-maturity-option-item ${isUnknown ? 'unknown-option' : ''} ${isSelected ? 'selected' : ''} ${isFullWidth ? 'is-wide' : ''}`}
                     >
-                      <div className="ai-maturity-opt-top">
-                        <span className="ai-maturity-opt-icon" aria-hidden="true">
-                          {OptIcon ? <OptIcon size={20} strokeWidth={1.8} /> : <HelpCircle size={20} strokeWidth={1.8} />}
-                        </span>
-                        <div className="ai-maturity-radio-circle">
-                          {isSelected && <Check size={12} strokeWidth={3} />}
-                        </div>
-                      </div>
+                      <span className="ai-maturity-opt-icon" aria-hidden="true">
+                        {isSelected
+                          ? <Check size={18} strokeWidth={2.6} />
+                          : OptIcon ? <OptIcon size={18} strokeWidth={1.8} /> : <HelpCircle size={18} strokeWidth={1.8} />}
+                      </span>
 
                       <div className="ai-maturity-opt-body">
                         <div className="ai-maturity-opt-label-row">
@@ -499,9 +479,20 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                           {opt.description}
                         </p>
                       </div>
+
                     </div>
                   );
                 })}
+              </div>
+              {/* Píldora de Contexto Estratégico */}
+              {currentQuestion.hint && (
+                <div className="ai-maturity-strategic-hint">
+                  <Info size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div>
+                    {currentQuestion.hint}
+                  </div>
+                </div>
+              )}
               </div>
               </div>
             </div>
@@ -608,9 +599,6 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                   </div>
                 </div>
 
-                <div className="ai-maturity-benchmark-note">
-                  Media sector UE: <strong>{AI_BENCHMARK_METADATA.averageIndustrialScore} pts</strong>
-                </div>
               </div>
 
               <div>
@@ -631,6 +619,22 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
               </div>
             </div>
 
+            {/* Contexto de mercado con fuente oficial */}
+            <div className="ai-maturity-market-context">
+              <div className="ai-maturity-market-stats">
+                {AI_MARKET_CONTEXT.stats.map(stat => (
+                  <div key={stat.url} className="ai-maturity-market-stat">
+                    <span className="ai-maturity-market-value">{stat.value}</span>
+                    <p className="ai-maturity-market-label">
+                      {stat.label} <span>({stat.period})</span>
+                      <a href={stat.url} target="_blank" rel="noopener noreferrer">{stat.source}</a>
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <p className="ai-maturity-market-note">{AI_MARKET_CONTEXT.note}</p>
+            </div>
+
             {/* Gráfico Radar & Desglose por Dimensión */}
             <div className="ai-maturity-grid-two">
               {/* Radar Chart SVG */}
@@ -638,12 +642,12 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 <div className="ai-maturity-card-head">
                   <h3 className="ai-maturity-card-title">Gráfico Radar de Capacidades</h3>
                   <p className="ai-maturity-card-sub">
-                    Tu empresa (azul) vs. Media industrial europea (gris)
+                    Puntuación de tu empresa en las cinco dimensiones
                   </p>
                 </div>
 
                 <div className="ai-maturity-radar-box">
-                  <svg viewBox="0 0 300 300" role="img" aria-label="Gráfico radar de las cinco dimensiones de madurez en IA frente a la media del sector">
+                  <svg viewBox="0 0 300 300" role="img" aria-label="Gráfico radar de las cinco dimensiones de madurez en IA">
                     <defs>
                       <linearGradient id="amRadarFill" x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0%" stopColor="#2563eb" stopOpacity="0.38" />
@@ -686,15 +690,6 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                       );
                     })}
 
-                    {/* Benchmark (Gris discontinuo) */}
-                    <polygon
-                      points={radarPoints.benchmarkCoords}
-                      fill="none"
-                      stroke="#94a3b8"
-                      strokeWidth="2"
-                      strokeDasharray="4 4"
-                    />
-
                     {/* Empresa (degradado azul → cian) */}
                     <polygon
                       points={radarPoints.companyCoords}
@@ -736,10 +731,6 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                     <span className="ai-maturity-legend-dot" />
                     Tu Empresa ({results.overallScore}%)
                   </span>
-                  <span className="ai-maturity-legend-bench">
-                    <span className="ai-maturity-legend-dash" />
-                    Sector UE ({AI_BENCHMARK_METADATA.averageIndustrialScore}%)
-                  </span>
                 </div>
               </div>
 
@@ -748,33 +739,24 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 <div>
                   <div className="ai-maturity-card-head">
                     <h3 className="ai-maturity-card-title">Desglose por Dimensión</h3>
-                    <p className="ai-maturity-card-sub">Comparativa frente a la media del sector</p>
+                    <p className="ai-maturity-card-sub">Puntuación de 0 a 100 en cada dimensión</p>
                   </div>
 
                   <div>
                     {AI_MATURITY_DIMENSIONS.map(dim => {
                       const score = results.dimensions[dim.id] || 0;
-                      const diff = score - dim.benchmarkAverage;
                       return (
                         <div key={dim.id} className="ai-maturity-bar-row">
                           <div className="ai-maturity-bar-header">
                             <span className="ai-maturity-bar-name">{dim.name}</span>
                             <div className="ai-maturity-bar-score">
                               <b>{score}%</b>
-                              <span className={`ai-maturity-delta ${diff >= 0 ? 'is-up' : 'is-down'}`}>
-                                {diff >= 0 ? `+${diff}%` : `${diff}%`}
-                              </span>
                             </div>
                           </div>
 
                           <div className="ai-maturity-bar-track">
                             <div
-                              className="ai-maturity-bar-marker"
-                              style={{ left: `${dim.benchmarkAverage}%` }}
-                              title={`Media: ${dim.benchmarkAverage}%`}
-                            />
-                            <div
-                              className={`ai-maturity-bar-fill ${score >= dim.benchmarkAverage ? 'is-above' : 'is-below'}`}
+                              className={`ai-maturity-bar-fill ${score >= 50 ? 'is-above' : 'is-below'}`}
                               style={{ width: `${Math.max(4, score)}%` }}
                             />
                           </div>
@@ -785,8 +767,8 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 </div>
 
                 <div className="ai-maturity-bar-foot">
-                  <span>Marca oscura = Media sectorial</span>
-                  <b>Meta líder: &gt;80%</b>
+                  <span>Barra = puntuación de la dimensión</span>
+                  <b>Nivel avanzado: desde 75 pts</b>
                 </div>
               </div>
             </div>
