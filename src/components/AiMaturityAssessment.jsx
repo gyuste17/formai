@@ -15,7 +15,9 @@ import {
   AI_MATURITY_DIMENSIONS,
   AI_MATURITY_QUESTIONS,
   AI_MATURITY_LEVELS,
-  calculateMaturityScore
+  calculateMaturityScore,
+  encodeAnswers,
+  decodeAnswers
 } from '../data/aiMaturityData';
 import './AiMaturityAssessment.css';
 
@@ -33,6 +35,14 @@ const GAP_TAGS = {
   warn: { className: 'ai-maturity-gap-tag--warn', label: 'A mejorar' },
   opp: { className: 'ai-maturity-gap-tag--opp', label: 'Oportunidad' }
 };
+
+// Respuestas recibidas en un enlace compartido (#auditoria-ia?r=...)
+function readSharedAnswers() {
+  if (typeof window === 'undefined') return null;
+  const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+  const searchParams = new URLSearchParams(window.location.search);
+  return decodeAnswers(hashParams.get('r') || searchParams.get('r'));
+}
 
 export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact }) {
   // Detectar empresa personalizada por URL (ej. ?empresa=profine, ?empresa=kommerling, ?empresa=commerlyn)
@@ -66,9 +76,10 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
       } else {
         setCompanyName(emp);
       }
-      setStep('intro');
+      const shared = readSharedAnswers();
+      setStep(shared ? 'results' : 'intro');
       setCurrentQuestionIdx(0);
-      setAnswers({});
+      setAnswers(shared || {});
     };
 
     window.addEventListener('hashchange', handleLocationChange);
@@ -76,9 +87,10 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
   }, []);
 
   // Estados del asistente
-  const [step, setStep] = useState('intro'); // 'intro' | 'wizard' | 'results'
+  const [sharedAnswers] = useState(readSharedAnswers);
+  const [step, setStep] = useState(sharedAnswers ? 'results' : 'intro'); // 'intro' | 'wizard' | 'results'
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState(sharedAnswers || {});
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Scroll suave hacia arriba al cambiar de paso
@@ -159,12 +171,40 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
       .map(d => d.name);
   }, [results]);
 
-  const handleShare = () => {
-    if (typeof window !== 'undefined' && navigator.clipboard) {
-      const url = window.location.href;
-      navigator.clipboard.writeText(url);
+  // Enlace que reabre este mismo informe (las respuestas viajan en el enlace)
+  const buildShareUrl = () => {
+    const params = new URLSearchParams();
+    params.set('r', encodeAnswers(answers));
+    const empresa = isKommerling ? 'profine' : companyName.trim();
+    if (empresa) params.set('empresa', empresa);
+    return `${window.location.origin}${window.location.pathname}#auditoria-ia?${params.toString()}`;
+  };
+
+  const handleShare = async () => {
+    if (typeof window === 'undefined') return;
+    const url = buildShareUrl();
+    const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+    // En móvil, hoja de compartir nativa; en escritorio, copiar el enlace
+    if (isTouch && navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Índice de Madurez en IA · FormAI',
+          text: `Resultado de la autoevaluación: ${results.overallScore}/100 · ${results.levelData.name}`,
+          url
+        });
+        return;
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 3000);
+    } catch (err) {
+      window.prompt('Copia este enlace para compartir el informe:', url);
     }
   };
 
@@ -539,7 +579,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
               <div className="ai-maturity-results-actions print-hidden">
                 <button onClick={handleShare} className="ai-maturity-btn-secondary">
                   <Share2 size={14} color="#64748b" />
-                  <span>{copiedLink ? '¡Copiado!' : 'Compartir'}</span>
+                  <span>{copiedLink ? '¡Enlace copiado!' : 'Compartir informe'}</span>
                 </button>
 
                 <button onClick={handlePrint} className="ai-maturity-btn-primary ai-maturity-btn-dark">

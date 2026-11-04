@@ -686,3 +686,30 @@ export function calculateMaturityScore(answers) {
     unknownCount,
   };
 }
+
+/**
+ * Enlace compartible: las respuestas viajan en el propio enlace (sin servidor).
+ * Un carácter por pregunta, en orden: a/b/c/d = opción, u = "No lo sé", - = sin responder.
+ */
+const optionKey = (optionId) => {
+  const key = optionId.split('_')[1];
+  return key === 'unknown' ? 'u' : key;
+};
+
+export function encodeAnswers(answers) {
+  return AI_MATURITY_QUESTIONS
+    .map(q => (answers[q.id] ? optionKey(answers[q.id]) : '-'))
+    .join('');
+}
+
+export function decodeAnswers(code) {
+  if (typeof code !== 'string' || code.length !== AI_MATURITY_QUESTIONS.length) return null;
+  const answers = {};
+  for (let i = 0; i < AI_MATURITY_QUESTIONS.length; i += 1) {
+    const q = AI_MATURITY_QUESTIONS[i];
+    const option = q.options.find(o => optionKey(o.id) === code[i]);
+    if (!option) return null;
+    answers[q.id] = option.id;
+  }
+  return answers;
+}

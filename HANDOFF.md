@@ -4,6 +4,11 @@ Entradas más recientes arriba. Formato: fecha · agente · rama · hecho / pend
 
 ---
 
+## 2026-11-04 (3) · Claude · `claude/auditoria-compartir`
+**Hecho:** `main` ya incluye benchmark con fuentes, opciones compactas y regla de veracidad (merge efff5c4, en producción). Botón "Compartir informe": antes copiaba la URL de la página (sin resultados). Ahora el enlace lleva las respuestas (`#auditoria-ia?r=cabubacbca&empresa=...`, un carácter por pregunta; `encodeAnswers/decodeAnswers` en `aiMaturityData.js`) y al abrirlo muestra directamente el informe. En móvil usa la hoja de compartir nativa; en escritorio copia el enlace. Sin servidor; el enlace solo contiene opciones elegidas (y el nombre de empresa si se escribió). Enlace inválido → pantalla inicial.
+**Aviso:** si se añaden/quitan/reordenan preguntas u opciones, los enlaces ya compartidos dejan de ser válidos o cambian de resultado.
+**Verificado:** copia correcta, reabrir el enlace da la misma puntuación (42) y 3 brechas, versión Kömmerling OK, consola limpia, build OK.
+
 ## 2026-11-04 (2) · Claude · `claude/auditoria-benchmark`
 **Hecho:** `main` ya incluye mosaico/iconos/10 preguntas (merge 45871f4, en producción). Benchmark: no había fuente (venía del primer commit de Antigravity), así que se eliminó la media sectorial (48), las medias por dimensión y "420 empresas"; radar y barras muestran solo la puntuación de la empresa. Añadida franja "contexto de mercado" (`AI_MARKET_CONTEXT` en `aiMaturityData.js`) con datos enlazados: INE 1T 2026 = 33,6 % de empresas españolas 10+ empleados usan IA (nota 22/10/2026) y Eurostat 2025 = 20,0 % UE (isoc_eb_ai). Son datos de adopción, no de madurez: no comparables con la puntuación 0-100. Quitado también "Metodología basada en Gartner, Microsoft AI" (sin respaldo); ahora "Alineada con el EU AI Act".
 **También en esta rama:** opciones compactas (icono a la izquierda, etiqueta en línea con el texto, sin radio: el icono pasa a check al seleccionar; "No lo sé" en una línea) para que quepan sin scroll (≤734 px de alto útil en 1440×780); título del dossier final estaba oscuro sobre fondo oscuro (heredaba el color global de h3) y ahora es blanco.
