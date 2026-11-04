@@ -1,16 +1,32 @@
 /**
  * aiMaturityData.js
  * Marco de evaluación de madurez en IA Corporativa de FormAI.
- * Basado en los estándares de Gartner, Microsoft Enterprise AI, BCG y el EU AI Act.
- * Diseñado para desacoplar el benchmark de mercado y permitir actualizaciones periódicas.
+ * Marco propio de FormAI, alineado con el EU AI Act (Reglamento UE 2024/1689).
  */
 
-export const AI_BENCHMARK_METADATA = {
-  version: '2026.2',
-  lastUpdated: 'Octubre 2026',
-  sampleSize: '420 empresas del sector industrial, manufacturero y servicios B2B en España y Europa',
-  averageIndustrialScore: 48, // Puntuación media en industria tradicional europea
-  leadingIndustryScore: 82,   // Puntuación de las empresas líderes en adopción
+/**
+ * Contexto de mercado con fuente oficial (datos de ADOPCIÓN de IA, no de madurez:
+ * no son comparables con la puntuación 0-100 de esta autoevaluación).
+ * Revisar cuando se publiquen nuevas ediciones (INE: octubre; Eurostat: diciembre).
+ */
+export const AI_MARKET_CONTEXT = {
+  note: 'Datos de adopción (uso de IA), no comparables directamente con la puntuación de madurez.',
+  stats: [
+    {
+      value: '33,6 %',
+      label: 'de las empresas españolas de 10 o más empleados usaban IA',
+      period: '1.er trimestre 2026',
+      source: 'INE · Encuesta TIC y comercio electrónico en las empresas',
+      url: 'https://www.ine.es/dyngs/Prensa/ETICCE20251T2026.htm',
+    },
+    {
+      value: '20,0 %',
+      label: 'de las empresas de la UE de 10 o más empleados usaban IA',
+      period: 'Año 2025',
+      source: 'Eurostat · isoc_eb_ai',
+      url: 'https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_in_enterprises',
+    },
+  ],
 };
 
 export const AI_MATURITY_DIMENSIONS = [
@@ -20,7 +36,6 @@ export const AI_MATURITY_DIMENSIONS = [
     shortName: 'Herramientas',
     description: 'Diversidad de modelos (Claude, GPT, Gemini, Qwen), entornos multimodales y acceso en el puesto de trabajo.',
     icon: 'Cpu',
-    benchmarkAverage: 52,
     weight: 0.20,
   },
   {
@@ -29,7 +44,6 @@ export const AI_MATURITY_DIMENSIONS = [
     shortName: 'Datos & RAG',
     description: 'Integración con SharePoint, bases documentales, RAG seguro, análisis cuantitativo y ejecución de código.',
     icon: 'Database',
-    benchmarkAverage: 42,
     weight: 0.20,
   },
   {
@@ -38,7 +52,6 @@ export const AI_MATURITY_DIMENSIONS = [
     shortName: 'Agentes & Flujos',
     description: 'Automatización de flujos multi-paso, Model Context Protocol (MCP), auditoría de BI y simulación de escenarios.',
     icon: 'Bot',
-    benchmarkAverage: 38,
     weight: 0.20,
   },
   {
@@ -47,7 +60,6 @@ export const AI_MATURITY_DIMENSIONS = [
     shortName: 'Seguridad & Legal',
     description: 'Políticas corporativas, control del uso no autorizado (Shadow AI), cumplimiento EU AI Act y garantías Zero Data Retention.',
     icon: 'ShieldCheck',
-    benchmarkAverage: 54,
     weight: 0.20,
   },
   {
@@ -56,7 +68,6 @@ export const AI_MATURITY_DIMENSIONS = [
     shortName: 'Formación & ROI',
     description: 'Capacitación práctica de directivos, medición de horas ahorradas y aprovechamiento del crédito FUNDAE.',
     icon: 'TrendingUp',
-    benchmarkAverage: 54,
     weight: 0.20,
   },
 ];
