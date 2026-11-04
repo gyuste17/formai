@@ -3,7 +3,12 @@ import {
   Cpu, Database, Bot, ShieldCheck, TrendingUp, ArrowRight, ArrowLeft,
   CheckCircle2, FileText, Download, Share2, Building2,
   Check, RefreshCw, BarChart3, HelpCircle, Sparkles, Award, Lock,
-  Printer, AlertCircle, Info
+  Printer, AlertCircle, Info,
+  UserX, FlaskConical, BadgeCheck, Layers, Type, Paperclip, ScanSearch,
+  ClipboardPaste, Upload, FolderSearch, Link2, MessageSquareText, Code2,
+  SquareTerminal, MessageCircle, ListChecks, Workflow, Ban, LineChart,
+  FileX, Megaphone, ScrollText, ShieldAlert, ShieldHalf, LockKeyhole,
+  MonitorPlay, Presentation, GraduationCap, EyeOff, ThumbsUp, Gauge
 } from 'lucide-react';
 import {
   AI_BENCHMARK_METADATA,
@@ -13,6 +18,21 @@ import {
   calculateMaturityScore
 } from '../data/aiMaturityData';
 import './AiMaturityAssessment.css';
+
+// Iconos de las opciones (el nombre viene de `icon` en aiMaturityData.js)
+const OPTION_ICONS = {
+  UserX, FlaskConical, BadgeCheck, Layers, Type, Paperclip, ScanSearch,
+  ClipboardPaste, Upload, FolderSearch, Link2, MessageSquareText, Code2,
+  SquareTerminal, MessageCircle, ListChecks, Bot, Workflow, Ban, FileText,
+  LineChart, FileX, Megaphone, ScrollText, ShieldAlert, ShieldHalf,
+  LockKeyhole, MonitorPlay, Presentation, GraduationCap, EyeOff, ThumbsUp, Gauge
+};
+
+const GAP_TAGS = {
+  risk: { className: 'ai-maturity-gap-tag--risk', label: 'Riesgo' },
+  warn: { className: 'ai-maturity-gap-tag--warn', label: 'A mejorar' },
+  opp: { className: 'ai-maturity-gap-tag--opp', label: 'Oportunidad' }
+};
 
 export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact }) {
   // Detectar empresa personalizada por URL (ej. ?empresa=profine, ?empresa=kommerling, ?empresa=commerlyn)
@@ -111,6 +131,34 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
     return calculateMaturityScore(answers);
   }, [answers]);
 
+  // Brechas prioritarias: las 3 preguntas con menor puntuación (orden original en empates)
+  const priorityGaps = useMemo(() => {
+    return AI_MATURITY_QUESTIONS
+      .map((q, order) => {
+        const option = q.options.find(o => o.id === answers[q.id]);
+        const dim = AI_MATURITY_DIMENSIONS.find(d => d.id === q.dimensionId);
+        return { q, order, score: option ? option.score : 0, dimName: dim?.shortName };
+      })
+      .filter(item => item.score < 100)
+      .sort((a, b) => a.score - b.score || a.order - b.order)
+      .slice(0, 3)
+      .map(item => ({
+        id: item.q.id,
+        dimName: item.dimName,
+        title: item.q.gap.title,
+        text: item.q.gap.text,
+        tone: item.score <= 30 ? 'risk' : item.score <= 70 ? 'warn' : 'opp'
+      }));
+  }, [answers]);
+
+  // Dimensiones con más margen de mejora (para el dictamen)
+  const weakestDimensions = useMemo(() => {
+    return [...AI_MATURITY_DIMENSIONS]
+      .sort((a, b) => (results.dimensions[a.id] ?? 0) - (results.dimensions[b.id] ?? 0))
+      .slice(0, 2)
+      .map(d => d.name);
+  }, [results]);
+
   const handleShare = () => {
     if (typeof window !== 'undefined' && navigator.clipboard) {
       const url = window.location.href;
@@ -190,7 +238,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
         </div>
       </div>
 
-      <div className="ai-maturity-container">
+      <div className={`ai-maturity-container ${step === 'wizard' ? 'is-wizard' : ''}`}>
         {/* ========================================================
             VISTA 1: INTRODUCCIÓN / HERO
            ======================================================== */}
@@ -313,7 +361,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                   <div className="ai-maturity-trust-row">
                     <span className="ai-maturity-trust-item">
                       <CheckCircle2 size={15} color="#059669" />
-                      11 preguntas rápidas (3 min)
+                      {AI_MATURITY_QUESTIONS.length} preguntas rápidas (3 min)
                     </span>
                     <span className="ai-maturity-trust-item">
                       <Lock size={15} color="#2563eb" />
@@ -335,23 +383,11 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
            ======================================================== */}
         {step === 'wizard' && currentQuestion && (
           <div>
-            {/* Barra de progreso */}
+            {/* Barra de progreso: nº de pregunta, barra y porcentaje en una línea */}
             <div className="ai-maturity-progress-bar-wrapper">
-              <div className="ai-maturity-progress-meta">
-                <div className="ai-maturity-progress-meta-left">
-                  <span className="ai-maturity-dim-pill">
-                    {currentDimension?.id === 'tooling' && <Cpu size={12} />}
-                    {currentDimension?.id === 'data' && <Database size={12} />}
-                    {currentDimension?.id === 'agentic' && <Bot size={12} />}
-                    {currentDimension?.id === 'governance' && <ShieldCheck size={12} />}
-                    {currentDimension?.id === 'adoption' && <TrendingUp size={12} />}
-                    <span>{currentDimension?.shortName}</span>
-                  </span>
-                  <span>Pregunta {currentQuestionIdx + 1} de {AI_MATURITY_QUESTIONS.length}</span>
-                </div>
-                <span>{progressPercent}% completado</span>
-              </div>
-
+              <span className="ai-maturity-progress-label">
+                Pregunta {currentQuestionIdx + 1} de {AI_MATURITY_QUESTIONS.length}
+              </span>
               <div
                 className="ai-maturity-progress-track"
                 role="progressbar"
@@ -365,21 +401,13 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                   style={{ width: `${Math.max(8, progressPercent)}%` }}
                 />
               </div>
+              <span className="ai-maturity-progress-label">{progressPercent}%</span>
             </div>
 
             {/* Tarjeta de la Pregunta */}
             <div className="ai-maturity-wizard-card">
-              <div className="ai-maturity-question-tag-row">
-                <span className="ai-maturity-dim-pill">
-                  {currentDimension?.name}
-                </span>
-                {currentQuestion.conceptTag && (
-                  <span className="ai-maturity-concept-pill">
-                    {currentQuestion.conceptTag}
-                  </span>
-                )}
-              </div>
-
+              <div className="ai-maturity-wizard-grid">
+              <div className="ai-maturity-wizard-left">
               <h2 className="ai-maturity-question-title">
                 {currentQuestion.title}
               </h2>
@@ -387,23 +415,20 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 {currentQuestion.subtitle}
               </p>
 
-              {/* 💡 Guía para Dirección / En palabras sencillas */}
+              {/* Explicación en palabras sencillas */}
               {currentQuestion.plainExplanation && (
                 <div className="ai-maturity-plain-guide">
-                  <div className="ai-maturity-plain-guide-header">
-                    <HelpCircle size={14} />
-                    <span>Guía para Dirección y RRHH · En palabras sencillas:</span>
-                  </div>
+                  <HelpCircle size={16} className="ai-maturity-plain-guide-icon" aria-hidden="true" />
                   <p className="ai-maturity-plain-guide-text">
                     {currentQuestion.plainExplanation}
                   </p>
                 </div>
               )}
 
-              {/* Chips de conceptos y herramientas clave */}
+              {/* Ejemplos y conceptos de la pregunta */}
               {currentQuestion.visualChips && currentQuestion.visualChips.length > 0 && (
                 <div className="ai-maturity-concept-chips-wrapper">
-                  <span className="ai-maturity-chips-label">Herramientas y tecnologías relacionadas:</span>
+                  <span className="ai-maturity-chips-label">Ejemplos:</span>
                   <div className="ai-maturity-concept-chips">
                     {currentQuestion.visualChips.map((chip, idx) => (
                       <span key={idx} className="ai-maturity-chip-tag">
@@ -414,11 +439,26 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 </div>
               )}
 
+              {/* Píldora de Contexto Estratégico */}
+              {currentQuestion.hint && (
+                <div className="ai-maturity-strategic-hint">
+                  <Info size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div>
+                    {currentQuestion.hint}
+                  </div>
+                </div>
+              )}
+              </div>
+
               {/* Opciones */}
               <div className="ai-maturity-options-list" role="radiogroup" aria-label={currentQuestion.title}>
-                {currentQuestion.options.map((opt) => {
+                {currentQuestion.options.map((opt, optIdx, allOpts) => {
                   const isSelected = answers[currentQuestion.id] === opt.id;
                   const isUnknown = opt.isUnknown;
+                  const OptIcon = opt.icon ? OPTION_ICONS[opt.icon] : null;
+                  const mainCount = allOpts.filter(o => !o.isUnknown).length;
+                  // Con un número impar de opciones, la última ocupa el ancho completo del mosaico
+                  const isFullWidth = !isUnknown && mainCount % 2 === 1 && optIdx === mainCount - 1;
 
                   return (
                     <div
@@ -433,14 +473,15 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                           handleSelectOption(currentQuestion.id, opt.id);
                         }
                       }}
-                      className={`ai-maturity-option-item ${isUnknown ? 'unknown-option' : ''} ${isSelected ? 'selected' : ''}`}
+                      className={`ai-maturity-option-item ${isUnknown ? 'unknown-option' : ''} ${isSelected ? 'selected' : ''} ${isFullWidth ? 'is-wide' : ''}`}
                     >
-                      <div className="ai-maturity-radio-circle">
-                        {isSelected ? (
-                          <Check size={12} strokeWidth={3} />
-                        ) : isUnknown ? (
-                          <HelpCircle size={11} color="#94a3b8" />
-                        ) : null}
+                      <div className="ai-maturity-opt-top">
+                        <span className="ai-maturity-opt-icon" aria-hidden="true">
+                          {OptIcon ? <OptIcon size={20} strokeWidth={1.8} /> : <HelpCircle size={20} strokeWidth={1.8} />}
+                        </span>
+                        <div className="ai-maturity-radio-circle">
+                          {isSelected && <Check size={12} strokeWidth={3} />}
+                        </div>
                       </div>
 
                       <div className="ai-maturity-opt-body">
@@ -462,17 +503,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                   );
                 })}
               </div>
-
-              {/* Píldora de Contexto Estratégico */}
-              {currentQuestion.hint && (
-                <div className="ai-maturity-strategic-hint">
-                  <Info size={16} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <strong>Clave estratégica para la dirección / matriz: </strong>
-                    {currentQuestion.hint}
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
 
             {/* Botones de Navegación */}
@@ -536,7 +567,9 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                     Auditoría Técnica Pendiente ({results.unknownCount} {results.unknownCount === 1 ? 'aspecto marcado' : 'aspectos marcados'} como no confirmados)
                   </strong>
                   <p>
-                    Has indicado no disponer de certeza sobre {results.unknownCount} punto{results.unknownCount === 1 ? '' : 's'} técnico{results.unknownCount === 1 ? '' : 's'}. En el dictamen para la matriz se recogen como brechas a verificar directamente con el departamento de TI o la central en Alemania para completar la homologación.
+                    Has indicado no disponer de certeza sobre {results.unknownCount} punto{results.unknownCount === 1 ? '' : 's'} técnico{results.unknownCount === 1 ? '' : 's'}. {isKommerling
+                      ? 'En el dictamen para la matriz se recogen como brechas a verificar directamente con el departamento de TI o la central en Alemania para completar la homologación.'
+                      : 'Conviene verificarlos con el departamento de TI para completar la auditoría.'}
                   </p>
                 </div>
               </div>
@@ -587,13 +620,13 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
 
                 <p className="ai-maturity-level-summary">{results.levelData.summary}</p>
 
-                {/* Conclusión estratégica para Alemania / Matriz */}
+                {/* Conclusión estratégica (versión Kömmerling: mensaje para la matriz) */}
                 <div className="ai-maturity-conclusion">
                   <strong>
                     <ShieldCheck size={16} />
-                    Conclusión estratégica para Dirección y Matriz:
+                    {isKommerling ? 'Conclusión estratégica para Dirección y Matriz:' : 'Conclusión estratégica:'}
                   </strong>
-                  {results.levelData.germanMatrixNote}
+                  {isKommerling ? results.levelData.germanMatrixNote : results.levelData.generalNote}
                 </div>
               </div>
             </div>
@@ -758,53 +791,47 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
               </div>
             </div>
 
-            {/* Las 3 Brechas Críticas */}
+            {/* Brechas prioritarias (según las respuestas) */}
             <div className="ai-maturity-card-clean">
               <div className="ai-maturity-card-head">
                 <h3 className="ai-maturity-card-title">
                   <AlertCircle size={20} color="#d97706" />
-                  Las 3 Brechas Críticas Detectadas en la Auditoría
+                  {priorityGaps.length > 0
+                    ? `${priorityGaps.length === 1 ? 'Brecha prioritaria detectada' : `Las ${priorityGaps.length} brechas prioritarias detectadas`} en la auditoría`
+                    : 'Sin brechas críticas detectadas'}
                 </h3>
               </div>
 
-              <div className="ai-maturity-gaps-grid">
-                <div className="ai-maturity-gap-card">
-                  <span className="ai-maturity-gap-tag ai-maturity-gap-tag--risk">Riesgo 1 · Cumplimiento</span>
-                  <h4 className="ai-maturity-gap-title">Proliferación de Shadow AI</h4>
-                  <p className="ai-maturity-gap-text">
-                    Las restricciones excesivas empujan a los empleados a usar herramientas privadas desde el móvil sin control, violando directrices de seguridad del EU AI Act.
-                  </p>
+              {priorityGaps.length > 0 ? (
+                <div className="ai-maturity-gaps-grid">
+                  {priorityGaps.map((gap, i) => (
+                    <div key={gap.id} className="ai-maturity-gap-card">
+                      <span className={`ai-maturity-gap-tag ${GAP_TAGS[gap.tone].className}`}>
+                        {GAP_TAGS[gap.tone].label} · {gap.dimName}
+                      </span>
+                      <h4 className="ai-maturity-gap-title">{gap.title}</h4>
+                      <p className="ai-maturity-gap-text">{gap.text}</p>
+                    </div>
+                  ))}
                 </div>
-
-                <div className="ai-maturity-gap-card">
-                  <span className="ai-maturity-gap-tag ai-maturity-gap-tag--warn">Riesgo 2 · Productividad</span>
-                  <h4 className="ai-maturity-gap-title">Carencia de Code Interpreter</h4>
-                  <p className="ai-maturity-gap-text">
-                    Sin ejecución de código matemático en servidor, los directivos no pueden auditar tablas de costes ni simular escenarios What-If con fiabilidad analítica.
-                  </p>
-                </div>
-
-                <div className="ai-maturity-gap-card">
-                  <span className="ai-maturity-gap-tag ai-maturity-gap-tag--opp">Riesgo 3 · Oportunidad</span>
-                  <h4 className="ai-maturity-gap-title">Ausencia de RAG sobre Archivos</h4>
-                  <p className="ai-maturity-gap-text">
-                    Copiar y pegar texto a mano en chatbots causa pérdidas de hasta 4 horas semanales por directivo frente a sistemas que indexan repositorios de forma segura.
-                  </p>
-                </div>
-              </div>
+              ) : (
+                <p className="ai-maturity-gap-text">
+                  Todas las respuestas alcanzan el nivel máximo. El siguiente paso es mantener la gobernanza y revisar el marco periódicamente.
+                </p>
+              )}
             </div>
 
             {/* Dossier Resumen Ejecutivo para la Matriz */}
             <div className="ai-maturity-dossier-card">
               <div className="ai-maturity-dossier-top">
-                <span className="ai-maturity-dossier-tag">Dossier para Comité de Dirección / Matriz</span>
+                <span className="ai-maturity-dossier-tag">{isKommerling ? 'Dossier para Comité de Dirección / Matriz' : 'Dossier para el Comité de Dirección'}</span>
                 <span className="ai-maturity-dossier-ref">REF: AUD-IA-{new Date().getFullYear()}</span>
               </div>
 
               <h3 className="ai-maturity-dossier-title">Dictamen Técnico y Hoja de Ruta de Desbloqueo</h3>
 
               <div className="ai-maturity-dossier-quote">
-                «La evaluación técnica concluye que la organización presenta un nivel de madurez <strong>{results.levelData.name}</strong> ({results.overallScore}/100 puntos). La política actual de aislamiento técnico genera una pérdida estimada de productividad del 28% y no frena el uso no regulado de IA. Se recomienda a la Dirección General autorizar un plan de modernización escalonado basado en: 1) Tenant europeo con Zero Data Retention; 2) Activación de Code Interpreter para análisis cuantitativo; 3) Plan de capacitación directiva y técnica 100% bonificable con cargo a la cuota de formación de FUNDAE.»
+                «La evaluación concluye que la organización presenta un nivel de madurez <strong>{results.levelData.name}</strong> ({results.overallScore}/100 puntos). Las áreas con mayor margen de mejora son {weakestDimensions.join(' y ')}. Se recomienda a la Dirección un plan escalonado basado en: 1) cerrar las brechas prioritarias señaladas; 2) formalizar la gobernanza y las garantías de datos (Zero Data Retention en tenant europeo); 3) plan de capacitación directiva y técnica bonificable con cargo al crédito de formación de FUNDAE.»
               </div>
 
               <div className="ai-maturity-dossier-foot">
