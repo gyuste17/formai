@@ -38,6 +38,12 @@ Este proyecto cuenta con 4 agentes especializados (ver detalle en [AGENTS.md](fi
 
 ---
 
+## ⚠️ Regla obligatoria: veracidad de datos
+
+**Nunca inventes cifras, benchmarks, muestras ni atribuciones a terceros** (Gartner, INE, Eurostat…). Toda cifra publicada debe estar verificada en la fuente oficial y enlazada; si no se puede verificar, no se publica. Detalle y ejemplos en la sección "Veracidad de datos y fuentes" de [AGENTS.md](AGENTS.md).
+
+---
+
 ## Reglas y Habilidades
 
 - **[.agents/rules/coding-style.md](file:///.agents/rules/coding-style.md):** Convenciones de React, Vite y Apps Script.
