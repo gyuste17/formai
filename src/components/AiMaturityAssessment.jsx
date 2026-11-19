@@ -30,6 +30,17 @@ const OPTION_ICONS = {
   LockKeyhole, MonitorPlay, Presentation, GraduationCap, EyeOff, ThumbsUp, Gauge
 };
 
+const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxkr3IiqKFK5IIRDc-keYnjNR_yqmtPIAfRN56I2QBNvU6vFfX-40Uv2PYjgNt1pDMm/exec';
+const LEAD_STORAGE_KEY = 'formai_auditoria_ia_lead';
+
+function readLeadFlag() {
+  try {
+    return typeof window !== 'undefined' && window.localStorage.getItem(LEAD_STORAGE_KEY) === '1';
+  } catch (e) {
+    return false;
+  }
+}
+
 const GAP_TAGS = {
   risk: { className: 'ai-maturity-gap-tag--risk', label: 'Riesgo' },
   warn: { className: 'ai-maturity-gap-tag--warn', label: 'A mejorar' },
@@ -92,6 +103,12 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [answers, setAnswers] = useState(sharedAnswers || {});
   const [copiedLink, setCopiedLink] = useState(false);
+
+  // Captación de leads: el informe completo se desbloquea al dejar los datos de contacto
+  const [leadSent, setLeadSent] = useState(readLeadFlag);
+  const [leadForm, setLeadForm] = useState({ name: '', company: '', email: '', phone: '', consent: false, website: '' });
+  const [leadLoading, setLeadLoading] = useState(false);
+  const [leadError, setLeadError] = useState('');
 
   // Scroll suave hacia arriba al cambiar de paso
   useEffect(() => {
@@ -205,6 +222,85 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
       setTimeout(() => setCopiedLink(false), 3000);
     } catch (err) {
       window.prompt('Copia este enlace para compartir el informe:', url);
+    }
+  };
+
+  // La versión Kömmerling (enlace de cliente) no pide datos
+  const unlocked = leadSent || isKommerling;
+
+  const handleLeadChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setLeadForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const handleLeadSubmit = async (e) => {
+    e.preventDefault();
+    setLeadError('');
+
+    const name = leadForm.name.trim();
+    const company = (leadForm.company || companyName).trim();
+    const email = leadForm.email.trim();
+    if (!name || !company || !email) {
+      setLeadError('Rellena nombre, empresa y correo electrónico.');
+      return;
+    }
+    if (!leadForm.consent) {
+      setLeadError('Debes aceptar la política de privacidad para recibir el informe.');
+      return;
+    }
+
+    const unlock = () => {
+      try { window.localStorage.setItem(LEAD_STORAGE_KEY, '1'); } catch (err) { /* sin almacenamiento */ }
+      setLeadSent(true);
+      setLeadLoading(false);
+    };
+
+    // Campo trampa anti-spam: un bot lo rellena, una persona no lo ve
+    if (leadForm.website) {
+      unlock();
+      return;
+    }
+
+    setLeadLoading(true);
+    const dimLines = AI_MATURITY_DIMENSIONS
+      .map(d => `- ${d.name}: ${results.dimensions[d.id] ?? 0}/100`)
+      .join('\n');
+    const gapLines = priorityGaps.length
+      ? priorityGaps.map(g => `- [${g.dimName}] ${g.title}`).join('\n')
+      : '- Sin brechas críticas';
+    const payload = {
+      name,
+      company,
+      email,
+      phone: leadForm.phone.trim() || 'No especificado',
+      subject: `Auditoría IA: ${results.overallScore}/100 · ${results.levelData.name}`,
+      message: [
+        'Lead desde la auditoría de madurez en IA (#auditoria-ia).',
+        `Puntuación: ${results.overallScore}/100 · Nivel: ${results.levelData.name}`,
+        `Preguntas marcadas "No lo sé": ${results.unknownCount}`,
+        '',
+        'Por dimensión:',
+        dimLines,
+        '',
+        'Brechas prioritarias:',
+        gapLines,
+        '',
+        `Informe: ${buildShareUrl()}`
+      ].join('\n')
+    };
+
+    try {
+      await fetch(LEAD_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      unlock();
+    } catch (err) {
+      console.error(err);
+      setLeadError('No hemos podido enviar tus datos. Inténtalo de nuevo en unos segundos.');
+      setLeadLoading(false);
     }
   };
 
@@ -396,7 +492,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                     </span>
                     <span className="ai-maturity-trust-item">
                       <Lock size={15} color="#2563eb" />
-                      100% Confidencial y Anónimo
+                      Sin registro para empezar
                     </span>
                     <span className="ai-maturity-trust-item">
                       <FileText size={15} color="#4f46e5" />
@@ -576,17 +672,19 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
               </div>
 
               {/* Botones de Compartir y Descargar PDF */}
-              <div className="ai-maturity-results-actions print-hidden">
-                <button onClick={handleShare} className="ai-maturity-btn-secondary">
-                  <Share2 size={14} color="#64748b" />
-                  <span>{copiedLink ? '¡Enlace copiado!' : 'Compartir informe'}</span>
-                </button>
+              {unlocked && (
+                <div className="ai-maturity-results-actions print-hidden">
+                  <button onClick={handleShare} className="ai-maturity-btn-secondary">
+                    <Share2 size={14} color="#64748b" />
+                    <span>{copiedLink ? '¡Enlace copiado!' : 'Compartir informe'}</span>
+                  </button>
 
-                <button onClick={handlePrint} className="ai-maturity-btn-primary ai-maturity-btn-dark">
-                  <Printer size={14} />
-                  <span>Descargar PDF</span>
-                </button>
-              </div>
+                  <button onClick={handlePrint} className="ai-maturity-btn-primary ai-maturity-btn-dark">
+                    <Printer size={14} />
+                    <span>Descargar PDF</span>
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Aviso especial si hubo preguntas marcadas como "No lo sé" */}
@@ -675,7 +773,60 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
               <p className="ai-maturity-market-note">{AI_MARKET_CONTEXT.note}</p>
             </div>
 
-            {/* Gráfico Radar & Desglose por Dimensión */}
+            {!unlocked && (
+              <form className="ai-maturity-card-clean ai-maturity-lead-card print-hidden" onSubmit={handleLeadSubmit} noValidate>
+                <div className="ai-maturity-lead-copy">
+                  <span className="ai-maturity-eyebrow">Informe completo</span>
+                  <h3>Desbloquea tu radar, las brechas prioritarias y el PDF</h3>
+                  <p>
+                    Déjanos tus datos y verás el desglose por dimensión, las 3 brechas que más pesan en tu resultado y el dictamen para Dirección. Un especialista de FormAI podrá contactar contigo para comentarlo, sin compromiso.
+                  </p>
+                </div>
+
+                <div className="ai-maturity-lead-fields">
+                  <label className="ai-maturity-lead-field">
+                    <span>Nombre y apellidos *</span>
+                    <input className="ai-maturity-company-input" type="text" name="name" value={leadForm.name} onChange={handleLeadChange} autoComplete="name" required />
+                  </label>
+                  <label className="ai-maturity-lead-field">
+                    <span>Empresa *</span>
+                    <input className="ai-maturity-company-input" type="text" name="company" value={leadForm.company || companyName} onChange={handleLeadChange} autoComplete="organization" required />
+                  </label>
+                  <label className="ai-maturity-lead-field">
+                    <span>Correo electrónico *</span>
+                    <input className="ai-maturity-company-input" type="email" name="email" value={leadForm.email} onChange={handleLeadChange} autoComplete="email" required />
+                  </label>
+                  <label className="ai-maturity-lead-field">
+                    <span>Teléfono (opcional)</span>
+                    <input className="ai-maturity-company-input" type="tel" name="phone" value={leadForm.phone} onChange={handleLeadChange} autoComplete="tel" />
+                  </label>
+
+                  {/* Campo trampa anti-spam */}
+                  <input type="text" name="website" value={leadForm.website} onChange={handleLeadChange} tabIndex={-1} autoComplete="off" aria-hidden="true" className="ai-maturity-hp" />
+
+                  <label className="ai-maturity-lead-consent">
+                    <input type="checkbox" name="consent" checked={leadForm.consent} onChange={handleLeadChange} />
+                    <span>
+                      He leído y acepto la <a href="/politica-privacidad.html" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>. Usaréis mis datos y el resultado de la autoevaluación para contactarme sobre formación en IA.
+                    </span>
+                  </label>
+
+                  {leadError && (
+                    <p className="ai-maturity-lead-error" role="alert">
+                      <AlertCircle size={15} />
+                      {leadError}
+                    </p>
+                  )}
+
+                  <button type="submit" disabled={leadLoading} className="ai-maturity-btn-primary">
+                    <span>{leadLoading ? 'Enviando...' : 'Ver informe completo'}</span>
+                    {!leadLoading && <ArrowRight size={16} />}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {unlocked && (<>
             <div className="ai-maturity-grid-two">
               {/* Radar Chart SVG */}
               <div className="ai-maturity-card-clean ai-maturity-radar-card">
@@ -897,6 +1048,7 @@ export default function AiMaturityAssessment({ onBackToHome, onNavigateToContact
                 <ArrowRight size={16} />
               </button>
             </div>
+            </>)}
           </div>
         )}
       </div>

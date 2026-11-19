@@ -4,6 +4,11 @@ Entradas más recientes arriba. Formato: fecha · agente · rama · hecho / pend
 
 ---
 
+## 2026-11-19 · Claude · `claude/project-thread-jmlq9v`
+**Hecho:** captación de leads en `#auditoria-ia`. En resultados (versión general) se ve la puntuación, el nivel y el contexto de mercado; el radar, el desglose, las 3 brechas, el dictamen, "Compartir" y "Descargar PDF" se desbloquean al dejar nombre, empresa, email (teléfono opcional) y aceptar la política de privacidad. El envío reutiliza el endpoint de Apps Script con el mismo payload que `ContactForm` (`name/company/email/phone/subject/message`), así que no hay cambios de backend: puntuación, nivel, puntuación por dimensión, brechas y enlace al informe viajan en `subject`/`message`. Desbloqueo recordado en `localStorage` (`formai_auditoria_ia_lead`). Campo trampa anti-spam. La versión Kömmerling/Profine no pide datos. Quitado "100% Confidencial y Anónimo" (ya no es cierto): ahora "Sin registro para empezar".
+**Verificado:** build OK; con el endpoint simulado: gate visible, validación, payload correcto, desbloqueo y persistencia tras recargar. **No verificado:** que el CRM real (`doPost`) clasifique bien estos leads ni que no los trate como duplicados; probar con un envío real tras el despliegue (el endpoint no está en este repo).
+**Aviso:** el texto de consentimiento es mío; conviene que lo revise Guillermo con su política de privacidad.
+
 ## 2026-11-04 (3) · Claude · `claude/auditoria-compartir`
 **Hecho:** `main` ya incluye benchmark con fuentes, opciones compactas y regla de veracidad (merge efff5c4, en producción). Botón "Compartir informe": antes copiaba la URL de la página (sin resultados). Ahora el enlace lleva las respuestas (`#auditoria-ia?r=cabubacbca&empresa=...`, un carácter por pregunta; `encodeAnswers/decodeAnswers` en `aiMaturityData.js`) y al abrirlo muestra directamente el informe. En móvil usa la hoja de compartir nativa; en escritorio copia el enlace. Sin servidor; el enlace solo contiene opciones elegidas (y el nombre de empresa si se escribió). Enlace inválido → pantalla inicial.
 **Aviso:** si se añaden/quitan/reordenan preguntas u opciones, los enlaces ya compartidos dejan de ser válidos o cambian de resultado.
