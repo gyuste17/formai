@@ -30,7 +30,7 @@ npm run push:gas
 
 ## Ecosistema de Subagentes Especializados
 
-Este proyecto cuenta con 4 agentes especializados (ver detalle en [AGENTS.md](file:///AGENTS.md)):
+Este proyecto cuenta con 4 agentes especializados (ver detalle en [AGENTS.md](AGENTS.md)):
 1. **`formai_blog_writer`:** Redactor de artículos técnicos y guías FUNDAE.
 2. **`formai_linkedin_strategist`:** Planificación semanal y copys para LinkedIn B2B.
 3. **`formai_visual_designer`:** Diseño de creatividades, infografías y portadas de blog.
@@ -46,9 +46,9 @@ Este proyecto cuenta con 4 agentes especializados (ver detalle en [AGENTS.md](fi
 
 ## Reglas y Habilidades
 
-- **[.agents/rules/coding-style.md](file:///.agents/rules/coding-style.md):** Convenciones de React, Vite y Apps Script.
-- **[.agents/rules/design-standards.md](file:///.agents/rules/design-standards.md):** Pautas de diseño corporativo y tonos de marca.
-- **[.agents/skills/health-check/SKILL.md](file:///.agents/skills/health-check/SKILL.md):** Verificación de build y enlaces (`/health-check`).
+- **[.agents/rules/coding-style.md](.agents/rules/coding-style.md):** Convenciones de React, Vite y Apps Script.
+- **[.agents/rules/design-standards.md](.agents/rules/design-standards.md):** Pautas de diseño corporativo y tonos de marca.
+- **[.agents/skills/health-check/SKILL.md](.agents/skills/health-check/SKILL.md):** Verificación de build y enlaces (`/health-check`).
 
 ---
 
