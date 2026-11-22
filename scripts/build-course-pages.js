@@ -41,12 +41,12 @@ details{background:var(--card);border:1px solid var(--bd);border-radius:12px;pad
 .cta{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:28px;text-align:center;margin:20px 0}
 footer{border-top:1px solid var(--bd);padding:28px 0;color:var(--mut);font-size:.88rem;margin-top:32px}footer a{color:var(--mut);margin-right:14px}
 
-.hero2{position:relative;overflow:hidden;isolation:isolate;color:#fff;background:linear-gradient(160deg,var(--dk) 0%,color-mix(in srgb,var(--dk) 70%,var(--c1)) 100%);padding:20px 0 48px}
+.hero2{position:relative;overflow:hidden;isolation:isolate;color:#fff;background:linear-gradient(160deg,var(--dk) 0%,color-mix(in srgb,var(--dk) 78%,var(--c2)) 100%);padding:20px 0 48px}
 .bg{position:absolute;inset:0;z-index:-1;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;will-change:transform}
 .b1{width:520px;height:520px;background:var(--c1);top:-160px;left:-120px;animation:fl1 16s ease-in-out infinite}
 .b2{width:560px;height:560px;background:var(--c2);right:-160px;top:-60px;animation:fl2 20s ease-in-out infinite}
-.b3{width:380px;height:380px;background:var(--c1);right:25%;bottom:-220px;opacity:.35;animation:fl3 24s ease-in-out infinite}
+.b3{width:380px;height:380px;background:var(--c3);right:25%;bottom:-220px;opacity:.35;animation:fl3 24s ease-in-out infinite}
 .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 0%,transparent 70%);mask-image:radial-gradient(ellipse at 70% 40%,#000 0%,transparent 70%);animation:pan 30s linear infinite}
 .dots i{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;opacity:.5;animation:rise 12s linear infinite}
 .dots i:nth-child(1){left:8%;animation-delay:0s}.dots i:nth-child(2){left:22%;animation-delay:-3s;width:4px;height:4px}.dots i:nth-child(3){left:38%;animation-delay:-6s}.dots i:nth-child(4){left:55%;animation-delay:-9s;width:4px;height:4px}.dots i:nth-child(5){left:72%;animation-delay:-2s}.dots i:nth-child(6){left:88%;animation-delay:-7s;width:4px;height:4px}
@@ -77,6 +77,20 @@ nav.anchors{position:sticky;top:0;z-index:20;background:var(--card);border-botto
 nav.anchors .w{display:flex;gap:4px;overflow-x:auto;align-items:center;scrollbar-width:none}
 nav.anchors a{white-space:nowrap;padding:14px 12px;text-decoration:none;color:var(--tx2);font-weight:600;font-size:.92rem;border-bottom:3px solid transparent}
 nav.anchors a:hover{color:var(--c1);border-color:var(--c1)}nav.anchors a.go{margin-left:auto;color:#fff;background:var(--c1);border-radius:99px;padding:8px 18px;border:0}
+.card2{display:block;background:var(--card);border:1px solid var(--bd);border-radius:20px;overflow:hidden;text-decoration:none;color:var(--tx);transition:transform .25s,box-shadow .25s}
+.card2:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.18)}
+.card2 .top{position:relative;height:150px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--dk),color-mix(in srgb,var(--dk) 60%,var(--c2)))}
+.card2 .top:before,.card2 .top:after{content:"";position:absolute;border-radius:50%;filter:blur(36px);opacity:.7;animation:fl1 14s ease-in-out infinite}
+.card2 .top:before{width:160px;height:160px;background:var(--c1);left:-30px;top:-50px}.card2 .top:after{width:150px;height:150px;background:var(--c2);right:-20px;bottom:-60px;animation-name:fl2}
+.card2 .top .mark{position:relative;width:84px;height:84px;object-fit:contain;animation:bob 6s ease-in-out infinite}
+.card2 .body{padding:18px 20px 20px}.card2 b{display:block;font-family:Outfit,Inter,sans-serif;font-size:1.15rem;margin-bottom:6px}
+.card2 span.m{color:var(--mut);font-size:.9rem;display:block}.card2 span.go{display:inline-block;margin-top:12px;font-weight:700;color:var(--c1)}
+.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.logos{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;justify-items:center}
+.logos .stage2{width:92px;height:92px;border-radius:26px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);animation:bob 6s ease-in-out infinite}
+.logos .stage2:nth-child(2n){animation-delay:-2s}.logos .stage2:nth-child(3n){animation-delay:-4s}.logos .mark{width:56px;height:56px;animation:none;filter:none}
+@media(max-width:760px){.logos{display:none}}
+
 .sticky-cta{display:none}
 section[id]{scroll-margin-top:60px}
 .cta{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;border:0}.cta p{color:rgba(255,255,255,.9)!important}.cta .btn{background:#fff;color:var(--dk)!important}
@@ -118,14 +132,16 @@ const GLYPHS = {
   rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
 };
 const THEME = {
-  'curso-copilot-365': { c1: '#0f6cbd', c2: '#7b3ff2', dark: '#06172e', logo: '/logos/herramientas/Copilot.webp' },
-  'curso-gemini-google-workspace': { c1: '#1a73e8', c2: '#a142f4', dark: '#0a1530', logo: '/logos/herramientas/Gemini.webp' },
-  'curso-google-apps-script': { c1: '#1e8e3e', c2: '#1a73e8', dark: '#07201a', logo: '/logos/herramientas/GW.webp' },
-  'curso-ia-agentica': { c1: '#6366f1', c2: '#06b6d4', dark: '#0d1030', glyph: 'bot' },
-  'curso-claude-empresas': { c1: '#d97757', c2: '#b4532f', dark: '#241109', glyph: 'spark' },
-  'curso-antigravity-ia': { c1: '#4285f4', c2: '#ea4335', dark: '#0a1124', glyph: 'rocket' },
+  'curso-copilot-365': { c1: '#1a9bdb', c2: '#b456d8', c3: '#f77d58', dark: '#071a33', logo: '/logos/herramientas/Copilot.png' },
+  'curso-gemini-google-workspace': { c1: '#4285f4', c2: '#9b72cb', c3: '#d96570', dark: '#0a1530', logo: '/logos/herramientas/Gemini.png' },
+  'curso-google-apps-script': { c1: '#4386f4', c2: '#35a954', c3: '#eb4536', dark: '#0b1626', logo: '/logos/herramientas/AppsScript.png' },
+  'curso-ia-agentica': { c1: '#6366f1', c2: '#06b6d4', c3: '#a855f7', dark: '#0d1030', glyph: 'bot' },
+  'curso-claude-empresas': { c1: '#d97757', c2: '#b4532f', c3: '#f0a37f', dark: '#241109', logo: '/logos/herramientas/Claude.svg' },
+  'curso-antigravity-ia': { c1: '#3e88f4', c2: '#f25c3b', c3: '#7fb84a', dark: '#0a1124', logo: '/logos/herramientas/Antigravity.png' },
 };
-const svgGlyph = (k) => `<svg viewBox="0 0 24 24" class="mark" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GLYPHS[k]}</svg>`;
+const themeVars = (t) => `--c1:${t.c1};--c2:${t.c2};--c3:${t.c3 || t.c1};--dk:${t.dark}`;
+const logoImg = (t, tool, cls = 'mark', px = 170) => t.logo ? `<img class="${cls}" src="${t.logo}" alt="Logo de ${esc(tool)}" width="${px}" height="${px}">` : svgGlyph(t.glyph, cls);
+const svgGlyph = (k, cls = 'mark') => `<svg viewBox="0 0 24 24" class="${cls}" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GLYPHS[k]}</svg>`;
 
 const TAGLINE = {
   'curso-copilot-365': 'Ahorra horas en correo, reuniones, documentos y Excel con Copilot, sin perder el control de tus datos.',
@@ -162,7 +178,7 @@ function coursePage(c) {
     ],
   };
   const t = THEME[c.slug];
-  const vars = `--c1:${t.c1};--c2:${t.c2};--dk:${t.dark}`;
+  const vars = themeVars(t);
   const rel = c.related.map((s) => bySlug[s]).filter(Boolean);
   return head({ title: c.metaTitle, desc: c.metaDescription, url, keywords: c.keywords, ld, vars }) + `
 <div class="hero2"><div class="bg"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><div class="grid"></div><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="w">
@@ -171,7 +187,7 @@ function coursePage(c) {
 <p class="lead">${esc(TAGLINE[c.slug])}</p>
 <div class="chips"><span>⏱ ${c.hours} horas</span><span>🎯 ${esc(c.level)}</span><span>💻 Aula virtual o presencial</span><span>👤 Formador en activo</span></div>
 <a class="btn big" href="/#contacto">Solicitar propuesta</a><a class="btn ghost" href="/#calculadora">Calcular mi crédito FUNDAE</a></div>
-<div class="hlogo"><div class="stage"><span class="pulse"></span><span class="pulse p2"></span>${t.logo ? `<img class="mark" src="${t.logo.replace('.webp', '.png')}" alt="Logo de ${esc(c.tool)}" width="170" height="170">` : svgGlyph(t.glyph)}</div><small>${esc(c.tool)}</small></div></div></div></div>
+<div class="hlogo"><div class="stage"><span class="pulse"></span><span class="pulse p2"></span>${logoImg(t, c.tool)}</div><small>${esc(c.tool)}</small></div></div></div></div>
 <nav class="anchors" aria-label="Secciones"><div class="w"><a href="#para-quien">Para quién</a><a href="#aprenderas">Qué aprenderás</a><a href="#temario">Temario</a><a href="#fundae">FUNDAE</a><a href="#faqs">FAQs</a><a class="go" href="/#contacto">Solicitar propuesta</a></div></nav>
 <main class="w">
 <section><p class="answer">${esc(c.directAnswer)}</p></section>
@@ -183,7 +199,7 @@ function coursePage(c) {
 <section id="fundae"><h2>Cómo se bonifica con FUNDAE</h2><p style="color:var(--tx2)">Las empresas disponen de un crédito anual para formación que pueden aplicar mediante bonificaciones en las cotizaciones a la Seguridad Social. FormAI trabaja con <b>Full Equipe S.L.</b>, entidad organizadora homologada, que gestiona el proceso. Te ayudamos con la documentación (encomienda de gestión, ficha técnica y listado de participantes). Consulta las condiciones vigentes en <a href="https://www.fundae.es" target="_blank" rel="noopener noreferrer">fundae.es</a>.</p></section>
 <section id="faqs"><h2>Preguntas frecuentes</h2>${c.faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('')}</section>
 <div class="cta"><h2 style="margin-bottom:8px">¿Hablamos de tu formación en ${esc(c.tool)}?</h2><p style="color:var(--tx2);margin-bottom:12px">Llamada breve de 10-15 minutos, sin compromiso.</p><a class="btn" href="/#contacto">Contactar con FormAI</a></div>
-<section><h2>Otras formaciones relacionadas</h2><div class="cards">${rel.map((r) => `<a class="card" href="/cursos/${r.slug}/"><b>${esc(r.name)}</b><span>${r.hours} horas · ${esc(r.level)}</span></a>`).join('')}</div></section>
+<section><h2>Otras formaciones relacionadas</h2><div class="cards2">${rel.map((r) => { const rt = THEME[r.slug]; return `<a class="card2" style="${themeVars(rt)}" href="/cursos/${r.slug}/"><div class="top">${logoImg(rt, r.tool, 'mark', 84)}</div><div class="body"><b>${esc(r.name)}</b><span class="m">${r.hours} horas · ${esc(r.level)}</span><span class="go">Ver temario →</span></div></a>`; }).join('')}</div></section>
 </main><div class="sticky-cta"><a class="btn" href="/#contacto">Solicitar propuesta</a></div>` + foot;
 }
 
@@ -201,12 +217,18 @@ function indexPage() {
     ],
   };
   return head({ title, desc, url, ld }) + `
-<main class="w"><p class="crumbs"><a href="/">Inicio</a> › Cursos</p>
-<div class="hero"><span class="badge">Formación bonificable FUNDAE</span><h1>Cursos de IA y automatización para empresas</h1>
-<p class="answer">${esc(desc)} Todos los cursos son prácticos, los imparten formadores en activo y se adaptan al sector y al nivel de cada equipo.</p></div>
-<section><div class="cards">${courseLandings.map((c) => `<a class="card" href="/cursos/${c.slug}/"><b>${esc(c.name)}</b><span>${c.hours} horas · ${esc(c.level)}</span></a>`).join('')}</div>
-<p style="margin-top:16px;color:var(--tx2)">¿Buscas Excel, Power BI, Power Automate, Looker Studio o Tableau? Consulta el <a href="/#cursos">catálogo completo</a>.</p></section>
-<div class="cta"><a class="btn" href="/#contacto">Solicitar propuesta</a><a class="btn alt" href="/#calculadora">Calcular mi crédito FUNDAE</a></div></main>` + foot;
+<div class="hero2" style="--c1:#38bdf8;--c2:#818cf8;--c3:#06b6d4;--dk:#06122b"><div class="bg"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><div class="grid"></div><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="w">
+<p class="crumbs"><a href="/">Inicio</a> › Cursos</p>
+<div class="hgrid"><div><span class="eyebrow">Formación bonificable FUNDAE</span><h1>Cursos de IA y automatización para empresas</h1>
+<p class="lead">Copilot, Gemini, Claude, Apps Script, IA agéntica y Antigravity: formación práctica con formadores en activo.</p>
+<div class="chips"><span>🎯 Casos reales de tu equipo</span><span>💻 Aula virtual o presencial</span><span>✅ Bonificable con FUNDAE</span></div>
+<a class="btn big" href="/#contacto">Solicitar propuesta</a><a class="btn ghost" href="/#calculadora">Calcular mi crédito FUNDAE</a></div>
+<div class="logos">${courseLandings.map((c) => { const t = THEME[c.slug]; return `<div class="stage2">${logoImg(t, c.tool, 'mark', 56)}</div>`; }).join('')}</div></div></div></div>
+<main class="w"><section><p class="answer">${esc(desc)} Todos los cursos son prácticos, los imparten formadores en activo y se adaptan al sector y al nivel de cada equipo.</p></section>
+<section><h2>Elige tu formación</h2><div class="cards2">${courseLandings.map((c) => { const t = THEME[c.slug]; return `<a class="card2" style="${themeVars(t)}" href="/cursos/${c.slug}/"><div class="top">${logoImg(t, c.tool, 'mark', 84)}</div><div class="body"><b>${esc(c.name)}</b><span class="m">${c.hours} horas · ${esc(c.level)}</span><span class="go">Ver temario →</span></div></a>`; }).join('')}</div>
+<p style="margin-top:20px;color:var(--tx2)">¿Buscas Excel, Power BI, Power Automate, Looker Studio o Tableau? Consulta el <a href="/#cursos">catálogo completo</a>.</p></section>
+<div class="cta" style="--c1:#38bdf8;--c2:#818cf8;--dk:#06122b"><h2 style="margin-bottom:8px">¿Qué formación necesita tu equipo?</h2><p style="margin-bottom:12px">Llamada breve de 10-15 minutos, sin compromiso.</p><a class="btn" href="/#contacto">Solicitar propuesta</a></div>
+</main>` + foot;
 }
 
 const write = (rel, html) => { const f = path.join(dist, rel, 'index.html'); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, html); };
