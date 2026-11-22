@@ -4,6 +4,11 @@ Entradas más recientes arriba. Formato: fecha · agente · rama · hecho / pend
 
 ---
 
+## 2026-11-22 · Claude · `claude/project-thread-ud5uqw`
+**Hecho (landings de cursos SEO + GEO):** 6 páginas estáticas reales (no hash) en `/cursos/<slug>/` + índice `/cursos/`: Copilot 365, Gemini/Google Workspace, Google Apps Script, IA agéntica, Claude, Antigravity. Datos en `src/data/courseLandings.js`; las genera `scripts/build-course-pages.js` (se ejecuta en `npm run build` tras el prerender). Cada página: title/description/canonical/OG, respuesta directa para GEO, temario, FAQ, JSON-LD `Course` + `FAQPage` + `BreadcrumbList`. El script añade las URLs al `sitemap.xml` y a `llms.txt` **de dist/** (sin tocar `public/`, para no chocar con la PR #2; si `llms.txt` aún no existe, lo omite).
+**Veracidad:** sin cifras externas; solo horas/módulos propios. **Temarios y duraciones son borrador de FormAI: revisar por Guillermo/formadores.** No se publican precios.
+**Pendiente:** enlazar las landings desde Footer/Navbar/tarjetas (no tocado: archivos compartidos con SEO general); landings para Excel/Power BI/etc.; llevar blog y AI Act a URLs reales; comprobar en Vercel tras el deploy.
+
 ## 2026-11-04 (3) · Claude · `claude/auditoria-compartir`
 **Hecho:** `main` ya incluye benchmark con fuentes, opciones compactas y regla de veracidad (merge efff5c4, en producción). Botón "Compartir informe": antes copiaba la URL de la página (sin resultados). Ahora el enlace lleva las respuestas (`#auditoria-ia?r=cabubacbca&empresa=...`, un carácter por pregunta; `encodeAnswers/decodeAnswers` en `aiMaturityData.js`) y al abrirlo muestra directamente el informe. En móvil usa la hoja de compartir nativa; en escritorio copia el enlace. Sin servidor; el enlace solo contiene opciones elegidas (y el nombre de empresa si se escribió). Enlace inválido → pantalla inicial.
 **Aviso:** si se añaden/quitan/reordenan preguntas u opciones, los enlaces ya compartidos dejan de ser válidos o cambian de resultado.
