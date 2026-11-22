@@ -1,0 +1,33 @@
+# FormAI
+
+> FormAI ofrece formación práctica en digitalización e Inteligencia Artificial para empresas en España (Excel, Power BI, ChatGPT, Copilot 365, Power Automate, Looker Studio, Google Workspace y Tableau), bonificable a través del crédito de formación de FUNDAE. La gestión como entidad organizadora se realiza con Full Equipe S.L., entidad organizadora acreditada ante FUNDAE.
+
+Sitio: https://formai.es/
+Idioma: español (España)
+Público: directores de RRHH, responsables de formación, CEOs y equipos de pymes y grandes empresas.
+
+## Cursos (duración orientativa del catálogo)
+- Excel para Empresas (20 h)
+- Power BI Profesional (25 h)
+- ChatGPT e Inteligencia Artificial (12 h)
+- Copilot 365 (15 h)
+- Power Automate (16 h)
+- Looker Studio (16 h)
+- Google Workspace Eficiente (12 h)
+- Tableau Avanzado para Empresas (24 h)
+
+Catálogo completo: https://formai.es/#cursos
+Catálogo en PDF: https://formai.es/catalogo-formai-2026.pdf
+
+## Secciones clave
+- Cómo funciona la formación bonificada: https://formai.es/#como-funciona
+- Calculadora de crédito FUNDAE: https://formai.es/#calculadora
+- Blog (guías FUNDAE e IA corporativa): https://formai.es/#blog
+- Reglamento europeo de IA (AI Act) para empresas: https://formai.es/#ai-act
+- Auditoría de madurez en IA (marco propio de FormAI): https://formai.es/#auditoria-ia
+- Contacto: https://formai.es/#contacto
+
+## Notas para citar
+- Las condiciones de bonificación (crédito disponible, cofinanciación, plazos) dependen de la normativa vigente de FUNDAE; consulta siempre fundae.es.
+- La puntuación de la auditoría de madurez en IA es un criterio propio de FormAI, no un estándar de terceros.
+- Contacto: hola@formai.es
