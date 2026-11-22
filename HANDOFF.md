@@ -4,6 +4,10 @@ Entradas más recientes arriba. Formato: fecha · agente · rama · hecho / pend
 
 ---
 
+## 2026-11-22 · Claude · `claude/project-thread-bnc1ll`
+**Hecho (SEO/GEO global):** título más corto; meta robots con `max-image-preview:large`; OG/Twitter con imagen real 1024×1024 (antes 80×80) y `og:locale`; JSON-LD: logo roto (`wp-content`) corregido, añadido `WebSite`, `areaServed`, `inLanguage`, `provider` por referencia a `#organization`; `robots.txt` con rastreadores de IA permitidos; nuevo `public/llms.txt` (solo datos del repo, sin cifras de FUNDAE); sitemap lastmod; cabeceras de caché en `vercel.json`.
+**Pendiente / coordinar con el hilo de landings de cursos:** la web usa rutas con hash (`#blog`, `#ai-act`, `#auditoria-ia`), que Google no indexa como páginas. Lo de más impacto es pasar landings y blog a URLs reales prerenderizadas y añadirlas al sitemap + schema `Course`/`FAQPage`. No se ha hecho aquí para no pisar ese hilo. Añadir `sameAs` (LinkedIn) cuando se confirme la URL.
+
 ## 2026-11-04 (3) · Claude · `claude/auditoria-compartir`
 **Hecho:** `main` ya incluye benchmark con fuentes, opciones compactas y regla de veracidad (merge efff5c4, en producción). Botón "Compartir informe": antes copiaba la URL de la página (sin resultados). Ahora el enlace lleva las respuestas (`#auditoria-ia?r=cabubacbca&empresa=...`, un carácter por pregunta; `encodeAnswers/decodeAnswers` en `aiMaturityData.js`) y al abrirlo muestra directamente el informe. En móvil usa la hoja de compartir nativa; en escritorio copia el enlace. Sin servidor; el enlace solo contiene opciones elegidas (y el nombre de empresa si se escribió). Enlace inválido → pantalla inicial.
 **Aviso:** si se añaden/quitan/reordenan preguntas u opciones, los enlaces ya compartidos dejan de ser válidos o cambian de resultado.
